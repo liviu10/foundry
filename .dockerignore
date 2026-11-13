@@ -1,0 +1,23 @@
+# ==============================================================================
+# Docker Build Context Ignore File
+# Prevents sending server/build code to Docker daemon and keeps images minimal & secure
+# ==============================================================================
+
+# Ignore everything by default
+**
+
+# Only allow public folder and docker configurations
+!public
+!public/**
+!docker
+!docker/**
+
+# Exclude sensitive, temporary, or unneeded files within allowed folders
+**/.git
+**/.gitignore
+**/.env*
+**/*.bak
+**/*.backup
+**/*.log
+**/.DS_Store
+public/.foundry-site

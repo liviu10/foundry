@@ -8,7 +8,7 @@ services:
     restart: unless-stopped
     user: "101:101"
     ports:
-      # Securely bind to localhost on port 8083 (routed via Cloudflare Tunnel)
+      # Securely bind strictly to localhost on port 8083 (routed via Cloudflare Tunnel)
       - "127.0.0.1:8083:8080"
     # Security hardening: read-only filesystem, drop all capabilities, no new privileges
     read_only: true
@@ -16,18 +16,29 @@ services:
       - ALL
     security_opt:
       - no-new-privileges:true
-    # In-memory tmpfs for temporary files (pid, buffers)
+    # In-memory tmpfs for temporary files (pid, buffers) with noexec/nosuid/nodev
     tmpfs:
-      - /tmp:rw,noexec,nosuid,size=8m
+      - /tmp:rw,noexec,nosuid,nodev,size=8m
+      - /var/run:rw,noexec,nosuid,nodev,size=1m
     # Strict resource limits for a static site
-    pids_limit: 10
+    pids_limit: 16
     deploy:
       resources:
         limits:
-          cpus: "0.10"
-          memory: 32M
+          cpus: "0.50"
+          memory: 64M
         reservations:
-          memory: 8M
+          memory: 16M
     volumes:
-      # Mount public/ directly so updates appear immediately without rebuilding the image
-      - ../public:/usr/share/nginx/html:ro,Z
+      # ISOLATION GUARANTEE: Mount ONLY public/ directly as read-only.
+      # All other project directories on the server (build, content, templates, assets, .git)
+      # are completely excluded and physically unreachable by the container.
+      - ../public:/usr/share/nginx/html:ro,z
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro,z
+      - ./security-headers.conf:/etc/nginx/security-headers.conf:ro,z
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1:8080/ || exit 1"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
