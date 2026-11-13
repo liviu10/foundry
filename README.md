@@ -77,60 +77,67 @@ The documentation is served by an ultra-minimal, hardened Nginx container on Alp
 
 ## How to Apply Updates on the Production Server
 
-### Trebuie să reconstruiești complet imaginea Docker?
+### Do You Need to Rebuild the Docker Image for Updates?
 
 > [!NOTE]
-> **NU!** În 99% din cazuri **nu este nevoie să reconstruiești imaginea sau containerul**.
-> Directorul `public/`, fișierul `nginx.conf` și `security-headers.conf` sunt montate direct ca volume read-only (`:ro,z`) în container.
+> **NO!** In 99% of cases, **rebuilding the image or restarting the container is completely unnecessary**.
+> The `public/` directory, `nginx.conf`, and `security-headers.conf` are mounted directly into the container as read-only volumes (`:ro,z`).
 
-### 1. Actualizări de conținut (documentație, ghiduri, fișiere din `public/`)
-După ce ai dat `git push` de pe calculatorul local, pe server rulezi doar:
+### 1. Content Updates (Documentation, Guides, HTML/CSS/JS in `public/`)
+
+After pushing changes from your local machine, run only the following on the server:
+
 ```bash
 cd /var/www/foundry.insightdevhub.ro
 git pull
 ```
-Fișierele noi sunt prezente instantaneu pe disc și servite direct de container.
 
-*(Opțional)* Pentru a curăța imediat memoria cache a descriptorilor Nginx (`open_file_cache` expiră automat după 60s):
+The new static files are updated on disk instantly and served directly by Nginx through the volume mount.
+
+*(Optional)*: Nginx caches file descriptors in RAM for up to 60s (`open_file_cache`). If you want updates to be visible immediately without waiting 60s, trigger a zero-downtime config reload (<0.1s):
+
 ```bash
 docker compose -f docker/compose.yaml exec foundry-docs nginx -s reload
 ```
 
-### 2. Modificări de configurare Nginx (`docker/nginx.conf` sau `security-headers.conf`)
-Deoarece fișierele de configurare sunt de asemenea montate ca volume, este suficient un reload fără downtime:
+### 2. Nginx Configuration Changes (`docker/nginx.conf` or `docker/security-headers.conf`)
+
+Since configuration files are also mounted as read-only volumes, updates do not require rebuilding the image:
+
 ```bash
 cd /var/www/foundry.insightdevhub.ro
 git pull
 docker compose -f docker/compose.yaml exec foundry-docs nginx -s reload
 ```
 
-### 3. CÂND este necesară reconstruirea imaginii (`docker compose up -d --build`)?
-Reconstrucția imaginii este necesară **doar** în următoarele cazuri:
-- Ai modificat `docker/Dockerfile` (de exemplu, schimbi imaginea de bază).
-- Ai modificat setările de nivel inferior din `docker/compose.yaml` (porturi, limite RAM/CPU, tmpfs).
-- Vrei să actualizezi pachetele de securitate ale imaginii de bază Alpine:
+### 3. WHEN is a Full Container Rebuild Required (`docker compose up -d --build`)?
+
+Rebuilding the container image is **only** required in the following scenarios:
+- You modified `docker/Dockerfile` (e.g. upgrading the base Alpine/Nginx image version).
+- You modified low-level container orchestrations in `docker/compose.yaml` (port bindings, memory/CPU caps, tmpfs mount sizes).
+- You want to pull and apply periodic upstream security patches for the base Alpine image:
   ```bash
   docker compose -f docker/compose.yaml up -d --build --pull
   ```
 
 ---
 
-## Profil de Securitate și Optimizare la Sânge
+## Security Hardening & Ultra-Optimization Profile
 
-* **Memorie RAM**: Consum real de doar **~2.6 MB RAM** (limită maximă impusă la 24 MB, rezervare 6 MB).
-* **CPU Zero-Copy**: Nginx folosește `sendfile` și `tcp_nopush` la nivel de kernel direct din Linux Page Cache spre rețea, fără copiere în memorie utilizator.
-* **Zero Disk Writes (`access_log off`)**: Nicio operațiune I/O de scriere pe SSD; traficul este contorizat la nivel de Cloudflare Edge.
-* **Hardening Container**:
-  * `read_only: true`: Rădăcina containerului este montată read-only; niciun fișier nu poate fi modificat.
-  * `user: "101:101"`: Rulează ne-privilegiat ca utilizator `nginx`.
-  * `cap_drop: [ALL]`: Toate capabilitățile Linux de kernel sunt revocate.
-  * `security_opt: [no-new-privileges:true]`: Previne escaladarea de privilegii.
-  * `tmpfs`: Directoarele temporare (`/tmp`, `/var/run`) sunt montate în RAM cu `noexec,nosuid,nodev`.
-* **Izolare Fizică Web**: Containerul are acces exclusiv la `public/`. Toate celelalte directoare de pe server (`build/`, `content/`, `templates/`, `assets/`, `.git`) **nu sunt montate**, fiind complet invizibile pentru container.
-* **Securitate Nginx**:
-  * Antete A+: CSP strict (`default-src 'self'`), `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `Permissions-Policy`, `COOP`, `CORP`, `HSTS`.
-  * Dotfiles blocate: `/.git`, `/.env`, `/.foundry-site` returnează `404 Not Found`.
-  * Extensii periculoase blocate: `.php`, `.sh`, `.sql`, `.env`, `.bak` returnează `404 Not Found`.
-  * Restricție metode: Doar `GET` și `HEAD` permise (oricare alta returnează `405`).
-  * Rate Limiting: 30 cereri/s (burst 50) și max 20 conexiuni simultane per IP, cu detectare reală a IP-ului prin antetul Cloudflare `CF-Connecting-IP`.
-  * Healthcheck integrat: `wget -q --spider http://127.0.0.1:8080/` la fiecare 30 secunde.
+* **RAM Consumption**: Real-world footprint of just **~2.6 MB RAM** (enforced ceiling at 24 MB, 6 MB reservation).
+* **Kernel Zero-Copy CPU**: Nginx leverages `sendfile`, `tcp_nopush`, and `tcp_nodelay` directly from the Linux Page Cache to the network interface, requiring near 0.0% CPU overhead.
+* **Zero Disk Writes (`access_log off`)**: Eliminates SSD/NVMe write wear; access logging and analytics are handled at the Cloudflare Edge.
+* **Container Hardening**:
+  * `read_only: true`: The container root filesystem is mounted strictly read-only; no filesystem tampering is possible.
+  * `user: "101:101"`: Runs unprivileged as the `nginx` system user (non-root).
+  * `cap_drop: [ALL]`: All Linux kernel capabilities are dropped.
+  * `security_opt: [no-new-privileges:true]`: Disallows privilege escalation via setuid binaries.
+  * `tmpfs`: Ephemeral directories (`/tmp`, `/var/run`) are in-memory tmpfs mounted with `noexec,nosuid,nodev`.
+* **Physical Webroot Isolation**: The container only mounts `public/`. All other server directories (`build/`, `content/`, `templates/`, `assets/`, `.git`) are unmounted and physically unreachable.
+* **Nginx Hardening**:
+  * A+ Security Headers: Strict CSP (`default-src 'self'`), `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `Permissions-Policy`, `Cross-Origin-Opener-Policy`, `Cross-Origin-Resource-Policy`, `Strict-Transport-Security`.
+  * Dotfiles Blocked: Requests to `/.git`, `/.env`, `/.foundry-site` return `404 Not Found` without logging.
+  * Dangerous Extensions Blocked: Script and configuration extensions (`.php`, `.sh`, `.sql`, `.env`, `.bak`) return `404 Not Found`.
+  * HTTP Method Restriction: Only `GET` and `HEAD` methods are accepted; all others return `405 Method Not Allowed`.
+  * Rate Limiting & DoS Protection: 30 req/s (burst 50) and max 20 concurrent connections per IP, extracting client IP via Cloudflare's `CF-Connecting-IP`.
+  * Integrated Healthcheck: `wget -q --spider http://127.0.0.1:8080/` tested every 30 seconds.
