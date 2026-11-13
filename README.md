@@ -38,20 +38,21 @@ content/
   titles.php                SEO title mappings per class
 templates/                  PHP templates (layout, home, class, guide, docs index, 404)
 assets/                     Source CSS, JS, Alpine.js (CSP), icons, and images
-public/                     GENERATED static website (served by Docker, tracked in Git)
+public/                     GENERATED static website (served by container, tracked in Git)
 docker/
+  docker-compose.yml        Compose service definition (symlink to compose.yaml)
   compose.yaml              Production compose definition (127.0.0.1:8083, 24MB RAM limit)
   Dockerfile                Hardened Alpine-slim container (<21MB total image)
   nginx.conf                Ultra-optimized static configuration (sendfile, rate-limiting)
   security-headers.conf     Strict A+ security headers (CSP, HSTS, COOP, CORP, Nosniff)
-.dockerignore               Excludes library/, source code & Git metadata from Docker build context
+.dockerignore               Excludes library/, source code & Git metadata from build context
 ```
 
 ---
 
-## Docker Infrastructure & Deployment
+## Container Infrastructure & Deployment (Podman / Docker)
 
-The documentation is served by an ultra-minimal, hardened Nginx container on Alpine Linux. It listens on internal port `8080`, securely mapped to `127.0.0.1:8083` on the host, routed through Cloudflare Tunnel to `https://foundry.insightdevhub.ro`.
+The documentation is served by an ultra-minimal, hardened Nginx container on Alpine Linux managed via **Podman** (or Docker). It listens on internal port `8080`, securely mapped to `127.0.0.1:8083` on the host, and routed through Cloudflare Tunnel to `https://foundry.insightdevhub.ro`.
 
 ### Initial Setup on the Server (`/var/www/foundry.insightdevhub.ro`)
 
@@ -65,10 +66,10 @@ The documentation is served by an ultra-minimal, hardened Nginx container on Alp
    git branch --set-upstream-to=origin/master master
    ```
 
-2. **Start the Docker container**:
+2. **Start the container with Podman Compose**:
    ```bash
-   cd /var/www/foundry.insightdevhub.ro/docker
-   docker compose up -d --build
+   cd /var/www/foundry.insightdevhub.ro
+   podman compose -f docker/docker-compose.yml up -d --build
    ```
 
 3. **Verify running status**:
@@ -80,48 +81,49 @@ The documentation is served by an ultra-minimal, hardened Nginx container on Alp
 
 ## How to Apply Updates on the Production Server
 
-### Do You Need to Rebuild the Docker Image for Updates?
+### Routine Updates vs Full Container Rebuild
 
-> [!NOTE]
-> **NO!** In 99% of cases, **rebuilding the image or restarting the container is completely unnecessary**.
-> The `public/` directory, `nginx.conf`, and `security-headers.conf` are mounted directly into the container as read-only volumes (`:ro,z`).
+There are two ways to apply changes on the production server:
+1. **Fast-track Routine Updates (Zero Rebuild)**: For everyday documentation, guide, or CSS/JS updates.
+2. **Full Container Rebuild**: When you modify `Dockerfile`, change compose parameters, or want a 100% clean rebuild without cache.
 
-### 1. Content Updates (Documentation, Guides, HTML/CSS/JS in `public/`)
+---
 
-After pushing changes from your local machine, run only the following on the server:
+### Option A: Routine Content Updates (No Rebuild Needed)
 
-```bash
-cd /var/www/foundry.insightdevhub.ro
-git pull
-```
-
-The new static files are updated on disk instantly and served directly by Nginx through the volume mount.
-
-*(Optional)*: Nginx caches file descriptors in RAM for up to 60s (`open_file_cache`). If you want updates to be visible immediately without waiting 60s, trigger a zero-downtime config reload (<0.1s):
-
-```bash
-docker compose -f docker/compose.yaml exec foundry-docs nginx -s reload
-```
-
-### 2. Nginx Configuration Changes (`docker/nginx.conf` or `docker/security-headers.conf`)
-
-Since configuration files are also mounted as read-only volumes, updates do not require rebuilding the image:
+Because `public/`, `docker/nginx.conf`, and `docker/security-headers.conf` are mounted directly into the container as read-only volumes (`:ro,z`), changes are updated directly on disk without touching or rebuilding the container:
 
 ```bash
 cd /var/www/foundry.insightdevhub.ro
 git pull
-docker compose -f docker/compose.yaml exec foundry-docs nginx -s reload
 ```
 
-### 3. WHEN is a Full Container Rebuild Required (`docker compose up -d --build`)?
+*(Optional)*: Nginx caches file descriptors in RAM for up to 60s (`open_file_cache`). To clear the cache immediately with zero downtime:
 
-Rebuilding the container image is **only** required in the following scenarios:
-- You modified `docker/Dockerfile` (e.g. upgrading the base Alpine/Nginx image version).
-- You modified low-level container orchestrations in `docker/compose.yaml` (port bindings, memory/CPU caps, tmpfs mount sizes).
-- You want to pull and apply periodic upstream security patches for the base Alpine image:
-  ```bash
-  docker compose -f docker/compose.yaml up -d --build --pull
-  ```
+```bash
+podman compose -f docker/docker-compose.yml exec foundry-docs nginx -s reload
+```
+
+---
+
+### Option B: Full Clean Rebuild (No-Cache Rebuild)
+
+Whenever you want to completely tear down the container, purge all cached build layers, and boot a brand new container instance from scratch:
+
+```bash
+cd /var/www/foundry.insightdevhub.ro
+
+# 1. Stop containers and delete all ephemeral volumes / cache:
+podman compose -f docker/docker-compose.yml down -v
+
+# 2. Rebuild images without cached layers:
+podman compose -f docker/docker-compose.yml build --no-cache
+
+# 3. Boot containers in detached mode:
+podman compose -f docker/docker-compose.yml up -d
+```
+
+*(Note: If your environment uses Docker instead of Podman, the exact same commands work by replacing `podman compose` with `docker compose`).*
 
 ---
 
@@ -140,7 +142,7 @@ Rebuilding the container image is **only** required in the following scenarios:
 * **Nginx Hardening**:
   * A+ Security Headers: Strict CSP (`default-src 'self'`), `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `Permissions-Policy`, `Cross-Origin-Opener-Policy`, `Cross-Origin-Resource-Policy`, `Strict-Transport-Security`.
   * Dotfiles Blocked: Requests to `/.git`, `/.env`, `/.foundry-site` return `404 Not Found` without logging.
-  * Dangerous Extensions Blocked: Script and configuration extensions (`.php`, `.sh`, `.sql`, `.env`, `.bak`) return `404 Not Found`.
+  * Library & Dangerous Extensions Blocked: Requests to `/library` or files ending in `.php`, `.sh`, `.sql`, `.env`, `.bak` return `404 Not Found`.
   * HTTP Method Restriction: Only `GET` and `HEAD` methods are accepted; all others return `405 Method Not Allowed`.
   * Rate Limiting & DoS Protection: 30 req/s (burst 50) and max 20 concurrent connections per IP, extracting client IP via Cloudflare's `CF-Connecting-IP`.
   * Integrated Healthcheck: `wget -q --spider http://127.0.0.1:8080/` tested every 30 seconds.
