@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Xml — Secure XML parsing and XSD validation | Foundry PHP</title>
+<meta name="description" content="PHP Xml class: Secure XML parsing (immune to XXE), XSD schema validation (e.g., ANAF e-Factura), XPath querying, streaming I/O. Standalone, single-file, zero…">
+<link rel="canonical" href="https://foundry.insightdevhub.ro/docs/xml/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f1115">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Foundry">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Xml — Secure XML parsing and XSD validation | Foundry PHP">
+<meta property="og:description" content="PHP Xml class: Secure XML parsing (immune to XXE), XSD schema validation (e.g., ANAF e-Factura), XPath querying, streaming I/O. Standalone, single-file, zero…">
+<meta property="og:url" content="https://foundry.insightdevhub.ro/docs/xml/">
+<meta property="og:image" content="https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Foundry — standalone PHP utility classes">
+<meta property="article:modified_time" content="2026-11-10T21:51:05+02:00">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Xml — Secure XML parsing and XSD validation | Foundry PHP">
+<meta name="twitter:description" content="PHP Xml class: Secure XML parsing (immune to XXE), XSD schema validation (e.g., ANAF e-Factura), XPath querying, streaming I/O. Standalone, single-file, zero…">
+<meta name="twitter:image" content="https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2">
+<link rel="alternate" type="text/markdown" href="/docs/xml.md" title="Markdown version">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="stylesheet" href="/assets/css/site.css?v=f05442ef0e">
+<script src="/assets/js/theme.js?v=b02059f0fb"></script>
+<script src="/assets/js/app.js?v=02d0b9d9f7" defer></script>
+<script src="/assets/vendor/alpine-csp.min.js?v=820bc95038" defer></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Xml — PHP utility class reference","description":"PHP Xml class: Secure XML parsing (immune to XXE), XSD schema validation (e.g., ANAF e-Factura), XPath querying, streaming I/O. Standalone, single-file, zero…","url":"https://foundry.insightdevhub.ro/docs/xml/","mainEntityOfPage":"https://foundry.insightdevhub.ro/docs/xml/","inLanguage":"en","image":"https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2","isPartOf":{"@type":"WebSite","name":"Foundry","url":"https://foundry.insightdevhub.ro/"},"proficiencyLevel":"Expert","dateModified":"2026-11-10T21:51:05+02:00","about":{"@type":"SoftwareSourceCode","name":"Foundry\\Xml","programmingLanguage":"PHP","runtimePlatform":"PHP 8.3+","version":"1.0"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://foundry.insightdevhub.ro/"},{"@type":"ListItem","position":2,"name":"Documentation","item":"https://foundry.insightdevhub.ro/docs/"},{"@type":"ListItem","position":3,"name":"Import / Export","item":"https://foundry.insightdevhub.ro/docs/#import-export"},{"@type":"ListItem","position":4,"name":"Xml","item":"https://foundry.insightdevhub.ro/docs/xml/"}]}</script>
+</head>
+<body class="is-docs">
+<div class="app" x-data="site" x-on:keydown.window="onKey">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="topbar-inner">
+        <button type="button" class="icon-btn menu-btn" x-cloak x-on:click="toggleDrawer" aria-controls="sidebar" x-bind:aria-expanded="drawerExpanded" aria-label="Open navigation">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+    </button>
+        <a class="brand" href="/" aria-label="Foundry home">
+      <svg class="brand-mark" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><rect width="32" height="32" rx="7" fill="var(--accent)"/><path d="M10 8h13v4h-8.5v3.5H21v4h-6.5V25H10z" fill="#fff"/></svg>
+      <span>Foundry</span>
+    </a>
+    <nav class="topnav" aria-label="Main">
+      <a href="/docs/" aria-current="true">Docs</a>
+      <a href="/docs/installation/#download">Download</a>
+    </nav>
+    <div class="topbar-actions">
+      <button type="button" class="search-btn" x-cloak x-on:click="openSearch" aria-label="Search documentation" aria-keyshortcuts="Control+K Meta+K /">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span class="search-btn-label">Search</span>
+        <kbd class="search-btn-kbd">Ctrl K</kbd>
+      </button>
+      <button type="button" class="icon-btn" x-cloak x-on:click="toggleTheme" x-bind:aria-label="themeLabel" x-bind:title="themeLabel">
+        <svg x-show="isDark" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <svg x-show="isLight" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="sidebar" id="sidebar" x-bind:class="drawerClass" aria-label="Documentation navigation">
+    <nav class="nav">
+    <div class="nav-group">
+    <p class="nav-title">Getting started</p>
+    <ul>
+            <li><a href="/docs/">Introduction</a></li>
+            <li><a href="/docs/installation/">Installation</a></li>
+            <li><a href="/docs/usage/">Usage &amp; exceptions</a></li>
+            <li><a href="/docs/bootstrap/">Bootstrap</a></li>
+            <li><a href="/docs/design-principles/">Design principles</a></li>
+            <li><a href="/docs/php-versions/">PHP versions</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Guides</p>
+    <ul>
+            <li><a href="/docs/form-handling/">Form handling</a></li>
+            <li><a href="/docs/imports-exports/">Imports &amp; exports</a></li>
+            <li><a href="/docs/databases/">Databases</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Errors &amp; Exception Handling</p>
+    <ul>
+            <li><a href="/docs/error-handler/">ErrorHandler</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Native Function Wrappers</p>
+    <ul>
+            <li><a href="/docs/json/">Json</a></li>
+            <li><a href="/docs/file/">File</a></li>
+            <li><a href="/docs/regex/">Regex</a></li>
+            <li><a href="/docs/cast/">Cast</a></li>
+            <li><a href="/docs/encoding/">Encoding</a></li>
+            <li><a href="/docs/upload/">Upload</a></li>
+            <li><a href="/docs/process/">Process</a></li>
+            <li><a href="/docs/zip/">Zip</a></li>
+            <li><a href="/docs/image/">Image</a></li>
+            <li><a href="/docs/ini/">Ini</a></li>
+            <li><a href="/docs/base64/">Base64</a></li>
+            <li><a href="/docs/serializer/">Serializer</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Text, Dates, and Numbers</p>
+    <ul>
+            <li><a href="/docs/str/">Str</a></li>
+            <li><a href="/docs/arr/">Arr</a></li>
+            <li><a href="/docs/date/">Date</a></li>
+            <li><a href="/docs/number/">Number</a></li>
+            <li><a href="/docs/money/">Money</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Validation</p>
+    <ul>
+            <li><a href="/docs/validator/">Validator</a></li>
+            <li><a href="/docs/ro-validator/">RoValidator</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Databases</p>
+    <ul>
+            <li><a href="/docs/mysql/">MySQL</a></li>
+            <li><a href="/docs/oracle/">Oracle</a></li>
+            <li><a href="/docs/sqlite/">SQLite</a></li>
+            <li><a href="/docs/paginator/">Paginator</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Import / Export</p>
+    <ul>
+            <li><a href="/docs/csv/">Csv</a></li>
+            <li><a href="/docs/xlsx/">Xlsx</a></li>
+            <li><a href="/docs/xml/" aria-current="page">Xml</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Configuration &amp; Infrastructure</p>
+    <ul>
+            <li><a href="/docs/env/">Env</a></li>
+            <li><a href="/docs/config/">Config</a></li>
+            <li><a href="/docs/log/">Log</a></li>
+            <li><a href="/docs/http-client/">HttpClient</a></li>
+            <li><a href="/docs/cache/">Cache</a></li>
+            <li><a href="/docs/retry/">Retry</a></li>
+            <li><a href="/docs/rate-limiter/">RateLimiter</a></li>
+            <li><a href="/docs/crypt/">Crypt</a></li>
+            <li><a href="/docs/token/">Token</a></li>
+            <li><a href="/docs/mailer/">Mailer</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Web &amp; HTTP</p>
+    <ul>
+            <li><a href="/docs/request/">Request</a></li>
+            <li><a href="/docs/response/">Response</a></li>
+            <li><a href="/docs/session/">Session</a></li>
+            <li><a href="/docs/csrf/">Csrf</a></li>
+            <li><a href="/docs/view/">View</a></li>
+            <li><a href="/docs/url/">Url</a></li>
+            <li><a href="/docs/security-headers/">SecurityHeaders</a></li>
+            <li><a href="/docs/bot-detection/">BotDetection</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">UI Rendering Helpers</p>
+    <ul>
+            <li><a href="/docs/breadcrumbs/">Breadcrumbs</a></li>
+            <li><a href="/docs/flash/">Flash</a></li>
+            <li><a href="/docs/form-builder/">FormBuilder</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Development Tools</p>
+    <ul>
+            <li><a href="/docs/debug/">Debug</a></li>
+            <li><a href="/docs/timer/">Timer</a></li>
+            <li><a href="/docs/faker/">Faker</a></li>
+          </ul>
+  </div>
+  </nav>
+  </aside>
+  <div class="drawer-backdrop" x-cloak x-show="drawerOpen" x-on:click="closeDrawer"></div>
+
+  <main id="main" class="content" tabindex="-1">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <ol>
+                        <li><a href="/">Home</a></li>
+                                <li><a href="/docs/">Documentation</a></li>
+                                <li><a href="/docs/#import-export">Import / Export</a></li>
+                                <li><span aria-current="page">Xml</span></li>
+                      </ol>
+    </nav>
+    
+    <article class="prose doc">
+  <header class="doc-head">
+    <p class="eyebrow"><a href="/docs/#import-export">Import / Export</a></p>
+    <h1>Xml</h1>
+    <p class="lead">XML reading, validation, querying, and writing (e.g., e-Factura UBL, SOAP responses, exports), with libxml errors converted to exceptions and free of classic parser vulnerabilities.</p>
+    <ul class="facts" aria-label="Class facts">
+      <li><span>Namespace</span><code>Foundry\Xml</code></li>
+      <li><span>File</span><code>Xml.php</code></li>
+      <li><span>Version</span><strong>1.0</strong></li>
+      <li><span>Requires</span><strong>PHP 8.3+</strong> <code class="ext">ext-mbstring</code> <code class="ext">ext-xmlreader</code> <code class="ext">ext-xmlwriter</code> <code class="ext">ext-dom</code> <code class="ext">ext-simplexml</code></li>
+      <li><span>API</span><strong>16 public members</strong></li>
+    </ul>
+  </header>
+  <h2 id="native-function-pitfalls-it-avoids">Native function pitfalls it avoids<a class="anchor" href="#native-function-pitfalls-it-avoids" aria-label="Permalink to this section">#</a></h2>
+<ul><li><code>simplexml_load_string()</code> / <code>DOMDocument::loadXML()</code> return false and emit warnings, and with <code>libxml_use_internal_errors(true)</code> errors accumulate silently in a global list</li><li>XXE and &quot;billion laughs&quot;: documents with DOCTYPE are rejected by default, network access is disabled</li><li><code>DOMXPath::query()</code> with a faulty expression returns false; a missing node silently yields an empty string.</li></ul>
+<p>The application&apos;s libxml state (libxml_use_internal_errors, error list) is restored after each call.</p>
+<p>Error messages contain line, column, and libxml error text; document values are masked (<code>&apos;?&apos;</code>), because libxml includes them in validation errors (e.g. &quot;<code>&apos;1960101123456&apos;</code> is not a valid value&quot;).</p>
+<p>Large volumes: <code>records()</code> streams repeated elements from a large file (constant memory), and <code>writer()</code> writes records one by one inside the consumer&apos;s loop.</p>
+<h2 id="usage">Usage<a class="anchor" href="#usage" aria-label="Permalink to this section">#</a></h2>
+<div class="codeblock" data-lang="php"><div class="codeblock-bar"><span class="codeblock-lang">PHP</span><button type="button" class="copy-btn" data-copy hidden>Copy</button></div><pre><code><span class="t-k">require_once</span> <span class="t-s">&apos;Xml.php&apos;</span>;
+<span class="t-k">use</span> <span class="t-C">Foundry\Xml</span>;
+
+<span class="t-v">$invoice</span> = <span class="t-C">Xml</span>::<span class="t-f">documentFile</span>(<span class="t-s">&apos;invoice.xml&apos;</span>);
+<span class="t-C">Xml</span>::<span class="t-f">validate</span>(<span class="t-v">$invoice</span>, __DIR__.<span class="t-s">&apos;/xsd/UBL-Invoice-2.1.xsd&apos;</span>);
+<span class="t-v">$ns</span> = [<span class="t-s">&apos;cbc&apos;</span> =&gt; <span class="t-s">&apos;urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2&apos;</span>];
+<span class="t-v">$number</span> = <span class="t-C">Xml</span>::<span class="t-f">value</span>(<span class="t-v">$invoice</span>, <span class="t-s">&apos;//cbc:ID&apos;</span>, <span class="t-v">$ns</span>);                 <span class="t-c">// exactly one node, otherwise exception</span>
+
+<span class="t-k">foreach</span> (<span class="t-C">Xml</span>::<span class="t-f">records</span>(<span class="t-s">&apos;export.xml&apos;</span>, <span class="t-s">&apos;Policy&apos;</span>) <span class="t-k">as</span> <span class="t-v">$policy</span>) { ... } <span class="t-c">// SimpleXMLElement, streamed</span>
+
+<span class="t-v">$out</span> = <span class="t-C">Xml</span>::<span class="t-f">writer</span>(<span class="t-s">&apos;report.xml&apos;</span>, <span class="t-s">&apos;Policies&apos;</span>);
+<span class="t-k">foreach</span> (<span class="t-v">$rows</span> <span class="t-k">as</span> <span class="t-v">$row</span>) {
+    <span class="t-v">$out</span>-&gt;<span class="t-f">add</span>(<span class="t-s">&apos;Policy&apos;</span>, [<span class="t-s">&apos;@id&apos;</span> =&gt; <span class="t-v">$row</span>[<span class="t-s">&apos;id&apos;</span>], <span class="t-s">&apos;Client&apos;</span> =&gt; <span class="t-v">$row</span>[<span class="t-s">&apos;client&apos;</span>]]);
+}
+<span class="t-v">$out</span>-&gt;<span class="t-f">close</span>();</code></pre></div>
+<h2 id="installation">Installation<a class="anchor" href="#installation" aria-label="Permalink to this section">#</a></h2>
+<p>Copy <code>Xml.php</code> from the <a href="/docs/installation/#download">download archive</a> into your project and load it (or register the <a href="/docs/installation/#loading-the-classes">autoloader</a>):</p>
+<div class="codeblock" data-lang="php"><div class="codeblock-bar"><span class="codeblock-lang">PHP</span><button type="button" class="copy-btn" data-copy hidden>Copy</button></div><pre><code><span class="t-k">require_once</span> __DIR__.<span class="t-s">&apos;/lib/Utilities/Xml.php&apos;</span>;
+
+<span class="t-k">use</span> <span class="t-C">Foundry\Xml</span>;</code></pre></div>
+<p class="muted-note">Requires the PHP extensions <code>mbstring</code>, <code>xmlreader</code>, <code>xmlwriter</code>, <code>dom</code>, <code>simplexml</code> (check with <code>php -m</code>).</p>
+<h2 id="methods">Methods<a class="anchor" href="#methods" aria-label="Permalink to this section">#</a></h2>
+<nav class="method-index" aria-label="Xml methods"><ul><li><a href="#method-__destruct"><code>__destruct()</code></a></li><li><a href="#method-parse"><code>parse()</code></a></li><li><a href="#method-parsefile"><code>parseFile()</code></a></li><li><a href="#method-document"><code>document()</code></a></li><li><a href="#method-documentfile"><code>documentFile()</code></a></li><li><a href="#method-validate"><code>validate()</code></a></li><li><a href="#method-schemaerrors"><code>schemaErrors()</code></a></li><li><a href="#method-value"><code>value()</code></a></li><li><a href="#method-values"><code>values()</code></a></li><li><a href="#method-nodes"><code>nodes()</code></a></li><li><a href="#method-records"><code>records()</code></a></li><li><a href="#method-fromarray"><code>fromArray()</code></a></li><li><a href="#method-writer"><code>writer()</code></a></li><li><a href="#method-add"><code>add()</code></a></li><li><a href="#method-close"><code>close()</code></a></li><li><a href="#method-count"><code>count()</code></a></li></ul></nav>
+<section class="member" id="method-__destruct" aria-labelledby="method-__destruct-title"><header class="member-head"><h3 id="method-__destruct-title"><code>$xml-&gt;__destruct()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-__destruct" aria-label="Permalink to __destruct">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">__destruct</span>()</code></pre><p>An abandoned file (without <code>close()</code>, e.g. after an exception) does not appear at destination.</p></section>
+<section class="member" id="method-parse" aria-labelledby="method-parse-title"><header class="member-head"><h3 id="method-parse-title"><code>Xml::parse()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-parse" aria-label="Permalink to parse">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">parse</span>(<span class="t-t">string</span> <span class="t-v">$xml</span>, <span class="t-t">bool</span> <span class="t-v">$allowDoctype</span> = <span class="t-t">false</span>): <span class="t-C">SimpleXMLElement</span></code></pre><p>Document as SimpleXMLElement.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$xml</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$allowDoctype</code></td><td><code class="type">bool</code></td><td><code class="value">false</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">SimpleXMLElement</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If the XML is invalid or contains DOCTYPE (without <code>$allowDoctype</code>).</li></ul></div></section>
+<section class="member" id="method-parsefile" aria-labelledby="method-parsefile-title"><header class="member-head"><h3 id="method-parsefile-title"><code>Xml::parseFile()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-parsefile" aria-label="Permalink to parseFile">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">parseFile</span>(<span class="t-t">string</span> <span class="t-v">$path</span>, <span class="t-t">bool</span> <span class="t-v">$allowDoctype</span> = <span class="t-t">false</span>): <span class="t-C">SimpleXMLElement</span></code></pre><p>File as SimpleXMLElement.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$path</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$allowDoctype</code></td><td><code class="type">bool</code></td><td><code class="value">false</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">SimpleXMLElement</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the file cannot be read.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If the XML is invalid or contains DOCTYPE (without <code>$allowDoctype</code>).</li></ul></div></section>
+<section class="member" id="method-document" aria-labelledby="method-document-title"><header class="member-head"><h3 id="method-document-title"><code>Xml::document()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-document" aria-label="Permalink to document">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">document</span>(<span class="t-t">string</span> <span class="t-v">$xml</span>, <span class="t-t">bool</span> <span class="t-v">$allowDoctype</span> = <span class="t-t">false</span>): <span class="t-C">DOMDocument</span></code></pre><p>Document as DOMDocument (for XPath, validation, mutations).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$xml</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$allowDoctype</code></td><td><code class="type">bool</code></td><td><code class="value">false</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">DOMDocument</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If the XML is invalid or contains DOCTYPE (without <code>$allowDoctype</code>).</li></ul></div></section>
+<section class="member" id="method-documentfile" aria-labelledby="method-documentfile-title"><header class="member-head"><h3 id="method-documentfile-title"><code>Xml::documentFile()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-documentfile" aria-label="Permalink to documentFile">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">documentFile</span>(<span class="t-t">string</span> <span class="t-v">$path</span>, <span class="t-t">bool</span> <span class="t-v">$allowDoctype</span> = <span class="t-t">false</span>): <span class="t-C">DOMDocument</span></code></pre><p>File as DOMDocument.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$path</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$allowDoctype</code></td><td><code class="type">bool</code></td><td><code class="value">false</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">DOMDocument</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the file cannot be read.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If the XML is invalid or contains DOCTYPE (without <code>$allowDoctype</code>).</li></ul></div></section>
+<section class="member" id="method-validate" aria-labelledby="method-validate-title"><header class="member-head"><h3 id="method-validate-title"><code>Xml::validate()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-validate" aria-label="Permalink to validate">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">validate</span>(<span class="t-C">DOMDocument</span> <span class="t-v">$document</span>, <span class="t-t">string</span> <span class="t-v">$schema</span>): <span class="t-t">void</span></code></pre><p>Validates the document against an XSD schema; all violations are reported in the message (first 5).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$document</code></td><td><code class="type">DOMDocument</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$schema</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the schema does not exist.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If the document does not match the schema or the schema is invalid.</li></ul></div></section>
+<section class="member" id="method-schemaerrors" aria-labelledby="method-schemaerrors-title"><header class="member-head"><h3 id="method-schemaerrors-title"><code>Xml::schemaErrors()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-schemaerrors" aria-label="Permalink to schemaErrors">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">schemaErrors</span>(<span class="t-C">DOMDocument</span> <span class="t-v">$document</span>, <span class="t-t">string</span> <span class="t-v">$schema</span>): <span class="t-k">array</span></code></pre><p>Document violations against an XSD schema (empty list = valid), for display or reporting.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$document</code></td><td><code class="type">DOMDocument</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$schema</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">list&lt;array{line: int, column: int, message: string}&gt;</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the schema does not exist.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If the schema itself is invalid.</li></ul></div></section>
+<section class="member" id="method-value" aria-labelledby="method-value-title"><header class="member-head"><h3 id="method-value-title"><code>Xml::value()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-value" aria-label="Permalink to value">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">value</span>(<span class="t-C">DOMNode</span> <span class="t-v">$context</span>, <span class="t-t">string</span> <span class="t-v">$expression</span>, <span class="t-k">array</span> <span class="t-v">$namespaces</span> = []): <span class="t-t">string</span></code></pre><p>Text of the single node matched by XPath expression; zero or more than one node is an error.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$context</code></td><td><code class="type">DOMNode</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$expression</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$namespaces</code></td><td><code class="type">array&lt;string, string&gt;</code></td><td><code class="value">[]</code></td><td>Prefix =&gt; URI, for prefixes in the expression.</td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If the expression or prefixes are invalid.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If the expression does not match exactly one node.</li></ul></div></section>
+<section class="member" id="method-values" aria-labelledby="method-values-title"><header class="member-head"><h3 id="method-values-title"><code>Xml::values()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-values" aria-label="Permalink to values">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">values</span>(<span class="t-C">DOMNode</span> <span class="t-v">$context</span>, <span class="t-t">string</span> <span class="t-v">$expression</span>, <span class="t-k">array</span> <span class="t-v">$namespaces</span> = []): <span class="t-k">array</span></code></pre><p>Texts of all nodes matched by XPath expression (empty list if none found).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$context</code></td><td><code class="type">DOMNode</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$expression</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$namespaces</code></td><td><code class="type">array&lt;string, string&gt;</code></td><td><code class="value">[]</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">list&lt;string&gt;</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If the expression or prefixes are invalid.</li></ul></div></section>
+<section class="member" id="method-nodes" aria-labelledby="method-nodes-title"><header class="member-head"><h3 id="method-nodes-title"><code>Xml::nodes()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-nodes" aria-label="Permalink to nodes">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">nodes</span>(<span class="t-C">DOMNode</span> <span class="t-v">$context</span>, <span class="t-t">string</span> <span class="t-v">$expression</span>, <span class="t-k">array</span> <span class="t-v">$namespaces</span> = []): <span class="t-k">array</span></code></pre><p>Nodes matched by XPath expression.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$context</code></td><td><code class="type">DOMNode</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$expression</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$namespaces</code></td><td><code class="type">array&lt;string, string&gt;</code></td><td><code class="value">[]</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">list&lt;DOMNode&gt;</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If the expression or prefixes are invalid.</li></ul></div></section>
+<section class="member" id="method-records" aria-labelledby="method-records-title"><header class="member-head"><h3 id="method-records-title"><code>Xml::records()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-records" aria-label="Permalink to records">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">records</span>(<span class="t-t">string</span> <span class="t-v">$path</span>, <span class="t-t">string</span> <span class="t-v">$element</span>, ?<span class="t-t">string</span> <span class="t-v">$namespace</span> = <span class="t-t">null</span>, <span class="t-t">bool</span> <span class="t-v">$allowDoctype</span> = <span class="t-t">false</span>): <span class="t-C">Generator</span></code></pre><p>Matches <code>$element</code> elements from arbitrarily large files, streamed (constant memory), as SimpleXMLElement. Nested elements inside another element with the same name are not read separately. Generator key is the element position (zero-based).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$path</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$element</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$namespace</code></td><td><code class="type">string|null</code></td><td><code class="value">null</code></td><td>Element namespace URI (null = any).</td></tr><tr><td><code>$allowDoctype</code></td><td><code class="type">bool</code></td><td><code class="value">false</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">Generator&lt;int, SimpleXMLElement&gt;</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the file cannot be read.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If the XML is invalid or contains DOCTYPE (without <code>$allowDoctype</code>).</li></ul></div></section>
+<section class="member" id="method-fromarray" aria-labelledby="method-fromarray-title"><header class="member-head"><h3 id="method-fromarray-title"><code>Xml::fromArray()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-fromarray" aria-label="Permalink to fromArray">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">fromArray</span>(<span class="t-t">string</span> <span class="t-v">$root</span>, <span class="t-k">array</span> <span class="t-v">$data</span>, <span class="t-k">array</span> <span class="t-v">$namespaces</span> = []): <span class="t-t">string</span></code></pre><p>XML representation of an array, under the <code>$root</code> root element.</p><p>Format: <code>&apos;Name&apos;</code> =&gt; value (text) or array (children); a list of values/arrays repeats the element; <code>&apos;@attribute&apos;</code> =&gt; value; <code>&apos;#&apos;</code> =&gt; text content for elements that also have attributes. null omits the element. bool -&gt; true/false; DateTimeInterface -&gt; <code>&apos;Y-m-d\TH:i:sP&apos;</code> (for simple dates pass a string).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$root</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$data</code></td><td><code class="type">array&lt;array-key, mixed&gt;</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$namespaces</code></td><td><code class="type">array&lt;string, string&gt;</code></td><td><code class="value">[]</code></td><td>Prefix =&gt; URI (&apos;&apos; = default namespace), declared on root.</td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If names, prefixes, or values are invalid.</li></ul></div></section>
+<section class="member" id="method-writer" aria-labelledby="method-writer-title"><header class="member-head"><h3 id="method-writer-title"><code>Xml::writer()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-writer" aria-label="Permalink to writer">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">writer</span>(<span class="t-t">string</span> <span class="t-v">$path</span>, <span class="t-t">string</span> <span class="t-v">$root</span>, <span class="t-k">array</span> <span class="t-v">$namespaces</span> = [], <span class="t-k">array</span> <span class="t-v">$attributes</span> = []): <span class="t-t">self</span></code></pre><p>An XML file written record by record: <code>add()</code> in a loop, then <code>close()</code>. The file appears at its destination only on <code>close()</code>, complete.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$path</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$root</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$namespaces</code></td><td><code class="type">array&lt;string, string&gt;</code></td><td><code class="value">[]</code></td><td>Prefix =&gt; URI, declared on root.</td></tr><tr><td><code>$attributes</code></td><td><code class="type">array&lt;string, string|int|float|bool&gt;</code></td><td><code class="value">[]</code></td><td>Root attributes.</td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">Foundry\Xml</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If names or prefixes are invalid.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the file cannot be created.</li></ul></div></section>
+<section class="member" id="method-add" aria-labelledby="method-add-title"><header class="member-head"><h3 id="method-add-title"><code>$xml-&gt;add()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-add" aria-label="Permalink to add">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">add</span>(<span class="t-t">string</span> <span class="t-v">$element</span>, <span class="t-k">array</span>|<span class="t-t">string</span>|<span class="t-t">int</span>|<span class="t-t">float</span>|<span class="t-t">bool</span>|<span class="t-C">DateTimeInterface</span> <span class="t-v">$data</span>): <span class="t-t">void</span></code></pre><p>Adds a record under the root (same format as in <code>fromArray()</code>).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$element</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$data</code></td><td><code class="type">array&lt;array-key, mixed&gt;|string|int|float|bool|DateTimeInterface</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.logicexception.php" rel="noopener" target="_blank"><code>LogicException</code></a> — If the file has been closed.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If names, prefixes, or values are invalid.</li></ul></div></section>
+<section class="member" id="method-close" aria-labelledby="method-close-title"><header class="member-head"><h3 id="method-close-title"><code>$xml-&gt;close()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-close" aria-label="Permalink to close">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">close</span>(): <span class="t-t">void</span></code></pre><p>Closes the root element and moves the file to destination. A second call has no effect.</p><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the file cannot be written.</li></ul></div></section>
+<section class="member" id="method-count" aria-labelledby="method-count-title"><header class="member-head"><h3 id="method-count-title"><code>$xml-&gt;count()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-count" aria-label="Permalink to count">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">count</span>(): <span class="t-t">int</span></code></pre><p>Number of added records.</p><dl class="returns"><dt>Returns</dt><dd><code class="type">int</code></dd></dl></section></article>
+
+        <nav class="pager" aria-label="Previous and next pages">
+            <a class="pager-prev" href="/docs/xlsx/" rel="prev"><span>Previous</span><strong>Xlsx</strong></a>
+                  <a class="pager-next" href="/docs/env/" rel="next"><span>Next</span><strong>Env</strong></a>
+          </nav>
+    
+    <div class="page-meta">
+            <span>Last updated <time datetime="2026-11-10T21:51:05+02:00">November 10, 2026</time></span>
+                  <a href="/docs/xml.md">View as Markdown</a>
+          </div>
+  </main>
+
+    <aside class="toc" aria-label="On this page">
+    <p class="toc-title">On this page</p>
+    <ul>
+            <li class="toc-l2"><a href="#native-function-pitfalls-it-avoids">Native function pitfalls it avoids</a></li>
+            <li class="toc-l2"><a href="#usage">Usage</a></li>
+            <li class="toc-l2"><a href="#installation">Installation</a></li>
+            <li class="toc-l2"><a href="#methods">Methods</a></li>
+            <li class="toc-l3"><a href="#method-__destruct">__destruct()</a></li>
+            <li class="toc-l3"><a href="#method-parse">parse()</a></li>
+            <li class="toc-l3"><a href="#method-parsefile">parseFile()</a></li>
+            <li class="toc-l3"><a href="#method-document">document()</a></li>
+            <li class="toc-l3"><a href="#method-documentfile">documentFile()</a></li>
+            <li class="toc-l3"><a href="#method-validate">validate()</a></li>
+            <li class="toc-l3"><a href="#method-schemaerrors">schemaErrors()</a></li>
+            <li class="toc-l3"><a href="#method-value">value()</a></li>
+            <li class="toc-l3"><a href="#method-values">values()</a></li>
+            <li class="toc-l3"><a href="#method-nodes">nodes()</a></li>
+            <li class="toc-l3"><a href="#method-records">records()</a></li>
+            <li class="toc-l3"><a href="#method-fromarray">fromArray()</a></li>
+            <li class="toc-l3"><a href="#method-writer">writer()</a></li>
+            <li class="toc-l3"><a href="#method-add">add()</a></li>
+            <li class="toc-l3"><a href="#method-close">close()</a></li>
+            <li class="toc-l3"><a href="#method-count">count()</a></li>
+          </ul>
+  </aside>
+  </div>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <p><strong>Foundry</strong> — standalone, single-file PHP utility classes. &copy; 2026 · Proprietary license.</p>
+    <nav aria-label="Footer">
+      <a href="/docs/">Documentation</a>
+      <a href="/docs/installation/">Installation</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/sitemap.xml">Sitemap</a>
+    </nav>
+  </div>
+</footer>
+
+<div class="search-modal" x-cloak x-show="searchOpen" role="dialog" aria-modal="true" aria-label="Search documentation" x-on:keydown="onSearchKey">
+  <div class="search-backdrop" x-on:click="closeSearch"></div>
+  <div class="search-panel">
+    <div class="search-field">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <input x-ref="input" type="search" placeholder="Search classes, methods and guides" autocomplete="off" spellcheck="false" aria-label="Search" aria-controls="search-results" aria-autocomplete="list" x-bind:aria-activedescendant="activeId" x-on:input="onInput">
+      <button type="button" class="kbd-btn" x-on:click="closeSearch" aria-label="Close search">Esc</button>
+    </div>
+    <ul id="search-results" class="search-results" role="listbox" aria-label="Results" x-ref="list">
+      <template x-for="item in results" x-bind:key="item.id">
+        <li role="option" x-bind:id="item.id" x-bind:aria-selected="item.selected" x-bind:class="item.cls" x-bind:data-index="item.i" x-on:mousemove="hover" x-on:click="closeSearch">
+          <a x-bind:href="item.u" tabindex="-1">
+            <span class="r-kind" x-text="item.kl"></span>
+            <span class="r-main"><span class="r-title" x-text="item.t"></span><span class="r-desc" x-text="item.d"></span></span>
+            <span class="r-sec" x-text="item.s"></span>
+          </a>
+        </li>
+      </template>
+    </ul>
+    <p class="search-status" x-show="showStatus" x-text="statusText"></p>
+    <div class="search-foot" aria-hidden="true"><span><kbd>↑</kbd><kbd>↓</kbd> navigate</span><span><kbd>Enter</kbd> open</span><span><kbd>Esc</kbd> close</span></div>
+  </div>
+</div>
+</div>
+</body>
+</html>

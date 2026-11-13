@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Money — Exact money math with bcmath | Foundry PHP</title>
+<meta name="description" content="PHP Money class: Currency amounts as exact strings, bcmath arithmetic, bankers rounding, loss-free installment splitting. Standalone, single-file, zero…">
+<link rel="canonical" href="https://foundry.insightdevhub.ro/docs/money/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f1115">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Foundry">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Money — Exact money math with bcmath | Foundry PHP">
+<meta property="og:description" content="PHP Money class: Currency amounts as exact strings, bcmath arithmetic, bankers rounding, loss-free installment splitting. Standalone, single-file, zero…">
+<meta property="og:url" content="https://foundry.insightdevhub.ro/docs/money/">
+<meta property="og:image" content="https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Foundry — standalone PHP utility classes">
+<meta property="article:modified_time" content="2026-11-12T16:54:22+02:00">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Money — Exact money math with bcmath | Foundry PHP">
+<meta name="twitter:description" content="PHP Money class: Currency amounts as exact strings, bcmath arithmetic, bankers rounding, loss-free installment splitting. Standalone, single-file, zero…">
+<meta name="twitter:image" content="https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2">
+<link rel="alternate" type="text/markdown" href="/docs/money.md" title="Markdown version">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="stylesheet" href="/assets/css/site.css?v=f05442ef0e">
+<script src="/assets/js/theme.js?v=b02059f0fb"></script>
+<script src="/assets/js/app.js?v=02d0b9d9f7" defer></script>
+<script src="/assets/vendor/alpine-csp.min.js?v=820bc95038" defer></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Money — PHP utility class reference","description":"PHP Money class: Currency amounts as exact strings, bcmath arithmetic, bankers rounding, loss-free installment splitting. Standalone, single-file, zero…","url":"https://foundry.insightdevhub.ro/docs/money/","mainEntityOfPage":"https://foundry.insightdevhub.ro/docs/money/","inLanguage":"en","image":"https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2","isPartOf":{"@type":"WebSite","name":"Foundry","url":"https://foundry.insightdevhub.ro/"},"proficiencyLevel":"Expert","dateModified":"2026-11-12T16:54:22+02:00","about":{"@type":"SoftwareSourceCode","name":"Foundry\\Money","programmingLanguage":"PHP","runtimePlatform":"PHP 8.3+","version":"1.1"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://foundry.insightdevhub.ro/"},{"@type":"ListItem","position":2,"name":"Documentation","item":"https://foundry.insightdevhub.ro/docs/"},{"@type":"ListItem","position":3,"name":"Text, Dates, and Numbers","item":"https://foundry.insightdevhub.ro/docs/#text-dates-and-numbers"},{"@type":"ListItem","position":4,"name":"Money","item":"https://foundry.insightdevhub.ro/docs/money/"}]}</script>
+</head>
+<body class="is-docs">
+<div class="app" x-data="site" x-on:keydown.window="onKey">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="topbar-inner">
+        <button type="button" class="icon-btn menu-btn" x-cloak x-on:click="toggleDrawer" aria-controls="sidebar" x-bind:aria-expanded="drawerExpanded" aria-label="Open navigation">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+    </button>
+        <a class="brand" href="/" aria-label="Foundry home">
+      <svg class="brand-mark" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><rect width="32" height="32" rx="7" fill="var(--accent)"/><path d="M10 8h13v4h-8.5v3.5H21v4h-6.5V25H10z" fill="#fff"/></svg>
+      <span>Foundry</span>
+    </a>
+    <nav class="topnav" aria-label="Main">
+      <a href="/docs/" aria-current="true">Docs</a>
+      <a href="/docs/installation/#download">Download</a>
+    </nav>
+    <div class="topbar-actions">
+      <button type="button" class="search-btn" x-cloak x-on:click="openSearch" aria-label="Search documentation" aria-keyshortcuts="Control+K Meta+K /">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span class="search-btn-label">Search</span>
+        <kbd class="search-btn-kbd">Ctrl K</kbd>
+      </button>
+      <button type="button" class="icon-btn" x-cloak x-on:click="toggleTheme" x-bind:aria-label="themeLabel" x-bind:title="themeLabel">
+        <svg x-show="isDark" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <svg x-show="isLight" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="sidebar" id="sidebar" x-bind:class="drawerClass" aria-label="Documentation navigation">
+    <nav class="nav">
+    <div class="nav-group">
+    <p class="nav-title">Getting started</p>
+    <ul>
+            <li><a href="/docs/">Introduction</a></li>
+            <li><a href="/docs/installation/">Installation</a></li>
+            <li><a href="/docs/usage/">Usage &amp; exceptions</a></li>
+            <li><a href="/docs/bootstrap/">Bootstrap</a></li>
+            <li><a href="/docs/design-principles/">Design principles</a></li>
+            <li><a href="/docs/php-versions/">PHP versions</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Guides</p>
+    <ul>
+            <li><a href="/docs/form-handling/">Form handling</a></li>
+            <li><a href="/docs/imports-exports/">Imports &amp; exports</a></li>
+            <li><a href="/docs/databases/">Databases</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Errors &amp; Exception Handling</p>
+    <ul>
+            <li><a href="/docs/error-handler/">ErrorHandler</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Native Function Wrappers</p>
+    <ul>
+            <li><a href="/docs/json/">Json</a></li>
+            <li><a href="/docs/file/">File</a></li>
+            <li><a href="/docs/regex/">Regex</a></li>
+            <li><a href="/docs/cast/">Cast</a></li>
+            <li><a href="/docs/encoding/">Encoding</a></li>
+            <li><a href="/docs/upload/">Upload</a></li>
+            <li><a href="/docs/process/">Process</a></li>
+            <li><a href="/docs/zip/">Zip</a></li>
+            <li><a href="/docs/image/">Image</a></li>
+            <li><a href="/docs/ini/">Ini</a></li>
+            <li><a href="/docs/base64/">Base64</a></li>
+            <li><a href="/docs/serializer/">Serializer</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Text, Dates, and Numbers</p>
+    <ul>
+            <li><a href="/docs/str/">Str</a></li>
+            <li><a href="/docs/arr/">Arr</a></li>
+            <li><a href="/docs/date/">Date</a></li>
+            <li><a href="/docs/number/">Number</a></li>
+            <li><a href="/docs/money/" aria-current="page">Money</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Validation</p>
+    <ul>
+            <li><a href="/docs/validator/">Validator</a></li>
+            <li><a href="/docs/ro-validator/">RoValidator</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Databases</p>
+    <ul>
+            <li><a href="/docs/mysql/">MySQL</a></li>
+            <li><a href="/docs/oracle/">Oracle</a></li>
+            <li><a href="/docs/sqlite/">SQLite</a></li>
+            <li><a href="/docs/paginator/">Paginator</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Import / Export</p>
+    <ul>
+            <li><a href="/docs/csv/">Csv</a></li>
+            <li><a href="/docs/xlsx/">Xlsx</a></li>
+            <li><a href="/docs/xml/">Xml</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Configuration &amp; Infrastructure</p>
+    <ul>
+            <li><a href="/docs/env/">Env</a></li>
+            <li><a href="/docs/config/">Config</a></li>
+            <li><a href="/docs/log/">Log</a></li>
+            <li><a href="/docs/http-client/">HttpClient</a></li>
+            <li><a href="/docs/cache/">Cache</a></li>
+            <li><a href="/docs/retry/">Retry</a></li>
+            <li><a href="/docs/rate-limiter/">RateLimiter</a></li>
+            <li><a href="/docs/crypt/">Crypt</a></li>
+            <li><a href="/docs/token/">Token</a></li>
+            <li><a href="/docs/mailer/">Mailer</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Web &amp; HTTP</p>
+    <ul>
+            <li><a href="/docs/request/">Request</a></li>
+            <li><a href="/docs/response/">Response</a></li>
+            <li><a href="/docs/session/">Session</a></li>
+            <li><a href="/docs/csrf/">Csrf</a></li>
+            <li><a href="/docs/view/">View</a></li>
+            <li><a href="/docs/url/">Url</a></li>
+            <li><a href="/docs/security-headers/">SecurityHeaders</a></li>
+            <li><a href="/docs/bot-detection/">BotDetection</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">UI Rendering Helpers</p>
+    <ul>
+            <li><a href="/docs/breadcrumbs/">Breadcrumbs</a></li>
+            <li><a href="/docs/flash/">Flash</a></li>
+            <li><a href="/docs/form-builder/">FormBuilder</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Development Tools</p>
+    <ul>
+            <li><a href="/docs/debug/">Debug</a></li>
+            <li><a href="/docs/timer/">Timer</a></li>
+            <li><a href="/docs/faker/">Faker</a></li>
+          </ul>
+  </div>
+  </nav>
+  </aside>
+  <div class="drawer-backdrop" x-cloak x-show="drawerOpen" x-on:click="closeDrawer"></div>
+
+  <main id="main" class="content" tabindex="-1">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <ol>
+                        <li><a href="/">Home</a></li>
+                                <li><a href="/docs/">Documentation</a></li>
+                                <li><a href="/docs/#text-dates-and-numbers">Text, Dates, and Numbers</a></li>
+                                <li><span aria-current="page">Money</span></li>
+                      </ol>
+    </nav>
+    
+    <article class="prose doc">
+  <header class="doc-head">
+    <p class="eyebrow"><a href="/docs/#text-dates-and-numbers">Text, Dates, and Numbers</a></p>
+    <h1>Money</h1>
+    <p class="lead">Exact monetary calculations on strings using bcmath. Floats are never used: 0.1 + 0.2 in floating-point arithmetic is 0.30000000000000004, causing errors to accumulate in invoices and installments.</p>
+    <ul class="facts" aria-label="Class facts">
+      <li><span>Namespace</span><code>Foundry\Money</code></li>
+      <li><span>File</span><code>Money.php</code></li>
+      <li><span>Version</span><strong>1.1</strong></li>
+      <li><span>Requires</span><strong>PHP 8.3+</strong> <code class="ext">ext-bcmath</code></li>
+      <li><span>API</span><strong>11 public members</strong></li>
+    </ul>
+  </header>
+  <p>Amounts are plain strings (<code>&apos;1234.56&apos;</code>, <code>&apos;-10&apos;</code>, <code>&apos;0.5&apos;</code>) or integers. Floats are rejected via type signatures. The result always has <code>$scale</code> decimals (default 2), rounded half-up (2.345 -&gt; 2.35; -2.345 -&gt; -2.35). Rounding is performed once at the very end.</p>
+<p>Built-in bc* functions truncate instead of rounding and silently accepted invalid values in older PHP versions; here each amount is strictly validated.</p>
+<p>Requires the bcmath extension (bundled with PHP on Windows; on Linux, the php-bcmath package).</p>
+<h2 id="usage">Usage<a class="anchor" href="#usage" aria-label="Permalink to this section">#</a></h2>
+<div class="codeblock" data-lang="php"><div class="codeblock-bar"><span class="codeblock-lang">PHP</span><button type="button" class="copy-btn" data-copy hidden>Copy</button></div><pre><code><span class="t-k">require_once</span> <span class="t-s">&apos;Money.php&apos;</span>;
+<span class="t-k">use</span> <span class="t-C">Foundry\Money</span>;
+
+<span class="t-v">$total</span> = <span class="t-C">Money</span>::<span class="t-f">add</span>(<span class="t-s">&apos;100.10&apos;</span>, <span class="t-s">&apos;0.20&apos;</span>);                 <span class="t-c">// &apos;100.30&apos;</span>
+<span class="t-v">$vat</span> = <span class="t-C">Money</span>::<span class="t-f">percent</span>(<span class="t-v">$total</span>, <span class="t-s">&apos;19&apos;</span>);                   <span class="t-c">// &apos;19.06&apos;</span>
+<span class="t-v">$rates</span> = <span class="t-C">Money</span>::<span class="t-f">allocate</span>(<span class="t-s">&apos;100.00&apos;</span>, <span class="t-n">3</span>);                 <span class="t-c">// [&apos;33.34&apos;, &apos;33.33&apos;, &apos;33.33&apos;]</span>
+<span class="t-v">$amount</span> = <span class="t-C">Money</span>::<span class="t-f">parse</span>(<span class="t-v">$_POST</span>[<span class="t-s">&apos;suma&apos;</span>]);                <span class="t-c">// &apos;1.234,50&apos; -&gt; &apos;1234.50&apos;</span>
+<span class="t-k">echo</span> <span class="t-C">Money</span>::<span class="t-f">format</span>(<span class="t-v">$total</span>, <span class="t-s">&apos;lei&apos;</span>);                     <span class="t-c">// &apos;100,30 lei&apos;</span></code></pre></div>
+<h2 id="installation">Installation<a class="anchor" href="#installation" aria-label="Permalink to this section">#</a></h2>
+<p>Copy <code>Money.php</code> from the <a href="/docs/installation/#download">download archive</a> into your project and load it (or register the <a href="/docs/installation/#loading-the-classes">autoloader</a>):</p>
+<div class="codeblock" data-lang="php"><div class="codeblock-bar"><span class="codeblock-lang">PHP</span><button type="button" class="copy-btn" data-copy hidden>Copy</button></div><pre><code><span class="t-k">require_once</span> __DIR__.<span class="t-s">&apos;/lib/Utilities/Money.php&apos;</span>;
+
+<span class="t-k">use</span> <span class="t-C">Foundry\Money</span>;</code></pre></div>
+<p class="muted-note">Requires the PHP extension <code>bcmath</code> (check with <code>php -m</code>).</p>
+<h2 id="methods">Methods<a class="anchor" href="#methods" aria-label="Permalink to this section">#</a></h2>
+<nav class="method-index" aria-label="Money methods"><ul><li><a href="#method-add"><code>add()</code></a></li><li><a href="#method-sub"><code>sub()</code></a></li><li><a href="#method-mul"><code>mul()</code></a></li><li><a href="#method-div"><code>div()</code></a></li><li><a href="#method-percent"><code>percent()</code></a></li><li><a href="#method-sum"><code>sum()</code></a></li><li><a href="#method-round"><code>round()</code></a></li><li><a href="#method-allocate"><code>allocate()</code></a></li><li><a href="#method-compare"><code>compare()</code></a></li><li><a href="#method-format"><code>format()</code></a></li><li><a href="#method-parse"><code>parse()</code></a></li></ul></nav>
+<section class="member" id="method-add" aria-labelledby="method-add-title"><header class="member-head"><h3 id="method-add-title"><code>Money::add()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-add" aria-label="Permalink to add">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">add</span>(<span class="t-t">string</span>|<span class="t-t">int</span> <span class="t-v">$a</span>, <span class="t-t">string</span>|<span class="t-t">int</span> <span class="t-v">$b</span>, <span class="t-t">int</span> <span class="t-v">$scale</span> = <span class="t-n">2</span>): <span class="t-t">string</span></code></pre><p><code>$a</code> + <code>$b</code>.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$a</code></td><td><code class="type">string|int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$b</code></td><td><code class="type">string|int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$scale</code></td><td><code class="type">int</code></td><td><code class="value">2</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If an amount is invalid.</li></ul></div></section>
+<section class="member" id="method-sub" aria-labelledby="method-sub-title"><header class="member-head"><h3 id="method-sub-title"><code>Money::sub()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-sub" aria-label="Permalink to sub">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">sub</span>(<span class="t-t">string</span>|<span class="t-t">int</span> <span class="t-v">$a</span>, <span class="t-t">string</span>|<span class="t-t">int</span> <span class="t-v">$b</span>, <span class="t-t">int</span> <span class="t-v">$scale</span> = <span class="t-n">2</span>): <span class="t-t">string</span></code></pre><p><code>$a</code> - <code>$b</code>.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$a</code></td><td><code class="type">string|int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$b</code></td><td><code class="type">string|int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$scale</code></td><td><code class="type">int</code></td><td><code class="value">2</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If an amount is invalid.</li></ul></div></section>
+<section class="member" id="method-mul" aria-labelledby="method-mul-title"><header class="member-head"><h3 id="method-mul-title"><code>Money::mul()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-mul" aria-label="Permalink to mul">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">mul</span>(<span class="t-t">string</span>|<span class="t-t">int</span> <span class="t-v">$amount</span>, <span class="t-t">string</span>|<span class="t-t">int</span> <span class="t-v">$multiplier</span>, <span class="t-t">int</span> <span class="t-v">$scale</span> = <span class="t-n">2</span>): <span class="t-t">string</span></code></pre><p><code>$amount</code> * <code>$multiplier</code> (e.g., quantity, exchange rate, coefficient).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$amount</code></td><td><code class="type">string|int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$multiplier</code></td><td><code class="type">string|int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$scale</code></td><td><code class="type">int</code></td><td><code class="value">2</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If a value is invalid.</li></ul></div></section>
+<section class="member" id="method-div" aria-labelledby="method-div-title"><header class="member-head"><h3 id="method-div-title"><code>Money::div()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-div" aria-label="Permalink to div">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">div</span>(<span class="t-t">string</span>|<span class="t-t">int</span> <span class="t-v">$amount</span>, <span class="t-t">string</span>|<span class="t-t">int</span> <span class="t-v">$divisor</span>, <span class="t-t">int</span> <span class="t-v">$scale</span> = <span class="t-n">2</span>): <span class="t-t">string</span></code></pre><p><code>$amount</code> / <code>$divisor</code>.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$amount</code></td><td><code class="type">string|int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$divisor</code></td><td><code class="type">string|int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$scale</code></td><td><code class="type">int</code></td><td><code class="value">2</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If a value is invalid or <code>$divisor</code> is zero.</li></ul></div></section>
+<section class="member" id="method-percent" aria-labelledby="method-percent-title"><header class="member-head"><h3 id="method-percent-title"><code>Money::percent()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-percent" aria-label="Permalink to percent">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">percent</span>(<span class="t-t">string</span>|<span class="t-t">int</span> <span class="t-v">$amount</span>, <span class="t-t">string</span>|<span class="t-t">int</span> <span class="t-v">$percent</span>, <span class="t-t">int</span> <span class="t-v">$scale</span> = <span class="t-n">2</span>): <span class="t-t">string</span></code></pre><p>Calculates <code>$percent</code> percent of <code>$amount</code>: <code>percent(&apos;200&apos;, &apos;19&apos;)</code> -&gt; <code>&apos;38.00&apos;</code>.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$amount</code></td><td><code class="type">string|int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$percent</code></td><td><code class="type">string|int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$scale</code></td><td><code class="type">int</code></td><td><code class="value">2</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If a value is invalid.</li></ul></div></section>
+<section class="member" id="method-sum" aria-labelledby="method-sum-title"><header class="member-head"><h3 id="method-sum-title"><code>Money::sum()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-sum" aria-label="Permalink to sum">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">sum</span>(<span class="t-k">array</span> <span class="t-v">$amounts</span>, <span class="t-t">int</span> <span class="t-v">$scale</span> = <span class="t-n">2</span>): <span class="t-t">string</span></code></pre><p>Sum of a list of amounts. Empty list -&gt; <code>&apos;0.00&apos;</code>.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$amounts</code></td><td><code class="type">list&lt;string|int&gt;</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$scale</code></td><td><code class="type">int</code></td><td><code class="value">2</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If an amount is invalid.</li></ul></div></section>
+<section class="member" id="method-round" aria-labelledby="method-round-title"><header class="member-head"><h3 id="method-round-title"><code>Money::round()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-round" aria-label="Permalink to round">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">round</span>(<span class="t-t">string</span>|<span class="t-t">int</span> <span class="t-v">$amount</span>, <span class="t-t">int</span> <span class="t-v">$scale</span> = <span class="t-n">2</span>): <span class="t-t">string</span></code></pre><p>Rounds an amount to <code>$scale</code> decimal places: <code>&apos;10.555&apos;</code> -&gt; <code>&apos;10.56&apos;</code>, <code>&apos;7&apos;</code> -&gt; <code>&apos;7.00&apos;</code>.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$amount</code></td><td><code class="type">string|int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$scale</code></td><td><code class="type">int</code></td><td><code class="value">2</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">numeric-string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If the amount is invalid.</li></ul></div></section>
+<section class="member" id="method-allocate" aria-labelledby="method-allocate-title"><header class="member-head"><h3 id="method-allocate-title"><code>Money::allocate()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-allocate" aria-label="Permalink to allocate">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">allocate</span>(<span class="t-t">string</span>|<span class="t-t">int</span> <span class="t-v">$amount</span>, <span class="t-t">int</span>|<span class="t-k">array</span> <span class="t-v">$ratios</span>, <span class="t-t">int</span> <span class="t-v">$scale</span> = <span class="t-n">2</span>): <span class="t-k">array</span></code></pre><p>Allocates an amount into parts without losing or creating money: the sum of the parts exactly equals the total (rounded to <code>$scale</code>). Any remainder units are distributed to the first non-zero weighted parts.</p><p><a class="code-link" href="/docs/money/#method-allocate"><code>Money::allocate(&apos;100.00&apos;, 3)</code></a>          -&gt; [<code>&apos;33.34&apos;</code>, <code>&apos;33.33&apos;</code>, <code>&apos;33.33&apos;</code>] <a class="code-link" href="/docs/money/#method-allocate"><code>Money::allocate(&apos;100.00&apos;, [70, 30])</code></a>   -&gt; [<code>&apos;70.00&apos;</code>, <code>&apos;30.00&apos;</code>] <a class="code-link" href="/docs/money/#method-allocate"><code>Money::allocate(&apos;0.05&apos;, [1, 1])</code></a>       -&gt; [<code>&apos;0.03&apos;</code>, <code>&apos;0.02&apos;</code>]</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$amount</code></td><td><code class="type">string|int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$ratios</code></td><td><code class="type">int|list&lt;string|int&gt;</code></td><td><span class="pill pill-req">required</span></td><td>Number of equal parts or list of weights (&gt;= 0, at least one &gt; 0).</td></tr><tr><td><code>$scale</code></td><td><code class="type">int</code></td><td><code class="value">2</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">list&lt;string&gt;</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If the amount, number of parts, or ratios are invalid.</li></ul></div></section>
+<section class="member" id="method-compare" aria-labelledby="method-compare-title"><header class="member-head"><h3 id="method-compare-title"><code>Money::compare()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-compare" aria-label="Permalink to compare">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">compare</span>(<span class="t-t">string</span>|<span class="t-t">int</span> <span class="t-v">$a</span>, <span class="t-t">string</span>|<span class="t-t">int</span> <span class="t-v">$b</span>): <span class="t-t">int</span></code></pre><p>Compares two amounts: -1 (<code>$a</code> &lt; <code>$b</code>), 0 (equal), 1 (<code>$a</code> &gt; <code>$b</code>). <code>&apos;10&apos;</code> and <code>&apos;10.00&apos;</code> are equal.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$a</code></td><td><code class="type">string|int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$b</code></td><td><code class="type">string|int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">int</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If an amount is invalid.</li></ul></div></section>
+<section class="member" id="method-format" aria-labelledby="method-format-title"><header class="member-head"><h3 id="method-format-title"><code>Money::format()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-format" aria-label="Permalink to format">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">format</span>(<span class="t-t">string</span>|<span class="t-t">int</span> <span class="t-v">$amount</span>, ?<span class="t-t">string</span> <span class="t-v">$currency</span> = <span class="t-t">null</span>, <span class="t-t">int</span> <span class="t-v">$scale</span> = <span class="t-n">2</span>, <span class="t-t">string</span> <span class="t-v">$decimalSeparator</span> = <span class="t-s">&apos;,&apos;</span>, <span class="t-t">string</span> <span class="t-v">$thousandsSeparator</span> = <span class="t-s">&apos;.&apos;</span>): <span class="t-t">string</span></code></pre><p>Formats an amount: <code>&apos;1234.5&apos;</code> -&gt; <code>&apos;1.234,50&apos;</code>; with currency: <code>&apos;1.234,50 lei&apos;</code>.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$amount</code></td><td><code class="type">string|int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$currency</code></td><td><code class="type">?string</code></td><td><code class="value">null</code></td><td></td></tr><tr><td><code>$scale</code></td><td><code class="type">int</code></td><td><code class="value">2</code></td><td></td></tr><tr><td><code>$decimalSeparator</code></td><td><code class="type">string</code></td><td><code class="value">&apos;,&apos;</code></td><td></td></tr><tr><td><code>$thousandsSeparator</code></td><td><code class="type">string</code></td><td><code class="value">&apos;.&apos;</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If the amount is invalid.</li></ul></div></section>
+<section class="member" id="method-parse" aria-labelledby="method-parse-title"><header class="member-head"><h3 id="method-parse-title"><code>Money::parse()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-parse" aria-label="Permalink to parse">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">parse</span>(<span class="t-t">string</span> <span class="t-v">$value</span>, <span class="t-t">int</span> <span class="t-v">$scale</span> = <span class="t-n">2</span>, <span class="t-t">string</span> <span class="t-v">$decimalSeparator</span> = <span class="t-s">&apos;,&apos;</span>, <span class="t-t">string</span> <span class="t-v">$thousandsSeparator</span> = <span class="t-s">&apos;.&apos;</span>): <span class="t-t">string</span></code></pre><p>Parses a user-entered monetary amount: <code>&apos;1.234,50&apos;</code> or <code>&apos;1234,5&apos;</code> -&gt; <code>&apos;1234.50&apos;</code>. More decimals than <code>$scale</code> triggers an error (<code>&apos;12,345&apos;</code> is ambiguous: not silently rounded).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$value</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$scale</code></td><td><code class="type">int</code></td><td><code class="value">2</code></td><td></td></tr><tr><td><code>$decimalSeparator</code></td><td><code class="type">string</code></td><td><code class="value">&apos;,&apos;</code></td><td></td></tr><tr><td><code>$thousandsSeparator</code></td><td><code class="type">string</code></td><td><code class="value">&apos;.&apos;</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If the separators are invalid.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If the string is not a valid amount.</li></ul></div></section></article>
+
+        <nav class="pager" aria-label="Previous and next pages">
+            <a class="pager-prev" href="/docs/number/" rel="prev"><span>Previous</span><strong>Number</strong></a>
+                  <a class="pager-next" href="/docs/validator/" rel="next"><span>Next</span><strong>Validator</strong></a>
+          </nav>
+    
+    <div class="page-meta">
+            <span>Last updated <time datetime="2026-11-12T16:54:22+02:00">November 12, 2026</time></span>
+                  <a href="/docs/money.md">View as Markdown</a>
+          </div>
+  </main>
+
+    <aside class="toc" aria-label="On this page">
+    <p class="toc-title">On this page</p>
+    <ul>
+            <li class="toc-l2"><a href="#usage">Usage</a></li>
+            <li class="toc-l2"><a href="#installation">Installation</a></li>
+            <li class="toc-l2"><a href="#methods">Methods</a></li>
+            <li class="toc-l3"><a href="#method-add">add()</a></li>
+            <li class="toc-l3"><a href="#method-sub">sub()</a></li>
+            <li class="toc-l3"><a href="#method-mul">mul()</a></li>
+            <li class="toc-l3"><a href="#method-div">div()</a></li>
+            <li class="toc-l3"><a href="#method-percent">percent()</a></li>
+            <li class="toc-l3"><a href="#method-sum">sum()</a></li>
+            <li class="toc-l3"><a href="#method-round">round()</a></li>
+            <li class="toc-l3"><a href="#method-allocate">allocate()</a></li>
+            <li class="toc-l3"><a href="#method-compare">compare()</a></li>
+            <li class="toc-l3"><a href="#method-format">format()</a></li>
+            <li class="toc-l3"><a href="#method-parse">parse()</a></li>
+          </ul>
+  </aside>
+  </div>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <p><strong>Foundry</strong> — standalone, single-file PHP utility classes. &copy; 2026 · Proprietary license.</p>
+    <nav aria-label="Footer">
+      <a href="/docs/">Documentation</a>
+      <a href="/docs/installation/">Installation</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/sitemap.xml">Sitemap</a>
+    </nav>
+  </div>
+</footer>
+
+<div class="search-modal" x-cloak x-show="searchOpen" role="dialog" aria-modal="true" aria-label="Search documentation" x-on:keydown="onSearchKey">
+  <div class="search-backdrop" x-on:click="closeSearch"></div>
+  <div class="search-panel">
+    <div class="search-field">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <input x-ref="input" type="search" placeholder="Search classes, methods and guides" autocomplete="off" spellcheck="false" aria-label="Search" aria-controls="search-results" aria-autocomplete="list" x-bind:aria-activedescendant="activeId" x-on:input="onInput">
+      <button type="button" class="kbd-btn" x-on:click="closeSearch" aria-label="Close search">Esc</button>
+    </div>
+    <ul id="search-results" class="search-results" role="listbox" aria-label="Results" x-ref="list">
+      <template x-for="item in results" x-bind:key="item.id">
+        <li role="option" x-bind:id="item.id" x-bind:aria-selected="item.selected" x-bind:class="item.cls" x-bind:data-index="item.i" x-on:mousemove="hover" x-on:click="closeSearch">
+          <a x-bind:href="item.u" tabindex="-1">
+            <span class="r-kind" x-text="item.kl"></span>
+            <span class="r-main"><span class="r-title" x-text="item.t"></span><span class="r-desc" x-text="item.d"></span></span>
+            <span class="r-sec" x-text="item.s"></span>
+          </a>
+        </li>
+      </template>
+    </ul>
+    <p class="search-status" x-show="showStatus" x-text="statusText"></p>
+    <div class="search-foot" aria-hidden="true"><span><kbd>↑</kbd><kbd>↓</kbd> navigate</span><span><kbd>Enter</kbd> open</span><span><kbd>Esc</kbd> close</span></div>
+  </div>
+</div>
+</div>
+</body>
+</html>

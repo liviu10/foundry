@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Env — Typed .env file loader | Foundry PHP</title>
+<meta name="description" content="PHP Env class: .env file loader (phpdotenv syntax), schema validation, and typed casting. Standalone, single-file, zero dependencies.">
+<link rel="canonical" href="https://foundry.insightdevhub.ro/docs/env/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f1115">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Foundry">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Env — Typed .env file loader | Foundry PHP">
+<meta property="og:description" content="PHP Env class: .env file loader (phpdotenv syntax), schema validation, and typed casting. Standalone, single-file, zero dependencies.">
+<meta property="og:url" content="https://foundry.insightdevhub.ro/docs/env/">
+<meta property="og:image" content="https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Foundry — standalone PHP utility classes">
+<meta property="article:modified_time" content="2026-11-10T21:51:05+02:00">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Env — Typed .env file loader | Foundry PHP">
+<meta name="twitter:description" content="PHP Env class: .env file loader (phpdotenv syntax), schema validation, and typed casting. Standalone, single-file, zero dependencies.">
+<meta name="twitter:image" content="https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2">
+<link rel="alternate" type="text/markdown" href="/docs/env.md" title="Markdown version">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="stylesheet" href="/assets/css/site.css?v=f05442ef0e">
+<script src="/assets/js/theme.js?v=b02059f0fb"></script>
+<script src="/assets/js/app.js?v=02d0b9d9f7" defer></script>
+<script src="/assets/vendor/alpine-csp.min.js?v=820bc95038" defer></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Env — PHP utility class reference","description":"PHP Env class: .env file loader (phpdotenv syntax), schema validation, and typed casting. Standalone, single-file, zero dependencies.","url":"https://foundry.insightdevhub.ro/docs/env/","mainEntityOfPage":"https://foundry.insightdevhub.ro/docs/env/","inLanguage":"en","image":"https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2","isPartOf":{"@type":"WebSite","name":"Foundry","url":"https://foundry.insightdevhub.ro/"},"proficiencyLevel":"Expert","dateModified":"2026-11-10T21:51:05+02:00","about":{"@type":"SoftwareSourceCode","name":"Foundry\\Env","programmingLanguage":"PHP","runtimePlatform":"PHP 8.3+","version":"1.1"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://foundry.insightdevhub.ro/"},{"@type":"ListItem","position":2,"name":"Documentation","item":"https://foundry.insightdevhub.ro/docs/"},{"@type":"ListItem","position":3,"name":"Configuration & Infrastructure","item":"https://foundry.insightdevhub.ro/docs/#configuration-infrastructure"},{"@type":"ListItem","position":4,"name":"Env","item":"https://foundry.insightdevhub.ro/docs/env/"}]}</script>
+</head>
+<body class="is-docs">
+<div class="app" x-data="site" x-on:keydown.window="onKey">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="topbar-inner">
+        <button type="button" class="icon-btn menu-btn" x-cloak x-on:click="toggleDrawer" aria-controls="sidebar" x-bind:aria-expanded="drawerExpanded" aria-label="Open navigation">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+    </button>
+        <a class="brand" href="/" aria-label="Foundry home">
+      <svg class="brand-mark" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><rect width="32" height="32" rx="7" fill="var(--accent)"/><path d="M10 8h13v4h-8.5v3.5H21v4h-6.5V25H10z" fill="#fff"/></svg>
+      <span>Foundry</span>
+    </a>
+    <nav class="topnav" aria-label="Main">
+      <a href="/docs/" aria-current="true">Docs</a>
+      <a href="/docs/installation/#download">Download</a>
+    </nav>
+    <div class="topbar-actions">
+      <button type="button" class="search-btn" x-cloak x-on:click="openSearch" aria-label="Search documentation" aria-keyshortcuts="Control+K Meta+K /">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span class="search-btn-label">Search</span>
+        <kbd class="search-btn-kbd">Ctrl K</kbd>
+      </button>
+      <button type="button" class="icon-btn" x-cloak x-on:click="toggleTheme" x-bind:aria-label="themeLabel" x-bind:title="themeLabel">
+        <svg x-show="isDark" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <svg x-show="isLight" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="sidebar" id="sidebar" x-bind:class="drawerClass" aria-label="Documentation navigation">
+    <nav class="nav">
+    <div class="nav-group">
+    <p class="nav-title">Getting started</p>
+    <ul>
+            <li><a href="/docs/">Introduction</a></li>
+            <li><a href="/docs/installation/">Installation</a></li>
+            <li><a href="/docs/usage/">Usage &amp; exceptions</a></li>
+            <li><a href="/docs/bootstrap/">Bootstrap</a></li>
+            <li><a href="/docs/design-principles/">Design principles</a></li>
+            <li><a href="/docs/php-versions/">PHP versions</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Guides</p>
+    <ul>
+            <li><a href="/docs/form-handling/">Form handling</a></li>
+            <li><a href="/docs/imports-exports/">Imports &amp; exports</a></li>
+            <li><a href="/docs/databases/">Databases</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Errors &amp; Exception Handling</p>
+    <ul>
+            <li><a href="/docs/error-handler/">ErrorHandler</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Native Function Wrappers</p>
+    <ul>
+            <li><a href="/docs/json/">Json</a></li>
+            <li><a href="/docs/file/">File</a></li>
+            <li><a href="/docs/regex/">Regex</a></li>
+            <li><a href="/docs/cast/">Cast</a></li>
+            <li><a href="/docs/encoding/">Encoding</a></li>
+            <li><a href="/docs/upload/">Upload</a></li>
+            <li><a href="/docs/process/">Process</a></li>
+            <li><a href="/docs/zip/">Zip</a></li>
+            <li><a href="/docs/image/">Image</a></li>
+            <li><a href="/docs/ini/">Ini</a></li>
+            <li><a href="/docs/base64/">Base64</a></li>
+            <li><a href="/docs/serializer/">Serializer</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Text, Dates, and Numbers</p>
+    <ul>
+            <li><a href="/docs/str/">Str</a></li>
+            <li><a href="/docs/arr/">Arr</a></li>
+            <li><a href="/docs/date/">Date</a></li>
+            <li><a href="/docs/number/">Number</a></li>
+            <li><a href="/docs/money/">Money</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Validation</p>
+    <ul>
+            <li><a href="/docs/validator/">Validator</a></li>
+            <li><a href="/docs/ro-validator/">RoValidator</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Databases</p>
+    <ul>
+            <li><a href="/docs/mysql/">MySQL</a></li>
+            <li><a href="/docs/oracle/">Oracle</a></li>
+            <li><a href="/docs/sqlite/">SQLite</a></li>
+            <li><a href="/docs/paginator/">Paginator</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Import / Export</p>
+    <ul>
+            <li><a href="/docs/csv/">Csv</a></li>
+            <li><a href="/docs/xlsx/">Xlsx</a></li>
+            <li><a href="/docs/xml/">Xml</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Configuration &amp; Infrastructure</p>
+    <ul>
+            <li><a href="/docs/env/" aria-current="page">Env</a></li>
+            <li><a href="/docs/config/">Config</a></li>
+            <li><a href="/docs/log/">Log</a></li>
+            <li><a href="/docs/http-client/">HttpClient</a></li>
+            <li><a href="/docs/cache/">Cache</a></li>
+            <li><a href="/docs/retry/">Retry</a></li>
+            <li><a href="/docs/rate-limiter/">RateLimiter</a></li>
+            <li><a href="/docs/crypt/">Crypt</a></li>
+            <li><a href="/docs/token/">Token</a></li>
+            <li><a href="/docs/mailer/">Mailer</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Web &amp; HTTP</p>
+    <ul>
+            <li><a href="/docs/request/">Request</a></li>
+            <li><a href="/docs/response/">Response</a></li>
+            <li><a href="/docs/session/">Session</a></li>
+            <li><a href="/docs/csrf/">Csrf</a></li>
+            <li><a href="/docs/view/">View</a></li>
+            <li><a href="/docs/url/">Url</a></li>
+            <li><a href="/docs/security-headers/">SecurityHeaders</a></li>
+            <li><a href="/docs/bot-detection/">BotDetection</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">UI Rendering Helpers</p>
+    <ul>
+            <li><a href="/docs/breadcrumbs/">Breadcrumbs</a></li>
+            <li><a href="/docs/flash/">Flash</a></li>
+            <li><a href="/docs/form-builder/">FormBuilder</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Development Tools</p>
+    <ul>
+            <li><a href="/docs/debug/">Debug</a></li>
+            <li><a href="/docs/timer/">Timer</a></li>
+            <li><a href="/docs/faker/">Faker</a></li>
+          </ul>
+  </div>
+  </nav>
+  </aside>
+  <div class="drawer-backdrop" x-cloak x-show="drawerOpen" x-on:click="closeDrawer"></div>
+
+  <main id="main" class="content" tabindex="-1">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <ol>
+                        <li><a href="/">Home</a></li>
+                                <li><a href="/docs/">Documentation</a></li>
+                                <li><a href="/docs/#configuration-infrastructure">Configuration &amp; Infrastructure</a></li>
+                                <li><span aria-current="page">Env</span></li>
+                      </ol>
+    </nav>
+    
+    <article class="prose doc">
+  <header class="doc-head">
+    <p class="eyebrow"><a href="/docs/#configuration-infrastructure">Configuration &amp; Infrastructure</a></p>
+    <h1>Env</h1>
+    <p class="lead">Loads environment variables from .env files and reads them as typed values. The file syntax is compatible with vlucas/phpdotenv.</p>
+    <ul class="facts" aria-label="Class facts">
+      <li><span>Namespace</span><code>Foundry\Env</code></li>
+      <li><span>File</span><code>Env.php</code></li>
+      <li><span>Version</span><strong>1.1</strong></li>
+      <li><span>Requires</span><strong>PHP 8.3+</strong></li>
+      <li><span>API</span><strong>13 public members</strong></li>
+    </ul>
+  </header>
+  <p>.env syntax:</p>
+<pre class="spec"># comment
+APP_ENV=production
+export DB_HOST=localhost            # &quot;export&quot; is optional; trailing comment
+DB_PASSWORD=                        # empty value
+APP_NAME=&quot;Customer Portal&quot;          # double quotes: escape sequences (\n \t \&quot; \\ \$) and ${VAR}
+REGEX=&apos;^\d+$&apos;                       # single quotes: literal text, no interpolation
+DB_DSN=&quot;mysql:host=${DB_HOST}&quot;      # interpolation from previously defined variables
+CERT=&quot;-----BEGIN-----
+...
+-----END-----&quot;                      # multiline value (enclosed in quotes)</pre>
+<h2 id="rules">Rules<a class="anchor" href="#rules" aria-label="Permalink to this section">#</a></h2>
+<ul><li>variables already present in the environment are NOT overwritten (unless <code>$override</code> = true)</li><li>unquoted values cannot contain whitespace</li><li>a duplicate key in the same file or an undefined ${VAR} throws an exception</li><li>error messages contain the file, line, and variable name, never the value.</li></ul>
+<h2 id="usage">Usage<a class="anchor" href="#usage" aria-label="Permalink to this section">#</a></h2>
+<div class="codeblock" data-lang="php"><div class="codeblock-bar"><span class="codeblock-lang">PHP</span><button type="button" class="copy-btn" data-copy hidden>Copy</button></div><pre><code><span class="t-k">require_once</span> <span class="t-s">&apos;Env.php&apos;</span>;
+<span class="t-k">use</span> <span class="t-C">Foundry\Env</span>;
+
+<span class="t-C">Env</span>::<span class="t-f">load</span>(__DIR__.<span class="t-s">&apos;/.env&apos;</span>);
+<span class="t-C">Env</span>::<span class="t-f">loadIfExists</span>(__DIR__.<span class="t-s">&apos;/.env.local&apos;</span>, override: <span class="t-t">true</span>);
+<span class="t-C">Env</span>::<span class="t-f">required</span>(<span class="t-s">&apos;DB_HOST&apos;</span>, <span class="t-s">&apos;DB_USER&apos;</span>, <span class="t-s">&apos;DB_PASSWORD&apos;</span>);
+
+<span class="t-v">$host</span> = <span class="t-C">Env</span>::<span class="t-t">string</span>(<span class="t-s">&apos;DB_HOST&apos;</span>);
+<span class="t-v">$port</span> = <span class="t-C">Env</span>::<span class="t-t">int</span>(<span class="t-s">&apos;DB_PORT&apos;</span>, <span class="t-n">3306</span>);
+<span class="t-v">$debug</span> = <span class="t-C">Env</span>::<span class="t-t">bool</span>(<span class="t-s">&apos;APP_DEBUG&apos;</span>, <span class="t-t">false</span>);
+<span class="t-v">$hosts</span> = <span class="t-C">Env</span>::<span class="t-k">list</span>(<span class="t-s">&apos;ALLOWED_HOSTS&apos;</span>);            <span class="t-c">// &quot;a.com, b.com&quot; -&gt; [&apos;a.com&apos;, &apos;b.com&apos;]</span>
+<span class="t-v">$env</span> = <span class="t-C">Env</span>::<span class="t-f">oneOf</span>(<span class="t-s">&apos;APP_ENV&apos;</span>, [<span class="t-s">&apos;local&apos;</span>, <span class="t-s">&apos;test&apos;</span>, <span class="t-s">&apos;production&apos;</span>]);</code></pre></div>
+<h2 id="installation">Installation<a class="anchor" href="#installation" aria-label="Permalink to this section">#</a></h2>
+<p>Copy <code>Env.php</code> from the <a href="/docs/installation/#download">download archive</a> into your project and load it (or register the <a href="/docs/installation/#loading-the-classes">autoloader</a>):</p>
+<div class="codeblock" data-lang="php"><div class="codeblock-bar"><span class="codeblock-lang">PHP</span><button type="button" class="copy-btn" data-copy hidden>Copy</button></div><pre><code><span class="t-k">require_once</span> __DIR__.<span class="t-s">&apos;/lib/Utilities/Env.php&apos;</span>;
+
+<span class="t-k">use</span> <span class="t-C">Foundry\Env</span>;</code></pre></div>
+<p class="muted-note">No PHP extensions required beyond a default PHP 8.3+ installation.</p>
+<h2 id="methods">Methods<a class="anchor" href="#methods" aria-label="Permalink to this section">#</a></h2>
+<nav class="method-index" aria-label="Env methods"><ul><li><a href="#method-load"><code>load()</code></a></li><li><a href="#method-loadifexists"><code>loadIfExists()</code></a></li><li><a href="#method-parse"><code>parse()</code></a></li><li><a href="#method-required"><code>required()</code></a></li><li><a href="#method-notempty"><code>notEmpty()</code></a></li><li><a href="#method-has"><code>has()</code></a></li><li><a href="#method-string"><code>string()</code></a></li><li><a href="#method-nullable"><code>nullable()</code></a></li><li><a href="#method-int"><code>int()</code></a></li><li><a href="#method-float"><code>float()</code></a></li><li><a href="#method-bool"><code>bool()</code></a></li><li><a href="#method-list"><code>list()</code></a></li><li><a href="#method-oneof"><code>oneOf()</code></a></li></ul></nav>
+<section class="member" id="method-load" aria-labelledby="method-load-title"><header class="member-head"><h3 id="method-load-title"><code>Env::load()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-load" aria-label="Permalink to load">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">load</span>(<span class="t-t">string</span> <span class="t-v">$path</span>, <span class="t-t">bool</span> <span class="t-v">$override</span> = <span class="t-t">false</span>, <span class="t-t">bool</span> <span class="t-v">$putenv</span> = <span class="t-t">false</span>): <span class="t-k">array</span></code></pre><p>Loads a .env file into <code>$_ENV</code> and <code>$_SERVER</code> (and optionally into <code>getenv()</code>).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$path</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td>The .env file path.</td></tr><tr><td><code>$override</code></td><td><code class="type">bool</code></td><td><code class="value">false</code></td><td>true: overwrites existing environment variables.</td></tr><tr><td><code>$putenv</code></td><td><code class="type">bool</code></td><td><code class="value">false</code></td><td>true: also sets via <code>putenv()</code>, for code relying on <code>getenv()</code>. <code>putenv()</code> is not thread-safe; avoid it in multithreaded environments.</td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">array&lt;string, string&gt;</code> <span>The variables actually set (excluding skipped ones).</span></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the file does not exist or cannot be read.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If the file contains syntax errors.</li></ul></div></section>
+<section class="member" id="method-loadifexists" aria-labelledby="method-loadifexists-title"><header class="member-head"><h3 id="method-loadifexists-title"><code>Env::loadIfExists()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-loadifexists" aria-label="Permalink to loadIfExists">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">loadIfExists</span>(<span class="t-t">string</span> <span class="t-v">$path</span>, <span class="t-t">bool</span> <span class="t-v">$override</span> = <span class="t-t">false</span>, <span class="t-t">bool</span> <span class="t-v">$putenv</span> = <span class="t-t">false</span>): <span class="t-t">bool</span></code></pre><p>Like <code>load()</code>, but without throwing an error if the file does not exist (e.g. optional .env.local). Syntax errors still throw exceptions.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$path</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$override</code></td><td><code class="type">bool</code></td><td><code class="value">false</code></td><td></td></tr><tr><td><code>$putenv</code></td><td><code class="type">bool</code></td><td><code class="value">false</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">bool</code> <span>true if the file existed and was loaded.</span></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the file exists but cannot be read.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If the file contains syntax errors.</li></ul></div></section>
+<section class="member" id="method-parse" aria-labelledby="method-parse-title"><header class="member-head"><h3 id="method-parse-title"><code>Env::parse()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-parse" aria-label="Permalink to parse">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">parse</span>(<span class="t-t">string</span> <span class="t-v">$content</span>, <span class="t-t">string</span> <span class="t-v">$source</span> = <span class="t-s">&apos;.env&apos;</span>): <span class="t-k">array</span></code></pre><p>Parses the contents of a .env file without modifying the environment. ${VAR} references are resolved first from preceding variables in the same content, then from the environment.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$content</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td>The file contents.</td></tr><tr><td><code>$source</code></td><td><code class="type">string</code></td><td><code class="value">&apos;.env&apos;</code></td><td>Source name used in error messages.</td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">array&lt;string, string&gt;</code> <span>The variables, in the order defined in the file.</span></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — On syntax errors.</li></ul></div></section>
+<section class="member" id="method-required" aria-labelledby="method-required-title"><header class="member-head"><h3 id="method-required-title"><code>Env::required()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-required" aria-label="Permalink to required">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">required</span>(<span class="t-t">string</span> ...<span class="t-v">$names</span>): <span class="t-t">void</span></code></pre><p>Verifies that all specified variables exist (empty values are allowed). Reports all missing variables in a single exception.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$names</code></td><td><code class="type">string</code></td><td><span class="pill">variadic</span></td><td></td></tr></tbody></table></div><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If at least one variable is missing.</li></ul></div></section>
+<section class="member" id="method-notempty" aria-labelledby="method-notempty-title"><header class="member-head"><h3 id="method-notempty-title"><code>Env::notEmpty()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-notempty" aria-label="Permalink to notEmpty">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">notEmpty</span>(<span class="t-t">string</span> ...<span class="t-v">$names</span>): <span class="t-t">void</span></code></pre><p>Verifies that all specified variables exist and are not empty (whitespace-only is considered empty).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$names</code></td><td><code class="type">string</code></td><td><span class="pill">variadic</span></td><td></td></tr></tbody></table></div><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If at least one variable is missing or empty.</li></ul></div></section>
+<section class="member" id="method-has" aria-labelledby="method-has-title"><header class="member-head"><h3 id="method-has-title"><code>Env::has()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-has" aria-label="Permalink to has">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">has</span>(<span class="t-t">string</span> <span class="t-v">$name</span>): <span class="t-t">bool</span></code></pre><p>Checks whether an environment variable exists (even if empty).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$name</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">bool</code></dd></dl></section>
+<section class="member" id="method-string" aria-labelledby="method-string-title"><header class="member-head"><h3 id="method-string-title"><code>Env::string()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-string" aria-label="Permalink to string">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-t">string</span>(<span class="t-t">string</span> <span class="t-v">$name</span>, ?<span class="t-t">string</span> <span class="t-v">$default</span> = <span class="t-t">null</span>): <span class="t-t">string</span></code></pre><p>Value as a string. An empty value is returned as &apos;&apos;.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$name</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td>The variable name.</td></tr><tr><td><code>$default</code></td><td><code class="type">string|null</code></td><td><code class="value">null</code></td><td>The fallback value if the variable is missing; null = required.</td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the variable is missing and no <code>$default</code> is provided.</li></ul></div></section>
+<section class="member" id="method-nullable" aria-labelledby="method-nullable-title"><header class="member-head"><h3 id="method-nullable-title"><code>Env::nullable()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-nullable" aria-label="Permalink to nullable">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">nullable</span>(<span class="t-t">string</span> <span class="t-v">$name</span>): ?<span class="t-t">string</span></code></pre><p>Value or null if the variable is missing or empty.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$name</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">?string</code></dd></dl></section>
+<section class="member" id="method-int" aria-labelledby="method-int-title"><header class="member-head"><h3 id="method-int-title"><code>Env::int()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-int" aria-label="Permalink to int">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-t">int</span>(<span class="t-t">string</span> <span class="t-v">$name</span>, ?<span class="t-t">int</span> <span class="t-v">$default</span> = <span class="t-t">null</span>): <span class="t-t">int</span></code></pre><p>Value as an integer (e.g. &quot;3306&quot;, &quot;-1&quot;).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$name</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td>The variable name.</td></tr><tr><td><code>$default</code></td><td><code class="type">int|null</code></td><td><code class="value">null</code></td><td>The fallback value if the variable is missing; null = required.</td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">int</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the variable is missing and no <code>$default</code> is provided.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If the value is not a valid integer.</li></ul></div></section>
+<section class="member" id="method-float" aria-labelledby="method-float-title"><header class="member-head"><h3 id="method-float-title"><code>Env::float()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-float" aria-label="Permalink to float">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-t">float</span>(<span class="t-t">string</span> <span class="t-v">$name</span>, ?<span class="t-t">float</span> <span class="t-v">$default</span> = <span class="t-t">null</span>): <span class="t-t">float</span></code></pre><p>Value as a float, using a dot (e.g. &quot;0.19&quot;, &quot;1e3&quot;). Comma is not accepted.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$name</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$default</code></td><td><code class="type">?float</code></td><td><code class="value">null</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">float</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the variable is missing and no <code>$default</code> is provided.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If the value is not a valid float.</li></ul></div></section>
+<section class="member" id="method-bool" aria-labelledby="method-bool-title"><header class="member-head"><h3 id="method-bool-title"><code>Env::bool()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-bool" aria-label="Permalink to bool">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-t">bool</span>(<span class="t-t">string</span> <span class="t-v">$name</span>, ?<span class="t-t">bool</span> <span class="t-v">$default</span> = <span class="t-t">null</span>): <span class="t-t">bool</span></code></pre><p>Value as a boolean. Accepts (case-insensitively): true/false, 1/0, yes/no, on/off. Any other value results in an error.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$name</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$default</code></td><td><code class="type">?bool</code></td><td><code class="value">null</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">bool</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the variable is missing and no <code>$default</code> is provided.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If the value is not one of the accepted representations.</li></ul></div></section>
+<section class="member" id="method-list" aria-labelledby="method-list-title"><header class="member-head"><h3 id="method-list-title"><code>Env::list()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-list" aria-label="Permalink to list">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-k">list</span>(<span class="t-t">string</span> <span class="t-v">$name</span>, ?<span class="t-k">array</span> <span class="t-v">$default</span> = <span class="t-t">null</span>, <span class="t-t">string</span> <span class="t-v">$separator</span> = <span class="t-s">&apos;,&apos;</span>): <span class="t-k">array</span></code></pre><p>Value as a list: &quot;a, b ,c&quot; -&gt; [<code>&apos;a&apos;</code>, <code>&apos;b&apos;</code>, <code>&apos;c&apos;</code>]. Empty elements are filtered out.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$name</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td>The variable name.</td></tr><tr><td><code>$default</code></td><td><code class="type">list&lt;string&gt;|null</code></td><td><code class="value">null</code></td><td>The fallback list if the variable is missing; null = required.</td></tr><tr><td><code>$separator</code></td><td><code class="type">non-empty-string</code></td><td><code class="value">&apos;,&apos;</code></td><td>The separator.</td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">list&lt;string&gt;</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the variable is missing and no <code>$default</code> is provided.</li></ul></div></section>
+<section class="member" id="method-oneof" aria-labelledby="method-oneof-title"><header class="member-head"><h3 id="method-oneof-title"><code>Env::oneOf()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-oneof" aria-label="Permalink to oneOf">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">oneOf</span>(<span class="t-t">string</span> <span class="t-v">$name</span>, <span class="t-k">array</span> <span class="t-v">$allowed</span>, ?<span class="t-t">string</span> <span class="t-v">$default</span> = <span class="t-t">null</span>): <span class="t-t">string</span></code></pre><p>Value that must match one of the allowed values (strict comparison).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$name</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td>The variable name.</td></tr><tr><td><code>$allowed</code></td><td><code class="type">list&lt;string&gt;</code></td><td><span class="pill pill-req">required</span></td><td>The allowed values.</td></tr><tr><td><code>$default</code></td><td><code class="type">string|null</code></td><td><code class="value">null</code></td><td>The fallback value if the variable is missing; null = required.</td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the variable is missing and no <code>$default</code> is provided.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If the value is not allowed.</li></ul></div></section></article>
+
+        <nav class="pager" aria-label="Previous and next pages">
+            <a class="pager-prev" href="/docs/xml/" rel="prev"><span>Previous</span><strong>Xml</strong></a>
+                  <a class="pager-next" href="/docs/config/" rel="next"><span>Next</span><strong>Config</strong></a>
+          </nav>
+    
+    <div class="page-meta">
+            <span>Last updated <time datetime="2026-11-10T21:51:05+02:00">November 10, 2026</time></span>
+                  <a href="/docs/env.md">View as Markdown</a>
+          </div>
+  </main>
+
+    <aside class="toc" aria-label="On this page">
+    <p class="toc-title">On this page</p>
+    <ul>
+            <li class="toc-l2"><a href="#rules">Rules</a></li>
+            <li class="toc-l2"><a href="#usage">Usage</a></li>
+            <li class="toc-l2"><a href="#installation">Installation</a></li>
+            <li class="toc-l2"><a href="#methods">Methods</a></li>
+            <li class="toc-l3"><a href="#method-load">load()</a></li>
+            <li class="toc-l3"><a href="#method-loadifexists">loadIfExists()</a></li>
+            <li class="toc-l3"><a href="#method-parse">parse()</a></li>
+            <li class="toc-l3"><a href="#method-required">required()</a></li>
+            <li class="toc-l3"><a href="#method-notempty">notEmpty()</a></li>
+            <li class="toc-l3"><a href="#method-has">has()</a></li>
+            <li class="toc-l3"><a href="#method-string">string()</a></li>
+            <li class="toc-l3"><a href="#method-nullable">nullable()</a></li>
+            <li class="toc-l3"><a href="#method-int">int()</a></li>
+            <li class="toc-l3"><a href="#method-float">float()</a></li>
+            <li class="toc-l3"><a href="#method-bool">bool()</a></li>
+            <li class="toc-l3"><a href="#method-list">list()</a></li>
+            <li class="toc-l3"><a href="#method-oneof">oneOf()</a></li>
+          </ul>
+  </aside>
+  </div>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <p><strong>Foundry</strong> — standalone, single-file PHP utility classes. &copy; 2026 · Proprietary license.</p>
+    <nav aria-label="Footer">
+      <a href="/docs/">Documentation</a>
+      <a href="/docs/installation/">Installation</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/sitemap.xml">Sitemap</a>
+    </nav>
+  </div>
+</footer>
+
+<div class="search-modal" x-cloak x-show="searchOpen" role="dialog" aria-modal="true" aria-label="Search documentation" x-on:keydown="onSearchKey">
+  <div class="search-backdrop" x-on:click="closeSearch"></div>
+  <div class="search-panel">
+    <div class="search-field">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <input x-ref="input" type="search" placeholder="Search classes, methods and guides" autocomplete="off" spellcheck="false" aria-label="Search" aria-controls="search-results" aria-autocomplete="list" x-bind:aria-activedescendant="activeId" x-on:input="onInput">
+      <button type="button" class="kbd-btn" x-on:click="closeSearch" aria-label="Close search">Esc</button>
+    </div>
+    <ul id="search-results" class="search-results" role="listbox" aria-label="Results" x-ref="list">
+      <template x-for="item in results" x-bind:key="item.id">
+        <li role="option" x-bind:id="item.id" x-bind:aria-selected="item.selected" x-bind:class="item.cls" x-bind:data-index="item.i" x-on:mousemove="hover" x-on:click="closeSearch">
+          <a x-bind:href="item.u" tabindex="-1">
+            <span class="r-kind" x-text="item.kl"></span>
+            <span class="r-main"><span class="r-title" x-text="item.t"></span><span class="r-desc" x-text="item.d"></span></span>
+            <span class="r-sec" x-text="item.s"></span>
+          </a>
+        </li>
+      </template>
+    </ul>
+    <p class="search-status" x-show="showStatus" x-text="statusText"></p>
+    <div class="search-foot" aria-hidden="true"><span><kbd>↑</kbd><kbd>↓</kbd> navigate</span><span><kbd>Enter</kbd> open</span><span><kbd>Esc</kbd> close</span></div>
+  </div>
+</div>
+</div>
+</body>
+</html>

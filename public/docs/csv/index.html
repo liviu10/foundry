@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Csv — Streaming CSV import and export | Foundry PHP</title>
+<meta name="description" content="PHP Csv class: Streaming reader (auto-detected delimiter, BOM, Windows-1250 support), atomic writer, batch validation import. Standalone, single-file, zero…">
+<link rel="canonical" href="https://foundry.insightdevhub.ro/docs/csv/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f1115">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Foundry">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Csv — Streaming CSV import and export | Foundry PHP">
+<meta property="og:description" content="PHP Csv class: Streaming reader (auto-detected delimiter, BOM, Windows-1250 support), atomic writer, batch validation import. Standalone, single-file, zero…">
+<meta property="og:url" content="https://foundry.insightdevhub.ro/docs/csv/">
+<meta property="og:image" content="https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Foundry — standalone PHP utility classes">
+<meta property="article:modified_time" content="2026-11-12T17:30:02+02:00">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Csv — Streaming CSV import and export | Foundry PHP">
+<meta name="twitter:description" content="PHP Csv class: Streaming reader (auto-detected delimiter, BOM, Windows-1250 support), atomic writer, batch validation import. Standalone, single-file, zero…">
+<meta name="twitter:image" content="https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2">
+<link rel="alternate" type="text/markdown" href="/docs/csv.md" title="Markdown version">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="stylesheet" href="/assets/css/site.css?v=f05442ef0e">
+<script src="/assets/js/theme.js?v=b02059f0fb"></script>
+<script src="/assets/js/app.js?v=02d0b9d9f7" defer></script>
+<script src="/assets/vendor/alpine-csp.min.js?v=820bc95038" defer></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Csv — PHP utility class reference","description":"PHP Csv class: Streaming reader (auto-detected delimiter, BOM, Windows-1250 support), atomic writer, batch validation import. Standalone, single-file, zero…","url":"https://foundry.insightdevhub.ro/docs/csv/","mainEntityOfPage":"https://foundry.insightdevhub.ro/docs/csv/","inLanguage":"en","image":"https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2","isPartOf":{"@type":"WebSite","name":"Foundry","url":"https://foundry.insightdevhub.ro/"},"proficiencyLevel":"Expert","dateModified":"2026-11-12T17:30:02+02:00","about":{"@type":"SoftwareSourceCode","name":"Foundry\\Csv","programmingLanguage":"PHP","runtimePlatform":"PHP 8.3+","version":"1.5"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://foundry.insightdevhub.ro/"},{"@type":"ListItem","position":2,"name":"Documentation","item":"https://foundry.insightdevhub.ro/docs/"},{"@type":"ListItem","position":3,"name":"Import / Export","item":"https://foundry.insightdevhub.ro/docs/#import-export"},{"@type":"ListItem","position":4,"name":"Csv","item":"https://foundry.insightdevhub.ro/docs/csv/"}]}</script>
+</head>
+<body class="is-docs">
+<div class="app" x-data="site" x-on:keydown.window="onKey">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="topbar-inner">
+        <button type="button" class="icon-btn menu-btn" x-cloak x-on:click="toggleDrawer" aria-controls="sidebar" x-bind:aria-expanded="drawerExpanded" aria-label="Open navigation">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+    </button>
+        <a class="brand" href="/" aria-label="Foundry home">
+      <svg class="brand-mark" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><rect width="32" height="32" rx="7" fill="var(--accent)"/><path d="M10 8h13v4h-8.5v3.5H21v4h-6.5V25H10z" fill="#fff"/></svg>
+      <span>Foundry</span>
+    </a>
+    <nav class="topnav" aria-label="Main">
+      <a href="/docs/" aria-current="true">Docs</a>
+      <a href="/docs/installation/#download">Download</a>
+    </nav>
+    <div class="topbar-actions">
+      <button type="button" class="search-btn" x-cloak x-on:click="openSearch" aria-label="Search documentation" aria-keyshortcuts="Control+K Meta+K /">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span class="search-btn-label">Search</span>
+        <kbd class="search-btn-kbd">Ctrl K</kbd>
+      </button>
+      <button type="button" class="icon-btn" x-cloak x-on:click="toggleTheme" x-bind:aria-label="themeLabel" x-bind:title="themeLabel">
+        <svg x-show="isDark" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <svg x-show="isLight" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="sidebar" id="sidebar" x-bind:class="drawerClass" aria-label="Documentation navigation">
+    <nav class="nav">
+    <div class="nav-group">
+    <p class="nav-title">Getting started</p>
+    <ul>
+            <li><a href="/docs/">Introduction</a></li>
+            <li><a href="/docs/installation/">Installation</a></li>
+            <li><a href="/docs/usage/">Usage &amp; exceptions</a></li>
+            <li><a href="/docs/bootstrap/">Bootstrap</a></li>
+            <li><a href="/docs/design-principles/">Design principles</a></li>
+            <li><a href="/docs/php-versions/">PHP versions</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Guides</p>
+    <ul>
+            <li><a href="/docs/form-handling/">Form handling</a></li>
+            <li><a href="/docs/imports-exports/">Imports &amp; exports</a></li>
+            <li><a href="/docs/databases/">Databases</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Errors &amp; Exception Handling</p>
+    <ul>
+            <li><a href="/docs/error-handler/">ErrorHandler</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Native Function Wrappers</p>
+    <ul>
+            <li><a href="/docs/json/">Json</a></li>
+            <li><a href="/docs/file/">File</a></li>
+            <li><a href="/docs/regex/">Regex</a></li>
+            <li><a href="/docs/cast/">Cast</a></li>
+            <li><a href="/docs/encoding/">Encoding</a></li>
+            <li><a href="/docs/upload/">Upload</a></li>
+            <li><a href="/docs/process/">Process</a></li>
+            <li><a href="/docs/zip/">Zip</a></li>
+            <li><a href="/docs/image/">Image</a></li>
+            <li><a href="/docs/ini/">Ini</a></li>
+            <li><a href="/docs/base64/">Base64</a></li>
+            <li><a href="/docs/serializer/">Serializer</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Text, Dates, and Numbers</p>
+    <ul>
+            <li><a href="/docs/str/">Str</a></li>
+            <li><a href="/docs/arr/">Arr</a></li>
+            <li><a href="/docs/date/">Date</a></li>
+            <li><a href="/docs/number/">Number</a></li>
+            <li><a href="/docs/money/">Money</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Validation</p>
+    <ul>
+            <li><a href="/docs/validator/">Validator</a></li>
+            <li><a href="/docs/ro-validator/">RoValidator</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Databases</p>
+    <ul>
+            <li><a href="/docs/mysql/">MySQL</a></li>
+            <li><a href="/docs/oracle/">Oracle</a></li>
+            <li><a href="/docs/sqlite/">SQLite</a></li>
+            <li><a href="/docs/paginator/">Paginator</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Import / Export</p>
+    <ul>
+            <li><a href="/docs/csv/" aria-current="page">Csv</a></li>
+            <li><a href="/docs/xlsx/">Xlsx</a></li>
+            <li><a href="/docs/xml/">Xml</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Configuration &amp; Infrastructure</p>
+    <ul>
+            <li><a href="/docs/env/">Env</a></li>
+            <li><a href="/docs/config/">Config</a></li>
+            <li><a href="/docs/log/">Log</a></li>
+            <li><a href="/docs/http-client/">HttpClient</a></li>
+            <li><a href="/docs/cache/">Cache</a></li>
+            <li><a href="/docs/retry/">Retry</a></li>
+            <li><a href="/docs/rate-limiter/">RateLimiter</a></li>
+            <li><a href="/docs/crypt/">Crypt</a></li>
+            <li><a href="/docs/token/">Token</a></li>
+            <li><a href="/docs/mailer/">Mailer</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Web &amp; HTTP</p>
+    <ul>
+            <li><a href="/docs/request/">Request</a></li>
+            <li><a href="/docs/response/">Response</a></li>
+            <li><a href="/docs/session/">Session</a></li>
+            <li><a href="/docs/csrf/">Csrf</a></li>
+            <li><a href="/docs/view/">View</a></li>
+            <li><a href="/docs/url/">Url</a></li>
+            <li><a href="/docs/security-headers/">SecurityHeaders</a></li>
+            <li><a href="/docs/bot-detection/">BotDetection</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">UI Rendering Helpers</p>
+    <ul>
+            <li><a href="/docs/breadcrumbs/">Breadcrumbs</a></li>
+            <li><a href="/docs/flash/">Flash</a></li>
+            <li><a href="/docs/form-builder/">FormBuilder</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Development Tools</p>
+    <ul>
+            <li><a href="/docs/debug/">Debug</a></li>
+            <li><a href="/docs/timer/">Timer</a></li>
+            <li><a href="/docs/faker/">Faker</a></li>
+          </ul>
+  </div>
+  </nav>
+  </aside>
+  <div class="drawer-backdrop" x-cloak x-show="drawerOpen" x-on:click="closeDrawer"></div>
+
+  <main id="main" class="content" tabindex="-1">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <ol>
+                        <li><a href="/">Home</a></li>
+                                <li><a href="/docs/">Documentation</a></li>
+                                <li><a href="/docs/#import-export">Import / Export</a></li>
+                                <li><span aria-current="page">Csv</span></li>
+                      </ol>
+    </nav>
+    
+    <article class="prose doc">
+  <header class="doc-head">
+    <p class="eyebrow"><a href="/docs/#import-export">Import / Export</a></p>
+    <h1>Csv</h1>
+    <p class="lead">Reading, writing, and importing CSV files, Excel-compatible, engineered for large volumes (millions of rows): entirely streaming-based, inside the consumer&apos;s loop, with constant memory usage.</p>
+    <ul class="facts" aria-label="Class facts">
+      <li><span>Namespace</span><code>Foundry\Csv</code></li>
+      <li><span>File</span><code>Csv.php</code></li>
+      <li><span>Version</span><strong>1.5</strong></li>
+      <li><span>Requires</span><strong>PHP 8.3+</strong> <code class="ext">ext-mbstring</code> <code class="ext">ext-iconv</code></li>
+      <li><span>API</span><strong>10 public members</strong></li>
+    </ul>
+  </header>
+  <h2 id="avoids-pitfalls-of-native-functions">Avoids pitfalls of native functions<a class="anchor" href="#avoids-pitfalls-of-native-functions" aria-label="Permalink to this section">#</a></h2>
+<ul><li><code>fgetcsv()</code> returns false both on EOF and on error; an empty line becomes [null]</li><li>the default <code>&apos;\&apos;</code> escape character of <code>fgetcsv()</code> / <code>fputcsv()</code> corrupts values containing <code>&apos;\&quot;&apos;</code></li><li>Romanian Excel files use <code>&apos;;&apos;</code> as delimiter, include a BOM, and frequently use Windows-1250 encoding</li><li>Excel executes formulas in values (<code>&apos;=HYPERLINK(...)&apos;</code>, CSV injection).</li></ul>
+<p>Reading (read): first row is the header (no empty names or duplicates); delimiter is auto-detected from the header if not provided; BOM is stripped; in non-UTF-8 files, each field that is not valid UTF-8 is converted from the fallback encoding (default Windows-1250), valid UTF-8 fields are kept as they are. A row with a different field count than the header causes an error (trailing empty fields are tolerated). A record longer than 8 MB (typically an unclosed quote) rejects the file before reading, so memory stays bounded.</p>
+<p>Writing (writer / write / download): the writer object receives rows one by one in the consumer&apos;s loop. UTF-8 with BOM and <code>&apos;;&apos;</code> by default (Romanian Excel), CRLF; final file is created atomically only on <code>close()</code>. With append: true, rows are appended to an existing file (for multi-request chunked exports). Values starting with = + - @ are prefixed with &apos; (prevents formula execution).</p>
+<p>Importing (import): one or more files validated against a schema, delivered in batches. Each batch contains valid rows (normalized), detected errors, per-file statistics, and a resume cursor. The consumer writes the batch (e.g. insertMany), saves the cursor, and can stop at any time (e.g. web request timeout limit); import resumes from the cursor without re-reading processed files. Errors report file, row, column, and a stable code; file values never appear in messages.</p>
+<p>Schema: [<code>&apos;column&apos;</code> =&gt; [rules]], where rules can be:</p>
+<pre class="spec">&apos;required&apos; =&gt; true                       mandatory value (after trim)
+&apos;type&apos; =&gt; &apos;string&apos;|&apos;int&apos;|&apos;decimal&apos;|&apos;date&apos;|&apos;bool&apos;   (default &apos;string&apos;)
+&apos;format&apos; =&gt; &apos;d.m.Y&apos; or list of formats   for &apos;date&apos; (default [&apos;d.m.Y&apos;, &apos;Y-m-d&apos;])
+&apos;scale&apos; =&gt; 2, &apos;decimal&apos; =&gt; &apos;,&apos;           for &apos;decimal&apos; (maximum decimals, separator)
+&apos;max&apos; =&gt; 100                             maximum character length
+&apos;pattern&apos; =&gt; &apos;/^\d{13}$/&apos;                regular expression
+&apos;in&apos; =&gt; [&apos;A&apos;, &apos;B&apos;]                       allowed values
+&apos;unique&apos; =&gt; true                         no duplicates across all imported files</pre>
+<p>Normalized values: string trimmed (empty -&gt; null), int, decimal as string <code>&apos;1234.50&apos;</code>, date as <code>&apos;Y-m-d&apos;</code>, bool (1/0, true/false, yes/no, da/nu).</p>
+<p>Uniqueness is tracked in memory, compactly (64-bit hash per value, ~40 MB for 1 million values), up to the maxUnique option. When resuming from a cursor, tracked values are persisted in the file specified via the uniqueFile option.</p>
+<h2 id="usage">Usage<a class="anchor" href="#usage" aria-label="Permalink to this section">#</a></h2>
+<div class="codeblock" data-lang="php"><div class="codeblock-bar"><span class="codeblock-lang">PHP</span><button type="button" class="copy-btn" data-copy hidden>Copy</button></div><pre><code><span class="t-k">require_once</span> <span class="t-s">&apos;Csv.php&apos;</span>;
+<span class="t-k">use</span> <span class="t-C">Foundry\Csv</span>;
+
+<span class="t-k">foreach</span> (<span class="t-C">Csv</span>::<span class="t-f">read</span>(<span class="t-s">&apos;customers.csv&apos;</span>) <span class="t-k">as</span> <span class="t-v">$row</span> =&gt; <span class="t-v">$values</span>) { ... }      <span class="t-c">// $values[&apos;name&apos;]</span>
+
+<span class="t-v">$out</span> = <span class="t-C">Csv</span>::<span class="t-f">writer</span>(<span class="t-s">&apos;report.csv&apos;</span>);                                  <span class="t-c">// header from first row keys</span>
+<span class="t-k">foreach</span> (<span class="t-v">$db</span>-&gt;<span class="t-f">cursor</span>(<span class="t-s">&apos;SELECT ...&apos;</span>) <span class="t-k">as</span> <span class="t-v">$row</span>) {
+    <span class="t-v">$out</span>-&gt;<span class="t-f">add</span>(<span class="t-v">$row</span>);
+}
+<span class="t-v">$out</span>-&gt;<span class="t-f">close</span>();
+
+<span class="t-k">foreach</span> (<span class="t-C">Csv</span>::<span class="t-f">import</span>(<span class="t-v">$files</span>, <span class="t-v">$schema</span>, batchSize: <span class="t-n">5000</span>, cursor: <span class="t-v">$cursor</span>) <span class="t-k">as</span> <span class="t-v">$batch</span>) {
+    <span class="t-v">$db</span>-&gt;<span class="t-f">insertMany</span>(<span class="t-s">&apos;customers&apos;</span>, <span class="t-f">array_column</span>(<span class="t-v">$batch</span>[<span class="t-s">&apos;rows&apos;</span>], <span class="t-s">&apos;data&apos;</span>));
+    <span class="t-v">$report</span> = [...<span class="t-v">$report</span>, ...<span class="t-v">$batch</span>[<span class="t-s">&apos;errors&apos;</span>]];
+    <span class="t-v">$cursor</span> = <span class="t-v">$batch</span>[<span class="t-s">&apos;cursor&apos;</span>];                                     <span class="t-c">// save to resume later</span>
+    <span class="t-k">if</span> (<span class="t-f">microtime</span>(<span class="t-t">true</span>) - <span class="t-v">$start</span> &gt; <span class="t-n">20</span>) {
+        <span class="t-k">break</span>;                                                      <span class="t-c">// next request resumes from here</span>
+    }
+}</code></pre></div>
+<h2 id="installation">Installation<a class="anchor" href="#installation" aria-label="Permalink to this section">#</a></h2>
+<p>Copy <code>Csv.php</code> from the <a href="/docs/installation/#download">download archive</a> into your project and load it (or register the <a href="/docs/installation/#loading-the-classes">autoloader</a>):</p>
+<div class="codeblock" data-lang="php"><div class="codeblock-bar"><span class="codeblock-lang">PHP</span><button type="button" class="copy-btn" data-copy hidden>Copy</button></div><pre><code><span class="t-k">require_once</span> __DIR__.<span class="t-s">&apos;/lib/Utilities/Csv.php&apos;</span>;
+
+<span class="t-k">use</span> <span class="t-C">Foundry\Csv</span>;</code></pre></div>
+<p class="muted-note">Requires the PHP extensions <code>mbstring</code>, <code>iconv</code> (check with <code>php -m</code>).</p>
+<h2 id="methods">Methods<a class="anchor" href="#methods" aria-label="Permalink to this section">#</a></h2>
+<nav class="method-index" aria-label="Csv methods"><ul><li><a href="#method-__destruct"><code>__destruct()</code></a></li><li><a href="#method-read"><code>read()</code></a></li><li><a href="#method-writer"><code>writer()</code></a></li><li><a href="#method-write"><code>write()</code></a></li><li><a href="#method-download"><code>download()</code></a></li><li><a href="#method-downloadfile"><code>downloadFile()</code></a></li><li><a href="#method-add"><code>add()</code></a></li><li><a href="#method-close"><code>close()</code></a></li><li><a href="#method-count"><code>count()</code></a></li><li><a href="#method-import"><code>import()</code></a></li></ul></nav>
+<section class="member" id="method-__destruct" aria-labelledby="method-__destruct-title"><header class="member-head"><h3 id="method-__destruct-title"><code>$csv-&gt;__destruct()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-__destruct" aria-label="Permalink to __destruct">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">__destruct</span>()</code></pre><p>An abandoned file (without <code>close()</code>, e.g. after an exception) does not appear at destination.</p></section>
+<section class="member" id="method-read" aria-labelledby="method-read-title"><header class="member-head"><h3 id="method-read-title"><code>Csv::read()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-read" aria-label="Permalink to read">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">read</span>(<span class="t-t">string</span> <span class="t-v">$path</span>, ?<span class="t-t">string</span> <span class="t-v">$delimiter</span> = <span class="t-t">null</span>, <span class="t-t">string</span> <span class="t-v">$fallbackEncoding</span> = <span class="t-s">&apos;Windows-1250&apos;</span>): <span class="t-C">Generator</span></code></pre><p>File rows as associative arrays with the header from the first row. The generator key is the file row number (the header is row 1).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$path</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$delimiter</code></td><td><code class="type">string|null</code></td><td><code class="value">null</code></td><td>null = auto-detected from header (; , tab |).</td></tr><tr><td><code>$fallbackEncoding</code></td><td><code class="type">string</code></td><td><code class="value">&apos;Windows-1250&apos;</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">Generator&lt;int, array&lt;string, string&gt;&gt;</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the file cannot be read.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If the file is not a CSV, header is invalid, a row has a mismatched field count, or contains invalid bytes in the fallback encoding.</li></ul></div></section>
+<section class="member" id="method-writer" aria-labelledby="method-writer-title"><header class="member-head"><h3 id="method-writer-title"><code>Csv::writer()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-writer" aria-label="Permalink to writer">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">writer</span>(<span class="t-t">string</span> <span class="t-v">$path</span>, ?<span class="t-k">array</span> <span class="t-v">$header</span> = <span class="t-t">null</span>, <span class="t-t">string</span> <span class="t-v">$delimiter</span> = <span class="t-s">&apos;;&apos;</span>, <span class="t-t">bool</span> <span class="t-v">$bom</span> = <span class="t-t">true</span>, <span class="t-t">string</span> <span class="t-v">$dateFormat</span> = <span class="t-s">&apos;Y-m-d H:i:s&apos;</span>, <span class="t-t">bool</span> <span class="t-v">$append</span> = <span class="t-t">false</span>): <span class="t-t">self</span></code></pre><p>A CSV file written row by row: <code>add()</code> in a loop, followed by <code>close()</code>.</p><p>Without <code>$append</code>, rows are written to a temporary file, and <code>$path</code> only appears at <code>close()</code> (atomically). With <code>$append</code>, rows are appended directly to <code>$path</code> (created if missing); for an existing file, <code>$header</code> is required and must match the existing file header.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$path</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$header</code></td><td><code class="type">list&lt;string&gt;|null</code></td><td><code class="value">null</code></td><td>null = keys of the first row.</td></tr><tr><td><code>$delimiter</code></td><td><code class="type">string</code></td><td><code class="value">&apos;;&apos;</code></td><td></td></tr><tr><td><code>$bom</code></td><td><code class="type">bool</code></td><td><code class="value">true</code></td><td></td></tr><tr><td><code>$dateFormat</code></td><td><code class="type">string</code></td><td><code class="value">&apos;Y-m-d H:i:s&apos;</code></td><td></td></tr><tr><td><code>$append</code></td><td><code class="type">bool</code></td><td><code class="value">false</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">Foundry\Csv</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If delimiter or header is invalid.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the file cannot be created.</li></ul></div></section>
+<section class="member" id="method-write" aria-labelledby="method-write-title"><header class="member-head"><h3 id="method-write-title"><code>Csv::write()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-write" aria-label="Permalink to write">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">write</span>(<span class="t-t">string</span> <span class="t-v">$path</span>, <span class="t-t">iterable</span> <span class="t-v">$rows</span>, ?<span class="t-k">array</span> <span class="t-v">$header</span> = <span class="t-t">null</span>, <span class="t-t">string</span> <span class="t-v">$delimiter</span> = <span class="t-s">&apos;;&apos;</span>, <span class="t-t">bool</span> <span class="t-v">$bom</span> = <span class="t-t">true</span>, <span class="t-t">string</span> <span class="t-v">$dateFormat</span> = <span class="t-s">&apos;Y-m-d H:i:s&apos;</span>): <span class="t-t">void</span></code></pre><p>Writes all rows to a file (shorthand for <code>writer()</code> + <code>add()</code> + <code>close()</code>).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$path</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$rows</code></td><td><code class="type">iterable&lt;array&lt;array-key, mixed&gt;&gt;</code></td><td><span class="pill pill-req">required</span></td><td>Associative rows (header = keys of first row) or lists (with <code>$header</code>).</td></tr><tr><td><code>$header</code></td><td><code class="type">list&lt;string&gt;|null</code></td><td><code class="value">null</code></td><td></td></tr><tr><td><code>$delimiter</code></td><td><code class="type">string</code></td><td><code class="value">&apos;;&apos;</code></td><td></td></tr><tr><td><code>$bom</code></td><td><code class="type">bool</code></td><td><code class="value">true</code></td><td></td></tr><tr><td><code>$dateFormat</code></td><td><code class="type">string</code></td><td><code class="value">&apos;Y-m-d H:i:s&apos;</code></td><td></td></tr></tbody></table></div><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If rows do not match the header or contain unsupported types.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the file cannot be written.</li></ul></div></section>
+<section class="member" id="method-download" aria-labelledby="method-download-title"><header class="member-head"><h3 id="method-download-title"><code>Csv::download()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-download" aria-label="Permalink to download">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">download</span>(<span class="t-t">string</span> <span class="t-v">$filename</span>, <span class="t-t">iterable</span> <span class="t-v">$rows</span>, ?<span class="t-k">array</span> <span class="t-v">$header</span> = <span class="t-t">null</span>, <span class="t-t">string</span> <span class="t-v">$delimiter</span> = <span class="t-s">&apos;;&apos;</span>, <span class="t-t">bool</span> <span class="t-v">$bom</span> = <span class="t-t">true</span>, <span class="t-t">string</span> <span class="t-v">$dateFormat</span> = <span class="t-s">&apos;Y-m-d H:i:s&apos;</span>): <span class="t-t">void</span></code></pre><p>Streams rows to the browser as a downloadable file (HTTP headers + streamed content).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$filename</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$rows</code></td><td><code class="type">iterable&lt;array&lt;array-key, mixed&gt;&gt;</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$header</code></td><td><code class="type">list&lt;string&gt;|null</code></td><td><code class="value">null</code></td><td></td></tr><tr><td><code>$delimiter</code></td><td><code class="type">string</code></td><td><code class="value">&apos;;&apos;</code></td><td></td></tr><tr><td><code>$bom</code></td><td><code class="type">bool</code></td><td><code class="value">true</code></td><td></td></tr><tr><td><code>$dateFormat</code></td><td><code class="type">string</code></td><td><code class="value">&apos;Y-m-d H:i:s&apos;</code></td><td></td></tr></tbody></table></div><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.logicexception.php" rel="noopener" target="_blank"><code>LogicException</code></a> — If HTTP headers have already been sent.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If rows do not match the header or contain unsupported types.</li></ul></div></section>
+<section class="member" id="method-downloadfile" aria-labelledby="method-downloadfile-title"><header class="member-head"><h3 id="method-downloadfile-title"><code>Csv::downloadFile()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-downloadfile" aria-label="Permalink to downloadFile">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">downloadFile</span>(<span class="t-t">string</span> <span class="t-v">$path</span>, ?<span class="t-t">string</span> <span class="t-v">$filename</span> = <span class="t-t">null</span>): <span class="t-t">void</span></code></pre><p>Streams a pre-generated file from disk to the browser (e.g. generated via <code>writer()</code> across multiple requests), without loading it into memory.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$path</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$filename</code></td><td><code class="type">?string</code></td><td><code class="value">null</code></td><td></td></tr></tbody></table></div><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the file does not exist or cannot be streamed.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.logicexception.php" rel="noopener" target="_blank"><code>LogicException</code></a> — If HTTP headers have already been sent.</li></ul></div></section>
+<section class="member" id="method-add" aria-labelledby="method-add-title"><header class="member-head"><h3 id="method-add-title"><code>$csv-&gt;add()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-add" aria-label="Permalink to add">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">add</span>(<span class="t-k">array</span> <span class="t-v">$row</span>): <span class="t-t">void</span></code></pre><p>Adds a row: associative (keys = header, in same order) or list (in header order).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$row</code></td><td><code class="type">array&lt;array-key, mixed&gt;</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.logicexception.php" rel="noopener" target="_blank"><code>LogicException</code></a> — If the file is already closed.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If the row does not match the header or contains unsupported types.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If writing fails.</li></ul></div></section>
+<section class="member" id="method-close" aria-labelledby="method-close-title"><header class="member-head"><h3 id="method-close-title"><code>$csv-&gt;close()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-close" aria-label="Permalink to close">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">close</span>(): <span class="t-t">void</span></code></pre><p>Closes the file; without append, the file only now appears at destination. Subsequent calls have no effect.</p><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the file cannot be moved to its destination.</li></ul></div></section>
+<section class="member" id="method-count" aria-labelledby="method-count-title"><header class="member-head"><h3 id="method-count-title"><code>$csv-&gt;count()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-count" aria-label="Permalink to count">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">count</span>(): <span class="t-t">int</span></code></pre><p>Number of added rows (excluding header).</p><dl class="returns"><dt>Returns</dt><dd><code class="type">int</code></dd></dl></section>
+<section class="member" id="method-import" aria-labelledby="method-import-title"><header class="member-head"><h3 id="method-import-title"><code>Csv::import()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-import" aria-label="Permalink to import">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">import</span>(<span class="t-k">array</span> <span class="t-v">$files</span>, <span class="t-k">array</span> <span class="t-v">$schema</span>, <span class="t-k">array</span> <span class="t-v">$options</span> = [], <span class="t-t">int</span> <span class="t-v">$batchSize</span> = <span class="t-n">1000</span>, ?<span class="t-k">array</span> <span class="t-v">$cursor</span> = <span class="t-t">null</span>): <span class="t-C">Generator</span></code></pre><p>Imports one or more files validated and normalized according to schema, in batches.</p><p>Each batch has at most <code>$batchSize</code> read rows and contains: rows    valid rows: [<code>&apos;file&apos;</code> =&gt; name, <code>&apos;row&apos;</code> =&gt; number, <code>&apos;data&apos;</code> =&gt; [column =&gt; value]] errors  errors found in the batch: [<code>&apos;file&apos;</code>, <code>&apos;row&apos;</code>, <code>&apos;column&apos;</code>, <code>&apos;code&apos;</code>, <code>&apos;message&apos;</code>] files   cumulative statistics: [name =&gt; [<code>&apos;status&apos;</code> =&gt; ok|invalid|unreadable, <code>&apos;rows&apos;</code>, <code>&apos;valid&apos;</code>, <code>&apos;errors&apos;</code>]] cursor  position after batch (JSON-serializable array); passed back into <code>$cursor</code> to resume done    true on the last batch (which may have empty rows) valid   no errors encountered so far (on done: across the entire import)</p><p>Parameter validation is performed immediately; files are only read as the generator progresses.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$files</code></td><td><code class="type">array&lt;array-key, string&gt;</code></td><td><span class="pill pill-req">required</span></td><td>File paths; with string keys, the key is the display name (e.g. original uploaded file name).</td></tr><tr><td><code>$schema</code></td><td><code class="type">array&lt;string, array&lt;string, mixed&gt;&gt;</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$options</code></td><td><code class="type">array{delimiter?: string|null, fallbackEncoding?: string, allowExtraColumns?: bool, maxErrors?: int, uniqueFile?: string|null, maxUnique?: int}</code></td><td><code class="value">[]</code></td><td>maxErrors: errors listed per file (remaining are only counted); uniqueFile: file for tracking unique values (required when resuming if schema uses <code>&apos;unique&apos;</code>); maxUnique: limit of tracked unique values (OverflowException above it).</td></tr><tr><td><code>$batchSize</code></td><td><code class="type">int</code></td><td><code class="value">1000</code></td><td></td></tr><tr><td><code>$cursor</code></td><td><code class="type">array&lt;string, mixed&gt;|null</code></td><td><code class="value">null</code></td><td>Cursor of the last processed batch, to resume.</td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">Generator&lt;int, array{rows: list&lt;array{file: string, row: int, data: array&lt;string, mixed&gt;}&gt;, errors: list&lt;array{file: string, row: int|null, column: string|null, code: string, message: string}&gt;, files: array&lt;string, array{status: string, rows: int, valid: int, errors: int}&gt;, cursor: array&lt;string, mixed&gt;, done: bool, valid: bool}&gt;</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If schema, options, file list, or cursor are invalid.</li></ul></div></section></article>
+
+        <nav class="pager" aria-label="Previous and next pages">
+            <a class="pager-prev" href="/docs/paginator/" rel="prev"><span>Previous</span><strong>Paginator</strong></a>
+                  <a class="pager-next" href="/docs/xlsx/" rel="next"><span>Next</span><strong>Xlsx</strong></a>
+          </nav>
+    
+    <div class="page-meta">
+            <span>Last updated <time datetime="2026-11-12T17:30:02+02:00">November 12, 2026</time></span>
+                  <a href="/docs/csv.md">View as Markdown</a>
+          </div>
+  </main>
+
+    <aside class="toc" aria-label="On this page">
+    <p class="toc-title">On this page</p>
+    <ul>
+            <li class="toc-l2"><a href="#avoids-pitfalls-of-native-functions">Avoids pitfalls of native functions</a></li>
+            <li class="toc-l2"><a href="#usage">Usage</a></li>
+            <li class="toc-l2"><a href="#installation">Installation</a></li>
+            <li class="toc-l2"><a href="#methods">Methods</a></li>
+            <li class="toc-l3"><a href="#method-__destruct">__destruct()</a></li>
+            <li class="toc-l3"><a href="#method-read">read()</a></li>
+            <li class="toc-l3"><a href="#method-writer">writer()</a></li>
+            <li class="toc-l3"><a href="#method-write">write()</a></li>
+            <li class="toc-l3"><a href="#method-download">download()</a></li>
+            <li class="toc-l3"><a href="#method-downloadfile">downloadFile()</a></li>
+            <li class="toc-l3"><a href="#method-add">add()</a></li>
+            <li class="toc-l3"><a href="#method-close">close()</a></li>
+            <li class="toc-l3"><a href="#method-count">count()</a></li>
+            <li class="toc-l3"><a href="#method-import">import()</a></li>
+          </ul>
+  </aside>
+  </div>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <p><strong>Foundry</strong> — standalone, single-file PHP utility classes. &copy; 2026 · Proprietary license.</p>
+    <nav aria-label="Footer">
+      <a href="/docs/">Documentation</a>
+      <a href="/docs/installation/">Installation</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/sitemap.xml">Sitemap</a>
+    </nav>
+  </div>
+</footer>
+
+<div class="search-modal" x-cloak x-show="searchOpen" role="dialog" aria-modal="true" aria-label="Search documentation" x-on:keydown="onSearchKey">
+  <div class="search-backdrop" x-on:click="closeSearch"></div>
+  <div class="search-panel">
+    <div class="search-field">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <input x-ref="input" type="search" placeholder="Search classes, methods and guides" autocomplete="off" spellcheck="false" aria-label="Search" aria-controls="search-results" aria-autocomplete="list" x-bind:aria-activedescendant="activeId" x-on:input="onInput">
+      <button type="button" class="kbd-btn" x-on:click="closeSearch" aria-label="Close search">Esc</button>
+    </div>
+    <ul id="search-results" class="search-results" role="listbox" aria-label="Results" x-ref="list">
+      <template x-for="item in results" x-bind:key="item.id">
+        <li role="option" x-bind:id="item.id" x-bind:aria-selected="item.selected" x-bind:class="item.cls" x-bind:data-index="item.i" x-on:mousemove="hover" x-on:click="closeSearch">
+          <a x-bind:href="item.u" tabindex="-1">
+            <span class="r-kind" x-text="item.kl"></span>
+            <span class="r-main"><span class="r-title" x-text="item.t"></span><span class="r-desc" x-text="item.d"></span></span>
+            <span class="r-sec" x-text="item.s"></span>
+          </a>
+        </li>
+      </template>
+    </ul>
+    <p class="search-status" x-show="showStatus" x-text="statusText"></p>
+    <div class="search-foot" aria-hidden="true"><span><kbd>↑</kbd><kbd>↓</kbd> navigate</span><span><kbd>Enter</kbd> open</span><span><kbd>Esc</kbd> close</span></div>
+  </div>
+</div>
+</div>
+</body>
+</html>

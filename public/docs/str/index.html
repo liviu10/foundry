@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Str — UTF-8 strings, slugs and masking | Foundry PHP</title>
+<meta name="description" content="PHP Str class: URL slugging, diacritic stripping, data masking (credit card, IBAN, email), case conversions, e() helper; fully UTF-8 compliant. Standalone…">
+<link rel="canonical" href="https://foundry.insightdevhub.ro/docs/str/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f1115">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Foundry">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Str — UTF-8 strings, slugs and masking | Foundry PHP">
+<meta property="og:description" content="PHP Str class: URL slugging, diacritic stripping, data masking (credit card, IBAN, email), case conversions, e() helper; fully UTF-8 compliant. Standalone…">
+<meta property="og:url" content="https://foundry.insightdevhub.ro/docs/str/">
+<meta property="og:image" content="https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Foundry — standalone PHP utility classes">
+<meta property="article:modified_time" content="2026-11-12T17:30:02+02:00">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Str — UTF-8 strings, slugs and masking | Foundry PHP">
+<meta name="twitter:description" content="PHP Str class: URL slugging, diacritic stripping, data masking (credit card, IBAN, email), case conversions, e() helper; fully UTF-8 compliant. Standalone…">
+<meta name="twitter:image" content="https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2">
+<link rel="alternate" type="text/markdown" href="/docs/str.md" title="Markdown version">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="stylesheet" href="/assets/css/site.css?v=f05442ef0e">
+<script src="/assets/js/theme.js?v=b02059f0fb"></script>
+<script src="/assets/js/app.js?v=02d0b9d9f7" defer></script>
+<script src="/assets/vendor/alpine-csp.min.js?v=820bc95038" defer></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Str — PHP utility class reference","description":"PHP Str class: URL slugging, diacritic stripping, data masking (credit card, IBAN, email), case conversions, e() helper; fully UTF-8 compliant. Standalone…","url":"https://foundry.insightdevhub.ro/docs/str/","mainEntityOfPage":"https://foundry.insightdevhub.ro/docs/str/","inLanguage":"en","image":"https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2","isPartOf":{"@type":"WebSite","name":"Foundry","url":"https://foundry.insightdevhub.ro/"},"proficiencyLevel":"Expert","dateModified":"2026-11-12T17:30:02+02:00","about":{"@type":"SoftwareSourceCode","name":"Foundry\\Str","programmingLanguage":"PHP","runtimePlatform":"PHP 8.3+","version":"1.1"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://foundry.insightdevhub.ro/"},{"@type":"ListItem","position":2,"name":"Documentation","item":"https://foundry.insightdevhub.ro/docs/"},{"@type":"ListItem","position":3,"name":"Text, Dates, and Numbers","item":"https://foundry.insightdevhub.ro/docs/#text-dates-and-numbers"},{"@type":"ListItem","position":4,"name":"Str","item":"https://foundry.insightdevhub.ro/docs/str/"}]}</script>
+</head>
+<body class="is-docs">
+<div class="app" x-data="site" x-on:keydown.window="onKey">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="topbar-inner">
+        <button type="button" class="icon-btn menu-btn" x-cloak x-on:click="toggleDrawer" aria-controls="sidebar" x-bind:aria-expanded="drawerExpanded" aria-label="Open navigation">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+    </button>
+        <a class="brand" href="/" aria-label="Foundry home">
+      <svg class="brand-mark" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><rect width="32" height="32" rx="7" fill="var(--accent)"/><path d="M10 8h13v4h-8.5v3.5H21v4h-6.5V25H10z" fill="#fff"/></svg>
+      <span>Foundry</span>
+    </a>
+    <nav class="topnav" aria-label="Main">
+      <a href="/docs/" aria-current="true">Docs</a>
+      <a href="/docs/installation/#download">Download</a>
+    </nav>
+    <div class="topbar-actions">
+      <button type="button" class="search-btn" x-cloak x-on:click="openSearch" aria-label="Search documentation" aria-keyshortcuts="Control+K Meta+K /">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span class="search-btn-label">Search</span>
+        <kbd class="search-btn-kbd">Ctrl K</kbd>
+      </button>
+      <button type="button" class="icon-btn" x-cloak x-on:click="toggleTheme" x-bind:aria-label="themeLabel" x-bind:title="themeLabel">
+        <svg x-show="isDark" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <svg x-show="isLight" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="sidebar" id="sidebar" x-bind:class="drawerClass" aria-label="Documentation navigation">
+    <nav class="nav">
+    <div class="nav-group">
+    <p class="nav-title">Getting started</p>
+    <ul>
+            <li><a href="/docs/">Introduction</a></li>
+            <li><a href="/docs/installation/">Installation</a></li>
+            <li><a href="/docs/usage/">Usage &amp; exceptions</a></li>
+            <li><a href="/docs/bootstrap/">Bootstrap</a></li>
+            <li><a href="/docs/design-principles/">Design principles</a></li>
+            <li><a href="/docs/php-versions/">PHP versions</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Guides</p>
+    <ul>
+            <li><a href="/docs/form-handling/">Form handling</a></li>
+            <li><a href="/docs/imports-exports/">Imports &amp; exports</a></li>
+            <li><a href="/docs/databases/">Databases</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Errors &amp; Exception Handling</p>
+    <ul>
+            <li><a href="/docs/error-handler/">ErrorHandler</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Native Function Wrappers</p>
+    <ul>
+            <li><a href="/docs/json/">Json</a></li>
+            <li><a href="/docs/file/">File</a></li>
+            <li><a href="/docs/regex/">Regex</a></li>
+            <li><a href="/docs/cast/">Cast</a></li>
+            <li><a href="/docs/encoding/">Encoding</a></li>
+            <li><a href="/docs/upload/">Upload</a></li>
+            <li><a href="/docs/process/">Process</a></li>
+            <li><a href="/docs/zip/">Zip</a></li>
+            <li><a href="/docs/image/">Image</a></li>
+            <li><a href="/docs/ini/">Ini</a></li>
+            <li><a href="/docs/base64/">Base64</a></li>
+            <li><a href="/docs/serializer/">Serializer</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Text, Dates, and Numbers</p>
+    <ul>
+            <li><a href="/docs/str/" aria-current="page">Str</a></li>
+            <li><a href="/docs/arr/">Arr</a></li>
+            <li><a href="/docs/date/">Date</a></li>
+            <li><a href="/docs/number/">Number</a></li>
+            <li><a href="/docs/money/">Money</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Validation</p>
+    <ul>
+            <li><a href="/docs/validator/">Validator</a></li>
+            <li><a href="/docs/ro-validator/">RoValidator</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Databases</p>
+    <ul>
+            <li><a href="/docs/mysql/">MySQL</a></li>
+            <li><a href="/docs/oracle/">Oracle</a></li>
+            <li><a href="/docs/sqlite/">SQLite</a></li>
+            <li><a href="/docs/paginator/">Paginator</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Import / Export</p>
+    <ul>
+            <li><a href="/docs/csv/">Csv</a></li>
+            <li><a href="/docs/xlsx/">Xlsx</a></li>
+            <li><a href="/docs/xml/">Xml</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Configuration &amp; Infrastructure</p>
+    <ul>
+            <li><a href="/docs/env/">Env</a></li>
+            <li><a href="/docs/config/">Config</a></li>
+            <li><a href="/docs/log/">Log</a></li>
+            <li><a href="/docs/http-client/">HttpClient</a></li>
+            <li><a href="/docs/cache/">Cache</a></li>
+            <li><a href="/docs/retry/">Retry</a></li>
+            <li><a href="/docs/rate-limiter/">RateLimiter</a></li>
+            <li><a href="/docs/crypt/">Crypt</a></li>
+            <li><a href="/docs/token/">Token</a></li>
+            <li><a href="/docs/mailer/">Mailer</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Web &amp; HTTP</p>
+    <ul>
+            <li><a href="/docs/request/">Request</a></li>
+            <li><a href="/docs/response/">Response</a></li>
+            <li><a href="/docs/session/">Session</a></li>
+            <li><a href="/docs/csrf/">Csrf</a></li>
+            <li><a href="/docs/view/">View</a></li>
+            <li><a href="/docs/url/">Url</a></li>
+            <li><a href="/docs/security-headers/">SecurityHeaders</a></li>
+            <li><a href="/docs/bot-detection/">BotDetection</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">UI Rendering Helpers</p>
+    <ul>
+            <li><a href="/docs/breadcrumbs/">Breadcrumbs</a></li>
+            <li><a href="/docs/flash/">Flash</a></li>
+            <li><a href="/docs/form-builder/">FormBuilder</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Development Tools</p>
+    <ul>
+            <li><a href="/docs/debug/">Debug</a></li>
+            <li><a href="/docs/timer/">Timer</a></li>
+            <li><a href="/docs/faker/">Faker</a></li>
+          </ul>
+  </div>
+  </nav>
+  </aside>
+  <div class="drawer-backdrop" x-cloak x-show="drawerOpen" x-on:click="closeDrawer"></div>
+
+  <main id="main" class="content" tabindex="-1">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <ol>
+                        <li><a href="/">Home</a></li>
+                                <li><a href="/docs/">Documentation</a></li>
+                                <li><a href="/docs/#text-dates-and-numbers">Text, Dates, and Numbers</a></li>
+                                <li><span aria-current="page">Str</span></li>
+                      </ol>
+    </nav>
+    
+    <article class="prose doc">
+  <header class="doc-head">
+    <p class="eyebrow"><a href="/docs/#text-dates-and-numbers">Text, Dates, and Numbers</a></p>
+    <h1>Str</h1>
+    <p class="lead">UTF-8 text operations: slugs, diacritic removal, truncation, casing conversions (camelCase, snake_case, etc.), masking, and substring extraction between delimiters.</p>
+    <ul class="facts" aria-label="Class facts">
+      <li><span>Namespace</span><code>Foundry\Str</code></li>
+      <li><span>File</span><code>Str.php</code></li>
+      <li><span>Version</span><strong>1.1</strong></li>
+      <li><span>Requires</span><strong>PHP 8.3+</strong> <code class="ext">ext-mbstring</code></li>
+      <li><span>API</span><strong>21 public members</strong></li>
+    </ul>
+  </header>
+  <p>All methods operate on characters rather than bytes: <code>limit(&apos;Iasi&apos;, 2)</code> will not split a multibyte Romanian character in half. Invalid UTF-8 text throws an exception (error message contains only length, not raw text).</p>
+<p>Diacritics are removed using an internal translation table (Romanian, including comma/cedilla variants, plus common characters across European languages), ensuring results are independent of the intl extension or operating system (iconv //TRANSLIT behaves differently across Windows and Linux).</p>
+<p>This file also defines the <code>e()</code> helper function for HTML escaping.</p>
+<h2 id="usage">Usage<a class="anchor" href="#usage" aria-label="Permalink to this section">#</a></h2>
+<div class="codeblock" data-lang="php"><div class="codeblock-bar"><span class="codeblock-lang">PHP</span><button type="button" class="copy-btn" data-copy hidden>Copy</button></div><pre><code><span class="t-k">require_once</span> <span class="t-s">&apos;Str.php&apos;</span>;
+<span class="t-k">use</span> <span class="t-C">Foundry\Str</span>;
+<span class="t-k">use</span> <span class="t-k">function</span> <span class="t-C">Foundry\e</span>;
+
+<span class="t-v">$slug</span> = <span class="t-C">Str</span>::<span class="t-f">slug</span>(<span class="t-v">$title</span>);                       <span class="t-c">// &apos;Situatia platilor - 2026&apos; -&gt; &apos;situatia-platilor-2026&apos;</span>
+<span class="t-v">$short</span> = <span class="t-C">Str</span>::<span class="t-f">limit</span>(<span class="t-v">$description</span>, <span class="t-n">100</span>);
+<span class="t-v">$card</span> = <span class="t-C">Str</span>::<span class="t-f">mask</span>(<span class="t-v">$cardNumber</span>, <span class="t-s">&apos;*&apos;</span>, <span class="t-n">0</span>, -<span class="t-n">4</span>);      <span class="t-c">// &apos;************1111&apos;</span>
+<span class="t-v">$column</span> = <span class="t-C">Str</span>::<span class="t-f">snake</span>(<span class="t-s">&apos;createdAt&apos;</span>);               <span class="t-c">// &apos;created_at&apos;</span>
+<span class="t-k">echo</span> <span class="t-s">&apos;&lt;td&gt;&apos;</span>.<span class="t-f">e</span>(<span class="t-v">$row</span>[<span class="t-s">&apos;name&apos;</span>]).<span class="t-s">&apos;&lt;/td&gt;&apos;</span>;</code></pre></div>
+<h2 id="installation">Installation<a class="anchor" href="#installation" aria-label="Permalink to this section">#</a></h2>
+<p>Copy <code>Str.php</code> from the <a href="/docs/installation/#download">download archive</a> into your project and load it (or register the <a href="/docs/installation/#loading-the-classes">autoloader</a>):</p>
+<div class="codeblock" data-lang="php"><div class="codeblock-bar"><span class="codeblock-lang">PHP</span><button type="button" class="copy-btn" data-copy hidden>Copy</button></div><pre><code><span class="t-k">require_once</span> __DIR__.<span class="t-s">&apos;/lib/Utilities/Str.php&apos;</span>;
+
+<span class="t-k">use</span> <span class="t-C">Foundry\Str</span>;
+<span class="t-k">use</span> <span class="t-k">function</span> <span class="t-C">Foundry\e</span>;</code></pre></div>
+<p class="muted-note">Requires the PHP extension <code>mbstring</code> (check with <code>php -m</code>).</p>
+<h2 id="methods">Methods<a class="anchor" href="#methods" aria-label="Permalink to this section">#</a></h2>
+<nav class="method-index" aria-label="Str methods"><ul><li><a href="#method-slug"><code>slug()</code></a></li><li><a href="#method-removediacritics"><code>removeDiacritics()</code></a></li><li><a href="#method-limit"><code>limit()</code></a></li><li><a href="#method-words"><code>words()</code></a></li><li><a href="#method-camel"><code>camel()</code></a></li><li><a href="#method-studly"><code>studly()</code></a></li><li><a href="#method-snake"><code>snake()</code></a></li><li><a href="#method-kebab"><code>kebab()</code></a></li><li><a href="#method-mask"><code>mask()</code></a></li><li><a href="#method-random"><code>random()</code></a></li><li><a href="#method-between"><code>between()</code></a></li><li><a href="#method-before"><code>before()</code></a></li><li><a href="#method-beforelast"><code>beforeLast()</code></a></li><li><a href="#method-after"><code>after()</code></a></li><li><a href="#method-afterlast"><code>afterLast()</code></a></li><li><a href="#method-squish"><code>squish()</code></a></li><li><a href="#method-padleft"><code>padLeft()</code></a></li><li><a href="#method-padright"><code>padRight()</code></a></li><li><a href="#method-ucfirst"><code>ucfirst()</code></a></li><li><a href="#method-e"><code>e()</code></a></li></ul></nav>
+<section class="member" id="method-slug" aria-labelledby="method-slug-title"><header class="member-head"><h3 id="method-slug-title"><code>Str::slug()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-slug" aria-label="Permalink to slug">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">slug</span>(<span class="t-t">string</span> <span class="t-v">$text</span>, <span class="t-t">string</span> <span class="t-v">$separator</span> = <span class="t-s">&apos;-&apos;</span>): <span class="t-t">string</span></code></pre><p>URL- and filename-safe slug: lowercase ASCII letters, digits, and separator. Characters without an ASCII equivalent (e.g. Cyrillic) are removed.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$text</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$separator</code></td><td><code class="type">string</code></td><td><code class="value">&apos;-&apos;</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If separator is empty.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If string is not valid UTF-8.</li></ul></div></section>
+<section class="member" id="method-removediacritics" aria-labelledby="method-removediacritics-title"><header class="member-head"><h3 id="method-removediacritics-title"><code>Str::removeDiacritics()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-removediacritics" aria-label="Permalink to removeDiacritics">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">removeDiacritics</span>(<span class="t-t">string</span> <span class="t-v">$text</span>): <span class="t-t">string</span></code></pre><p>Replaces accented letters with their ASCII equivalents (s with comma and s with cedilla -&gt; s, a with breve -&gt; a, German ss -&gt; ss). Other characters remain unchanged.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$text</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If string is not valid UTF-8.</li></ul></div></section>
+<section class="member" id="method-limit" aria-labelledby="method-limit-title"><header class="member-head"><h3 id="method-limit-title"><code>Str::limit()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-limit" aria-label="Permalink to limit">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">limit</span>(<span class="t-t">string</span> <span class="t-v">$text</span>, <span class="t-t">int</span> <span class="t-v">$limit</span>, <span class="t-t">string</span> <span class="t-v">$end</span> = <span class="t-s">&apos;...&apos;</span>): <span class="t-t">string</span></code></pre><p>Truncates string to <code>$limit</code> characters and appends <code>$end</code> if shortened. <code>$end</code> is not included in the limit count.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$text</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$limit</code></td><td><code class="type">int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$end</code></td><td><code class="type">string</code></td><td><code class="value">&apos;...&apos;</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If <code>$limit</code> is negative.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If string is not valid UTF-8.</li></ul></div></section>
+<section class="member" id="method-words" aria-labelledby="method-words-title"><header class="member-head"><h3 id="method-words-title"><code>Str::words()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-words" aria-label="Permalink to words">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">words</span>(<span class="t-t">string</span> <span class="t-v">$text</span>, <span class="t-t">int</span> <span class="t-v">$words</span>, <span class="t-t">string</span> <span class="t-v">$end</span> = <span class="t-s">&apos;...&apos;</span>): <span class="t-t">string</span></code></pre><p>Retains the first <code>$words</code> words and appends <code>$end</code> if the string was shortened.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$text</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$words</code></td><td><code class="type">int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$end</code></td><td><code class="type">string</code></td><td><code class="value">&apos;...&apos;</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If <code>$words</code> is less than 1.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If string is not valid UTF-8.</li></ul></div></section>
+<section class="member" id="method-camel" aria-labelledby="method-camel-title"><header class="member-head"><h3 id="method-camel-title"><code>Str::camel()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-camel" aria-label="Permalink to camel">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">camel</span>(<span class="t-t">string</span> <span class="t-v">$text</span>): <span class="t-t">string</span></code></pre><p><code>&apos;user_name&apos;</code>, <code>&apos;user-name&apos;</code>, <code>&apos;User Name&apos;</code> -&gt; <code>&apos;userName&apos;</code>.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$text</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If string is not valid UTF-8.</li></ul></div></section>
+<section class="member" id="method-studly" aria-labelledby="method-studly-title"><header class="member-head"><h3 id="method-studly-title"><code>Str::studly()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-studly" aria-label="Permalink to studly">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">studly</span>(<span class="t-t">string</span> <span class="t-v">$text</span>): <span class="t-t">string</span></code></pre><p><code>&apos;user_name&apos;</code>, <code>&apos;userName&apos;</code>, <code>&apos;user name&apos;</code> -&gt; <code>&apos;UserName&apos;</code>. Acronyms are treated as words: <code>&apos;XMLHttpRequest&apos;</code> -&gt; <code>&apos;XmlHttpRequest&apos;</code>.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$text</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If string is not valid UTF-8.</li></ul></div></section>
+<section class="member" id="method-snake" aria-labelledby="method-snake-title"><header class="member-head"><h3 id="method-snake-title"><code>Str::snake()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-snake" aria-label="Permalink to snake">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">snake</span>(<span class="t-t">string</span> <span class="t-v">$text</span>, <span class="t-t">string</span> <span class="t-v">$delimiter</span> = <span class="t-s">&apos;_&apos;</span>): <span class="t-t">string</span></code></pre><p><code>&apos;userName&apos;</code>, <code>&apos;UserName&apos;</code>, <code>&apos;user name&apos;</code> -&gt; <code>&apos;user_name&apos;</code>; <code>&apos;XMLHttpRequest&apos;</code> -&gt; <code>&apos;xml_http_request&apos;</code>.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$text</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$delimiter</code></td><td><code class="type">string</code></td><td><code class="value">&apos;_&apos;</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If string is not valid UTF-8.</li></ul></div></section>
+<section class="member" id="method-kebab" aria-labelledby="method-kebab-title"><header class="member-head"><h3 id="method-kebab-title"><code>Str::kebab()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-kebab" aria-label="Permalink to kebab">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">kebab</span>(<span class="t-t">string</span> <span class="t-v">$text</span>): <span class="t-t">string</span></code></pre><p><code>&apos;userName&apos;</code>, <code>&apos;user_name&apos;</code> -&gt; <code>&apos;user-name&apos;</code>.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$text</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If string is not valid UTF-8.</li></ul></div></section>
+<section class="member" id="method-mask" aria-labelledby="method-mask-title"><header class="member-head"><h3 id="method-mask-title"><code>Str::mask()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-mask" aria-label="Permalink to mask">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">mask</span>(<span class="t-t">string</span> <span class="t-v">$text</span>, <span class="t-t">string</span> <span class="t-v">$character</span>, <span class="t-t">int</span> <span class="t-v">$index</span>, ?<span class="t-t">int</span> <span class="t-v">$length</span> = <span class="t-t">null</span>): <span class="t-t">string</span></code></pre><p>Replaces a portion of the string with <code>$character</code>, preserving length. Negative <code>$index</code> counts from the end; null <code>$length</code> masks to the end; negative leaves trailing characters visible.</p><p><a class="code-link" href="/docs/str/#method-mask"><code>Str::mask(&apos;4111111111111111&apos;, &apos;*&apos;, 0, -4)</code></a>  -&gt; <code>&apos;************1111&apos;</code></p><p><a class="code-link" href="/docs/str/#method-mask"><code>Str::mask(&apos;ion@exemplu.ro&apos;, &apos;*&apos;, 1, 2)</code></a>     -&gt; <code>&apos;i**@exemplu.ro&apos;</code></p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$text</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$character</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$index</code></td><td><code class="type">int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$length</code></td><td><code class="type">?int</code></td><td><code class="value">null</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If <code>$character</code> is not exactly one character.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If string is not valid UTF-8.</li></ul></div></section>
+<section class="member" id="method-random" aria-labelledby="method-random-title"><header class="member-head"><h3 id="method-random-title"><code>Str::random()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-random" aria-label="Permalink to random">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">random</span>(<span class="t-t">int</span> <span class="t-v">$length</span> = <span class="t-n">16</span>): <span class="t-t">string</span></code></pre><p>Cryptographically secure random alphanumeric string (random_int). For security tokens, <a class="code-link" href="/docs/token/#method-random"><code>Token::random()</code></a> is recommended.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$length</code></td><td><code class="type">int</code></td><td><code class="value">16</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If <code>$length</code> is less than 1.</li></ul></div></section>
+<section class="member" id="method-between" aria-labelledby="method-between-title"><header class="member-head"><h3 id="method-between-title"><code>Str::between()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-between" aria-label="Permalink to between">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">between</span>(<span class="t-t">string</span> <span class="t-v">$text</span>, <span class="t-t">string</span> <span class="t-v">$from</span>, <span class="t-t">string</span> <span class="t-v">$to</span>): <span class="t-t">string</span></code></pre><p>Extracts text between the first occurrence of <code>$from</code> and the next occurrence of <code>$to</code>.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$text</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$from</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$to</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If a delimiter is empty.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If a delimiter is not found in the string.</li></ul></div></section>
+<section class="member" id="method-before" aria-labelledby="method-before-title"><header class="member-head"><h3 id="method-before-title"><code>Str::before()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-before" aria-label="Permalink to before">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">before</span>(<span class="t-t">string</span> <span class="t-v">$text</span>, <span class="t-t">string</span> <span class="t-v">$search</span>): <span class="t-t">string</span></code></pre><p>Extracts text before the first occurrence of <code>$search</code>.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$text</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$search</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If <code>$search</code> is empty.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If <code>$search</code> is not found in the string.</li></ul></div></section>
+<section class="member" id="method-beforelast" aria-labelledby="method-beforelast-title"><header class="member-head"><h3 id="method-beforelast-title"><code>Str::beforeLast()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-beforelast" aria-label="Permalink to beforeLast">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">beforeLast</span>(<span class="t-t">string</span> <span class="t-v">$text</span>, <span class="t-t">string</span> <span class="t-v">$search</span>): <span class="t-t">string</span></code></pre><p>Extracts text before the last occurrence of <code>$search</code> (<code>&apos;report.final.pdf&apos;</code>, <code>&apos;.&apos;</code> -&gt; <code>&apos;report.final&apos;</code>).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$text</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$search</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If <code>$search</code> is empty.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If <code>$search</code> is not found in the string.</li></ul></div></section>
+<section class="member" id="method-after" aria-labelledby="method-after-title"><header class="member-head"><h3 id="method-after-title"><code>Str::after()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-after" aria-label="Permalink to after">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">after</span>(<span class="t-t">string</span> <span class="t-v">$text</span>, <span class="t-t">string</span> <span class="t-v">$search</span>): <span class="t-t">string</span></code></pre><p>Extracts text after the first occurrence of <code>$search</code>.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$text</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$search</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If <code>$search</code> is empty.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If <code>$search</code> is not found in the string.</li></ul></div></section>
+<section class="member" id="method-afterlast" aria-labelledby="method-afterlast-title"><header class="member-head"><h3 id="method-afterlast-title"><code>Str::afterLast()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-afterlast" aria-label="Permalink to afterLast">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">afterLast</span>(<span class="t-t">string</span> <span class="t-v">$text</span>, <span class="t-t">string</span> <span class="t-v">$search</span>): <span class="t-t">string</span></code></pre><p>Extracts text after the last occurrence of <code>$search</code> (<code>&apos;report.final.pdf&apos;</code>, <code>&apos;.&apos;</code> -&gt; <code>&apos;pdf&apos;</code>).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$text</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$search</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If <code>$search</code> is empty.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If <code>$search</code> is not found in the string.</li></ul></div></section>
+<section class="member" id="method-squish" aria-labelledby="method-squish-title"><header class="member-head"><h3 id="method-squish-title"><code>Str::squish()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-squish" aria-label="Permalink to squish">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">squish</span>(<span class="t-t">string</span> <span class="t-v">$text</span>): <span class="t-t">string</span></code></pre><p>Trims leading/trailing whitespace and reduces any whitespace sequence (including tabs, newlines, non-breaking spaces, zero-width spaces) to a single space.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$text</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If string is not valid UTF-8.</li></ul></div></section>
+<section class="member" id="method-padleft" aria-labelledby="method-padleft-title"><header class="member-head"><h3 id="method-padleft-title"><code>Str::padLeft()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-padleft" aria-label="Permalink to padLeft">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">padLeft</span>(<span class="t-t">string</span> <span class="t-v">$text</span>, <span class="t-t">int</span> <span class="t-v">$length</span>, <span class="t-t">string</span> <span class="t-v">$pad</span> = <span class="t-s">&apos; &apos;</span>): <span class="t-t">string</span></code></pre><p>Pads the string on the left up to <code>$length</code> characters (<code>&apos;7&apos;</code>, 3, <code>&apos;0&apos;</code> -&gt; <code>&apos;007&apos;</code>). Strings longer than <code>$length</code> remain untouched (not truncated).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$text</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$length</code></td><td><code class="type">int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$pad</code></td><td><code class="type">string</code></td><td><code class="value">&apos; &apos;</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If <code>$pad</code> is empty.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If string is not valid UTF-8.</li></ul></div></section>
+<section class="member" id="method-padright" aria-labelledby="method-padright-title"><header class="member-head"><h3 id="method-padright-title"><code>Str::padRight()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-padright" aria-label="Permalink to padRight">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">padRight</span>(<span class="t-t">string</span> <span class="t-v">$text</span>, <span class="t-t">int</span> <span class="t-v">$length</span>, <span class="t-t">string</span> <span class="t-v">$pad</span> = <span class="t-s">&apos; &apos;</span>): <span class="t-t">string</span></code></pre><p>Pads the string on the right up to <code>$length</code> characters. Strings longer than <code>$length</code> remain untouched (not truncated).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$text</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$length</code></td><td><code class="type">int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$pad</code></td><td><code class="type">string</code></td><td><code class="value">&apos; &apos;</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If <code>$pad</code> is empty.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If string is not valid UTF-8.</li></ul></div></section>
+<section class="member" id="method-ucfirst" aria-labelledby="method-ucfirst-title"><header class="member-head"><h3 id="method-ucfirst-title"><code>Str::ucfirst()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-ucfirst" aria-label="Permalink to ucfirst">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">ucfirst</span>(<span class="t-t">string</span> <span class="t-v">$text</span>): <span class="t-t">string</span></code></pre><p>Capitalizes first character, supporting multibyte and accented characters (native <code>ucfirst()</code> handles ASCII only).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$text</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If string is not valid UTF-8.</li></ul></div></section>
+<section class="member" id="method-e" aria-labelledby="method-e-title"><header class="member-head"><h3 id="method-e-title"><code>Str::e()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-e" aria-label="Permalink to e">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">e</span>(<span class="t-t">string</span>|<span class="t-t">int</span>|<span class="t-t">float</span>|<span class="t-C">Stringable</span>|<span class="t-t">null</span> <span class="t-v">$value</span>): <span class="t-t">string</span></code></pre><p>Escapes text for HTML (content and attribute values, with single or double quotes). null becomes an empty string.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$value</code></td><td><code class="type">Stringable|string|int|float|null</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If string is not valid UTF-8.</li></ul></div></section>
+<h2 id="functions">Functions<a class="anchor" href="#functions" aria-label="Permalink to this section">#</a></h2>
+<p>Global helpers defined in the <code>Foundry</code> namespace by <code>Str.php</code>. Import them with <code>use function</code>.</p>
+<section class="member" id="function-e" aria-labelledby="function-e-title"><header class="member-head"><h3 id="function-e-title"><code>e()</code></h3><span class="badge badge-function">Function</span><a class="anchor" href="#function-e" aria-label="Permalink to e">#</a></header><pre class="signature"><code><span class="t-k">function</span> <span class="t-f">e</span>(<span class="t-t">string</span>|<span class="t-t">int</span>|<span class="t-t">float</span>|<span class="t-C">Stringable</span>|<span class="t-t">null</span> <span class="t-v">$value</span>): <span class="t-t">string</span></code></pre><p>HTML escaping: shortcut for <a class="code-link" href="/docs/str/#method-e"><code>Str::e()</code></a>.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$value</code></td><td><code class="type">Stringable|string|int|float|null</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If string is not valid UTF-8.</li></ul></div></section></article>
+
+        <nav class="pager" aria-label="Previous and next pages">
+            <a class="pager-prev" href="/docs/serializer/" rel="prev"><span>Previous</span><strong>Serializer</strong></a>
+                  <a class="pager-next" href="/docs/arr/" rel="next"><span>Next</span><strong>Arr</strong></a>
+          </nav>
+    
+    <div class="page-meta">
+            <span>Last updated <time datetime="2026-11-12T17:30:02+02:00">November 12, 2026</time></span>
+                  <a href="/docs/str.md">View as Markdown</a>
+          </div>
+  </main>
+
+    <aside class="toc" aria-label="On this page">
+    <p class="toc-title">On this page</p>
+    <ul>
+            <li class="toc-l2"><a href="#usage">Usage</a></li>
+            <li class="toc-l2"><a href="#installation">Installation</a></li>
+            <li class="toc-l2"><a href="#methods">Methods</a></li>
+            <li class="toc-l3"><a href="#method-slug">slug()</a></li>
+            <li class="toc-l3"><a href="#method-removediacritics">removeDiacritics()</a></li>
+            <li class="toc-l3"><a href="#method-limit">limit()</a></li>
+            <li class="toc-l3"><a href="#method-words">words()</a></li>
+            <li class="toc-l3"><a href="#method-camel">camel()</a></li>
+            <li class="toc-l3"><a href="#method-studly">studly()</a></li>
+            <li class="toc-l3"><a href="#method-snake">snake()</a></li>
+            <li class="toc-l3"><a href="#method-kebab">kebab()</a></li>
+            <li class="toc-l3"><a href="#method-mask">mask()</a></li>
+            <li class="toc-l3"><a href="#method-random">random()</a></li>
+            <li class="toc-l3"><a href="#method-between">between()</a></li>
+            <li class="toc-l3"><a href="#method-before">before()</a></li>
+            <li class="toc-l3"><a href="#method-beforelast">beforeLast()</a></li>
+            <li class="toc-l3"><a href="#method-after">after()</a></li>
+            <li class="toc-l3"><a href="#method-afterlast">afterLast()</a></li>
+            <li class="toc-l3"><a href="#method-squish">squish()</a></li>
+            <li class="toc-l3"><a href="#method-padleft">padLeft()</a></li>
+            <li class="toc-l3"><a href="#method-padright">padRight()</a></li>
+            <li class="toc-l3"><a href="#method-ucfirst">ucfirst()</a></li>
+            <li class="toc-l3"><a href="#method-e">e()</a></li>
+            <li class="toc-l2"><a href="#functions">Functions</a></li>
+            <li class="toc-l3"><a href="#function-e">e()</a></li>
+          </ul>
+  </aside>
+  </div>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <p><strong>Foundry</strong> — standalone, single-file PHP utility classes. &copy; 2026 · Proprietary license.</p>
+    <nav aria-label="Footer">
+      <a href="/docs/">Documentation</a>
+      <a href="/docs/installation/">Installation</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/sitemap.xml">Sitemap</a>
+    </nav>
+  </div>
+</footer>
+
+<div class="search-modal" x-cloak x-show="searchOpen" role="dialog" aria-modal="true" aria-label="Search documentation" x-on:keydown="onSearchKey">
+  <div class="search-backdrop" x-on:click="closeSearch"></div>
+  <div class="search-panel">
+    <div class="search-field">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <input x-ref="input" type="search" placeholder="Search classes, methods and guides" autocomplete="off" spellcheck="false" aria-label="Search" aria-controls="search-results" aria-autocomplete="list" x-bind:aria-activedescendant="activeId" x-on:input="onInput">
+      <button type="button" class="kbd-btn" x-on:click="closeSearch" aria-label="Close search">Esc</button>
+    </div>
+    <ul id="search-results" class="search-results" role="listbox" aria-label="Results" x-ref="list">
+      <template x-for="item in results" x-bind:key="item.id">
+        <li role="option" x-bind:id="item.id" x-bind:aria-selected="item.selected" x-bind:class="item.cls" x-bind:data-index="item.i" x-on:mousemove="hover" x-on:click="closeSearch">
+          <a x-bind:href="item.u" tabindex="-1">
+            <span class="r-kind" x-text="item.kl"></span>
+            <span class="r-main"><span class="r-title" x-text="item.t"></span><span class="r-desc" x-text="item.d"></span></span>
+            <span class="r-sec" x-text="item.s"></span>
+          </a>
+        </li>
+      </template>
+    </ul>
+    <p class="search-status" x-show="showStatus" x-text="statusText"></p>
+    <div class="search-foot" aria-hidden="true"><span><kbd>↑</kbd><kbd>↓</kbd> navigate</span><span><kbd>Enter</kbd> open</span><span><kbd>Esc</kbd> close</span></div>
+  </div>
+</div>
+</div>
+</body>
+</html>

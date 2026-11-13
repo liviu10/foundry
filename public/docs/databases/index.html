@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Databases — Foundry PHP utilities</title>
+<meta name="description" content="MySQL, Oracle and SQLite share one API - fetch helpers, array-based insert/update/delete, streaming cursors, transactions and safe pagination.">
+<link rel="canonical" href="https://foundry.insightdevhub.ro/docs/databases/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f1115">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Foundry">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Databases — Foundry PHP utilities">
+<meta property="og:description" content="MySQL, Oracle and SQLite share one API - fetch helpers, array-based insert/update/delete, streaming cursors, transactions and safe pagination.">
+<meta property="og:url" content="https://foundry.insightdevhub.ro/docs/databases/">
+<meta property="og:image" content="https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Foundry — standalone PHP utility classes">
+<meta property="article:modified_time" content="2026-11-12T16:13:55+02:00">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Databases — Foundry PHP utilities">
+<meta name="twitter:description" content="MySQL, Oracle and SQLite share one API - fetch helpers, array-based insert/update/delete, streaming cursors, transactions and safe pagination.">
+<meta name="twitter:image" content="https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2">
+<link rel="alternate" type="text/markdown" href="/docs/databases.md" title="Markdown version">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="stylesheet" href="/assets/css/site.css?v=f05442ef0e">
+<script src="/assets/js/theme.js?v=b02059f0fb"></script>
+<script src="/assets/js/app.js?v=02d0b9d9f7" defer></script>
+<script src="/assets/vendor/alpine-csp.min.js?v=820bc95038" defer></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Databases","description":"MySQL, Oracle and SQLite share one API - fetch helpers, array-based insert/update/delete, streaming cursors, transactions and safe pagination.","url":"https://foundry.insightdevhub.ro/docs/databases/","mainEntityOfPage":"https://foundry.insightdevhub.ro/docs/databases/","inLanguage":"en","image":"https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2","isPartOf":{"@type":"WebSite","name":"Foundry","url":"https://foundry.insightdevhub.ro/"},"proficiencyLevel":"Expert","dateModified":"2026-11-12T16:13:55+02:00"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://foundry.insightdevhub.ro/"},{"@type":"ListItem","position":2,"name":"Documentation","item":"https://foundry.insightdevhub.ro/docs/"},{"@type":"ListItem","position":3,"name":"Databases","item":"https://foundry.insightdevhub.ro/docs/databases/"}]}</script>
+</head>
+<body class="is-docs">
+<div class="app" x-data="site" x-on:keydown.window="onKey">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="topbar-inner">
+        <button type="button" class="icon-btn menu-btn" x-cloak x-on:click="toggleDrawer" aria-controls="sidebar" x-bind:aria-expanded="drawerExpanded" aria-label="Open navigation">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+    </button>
+        <a class="brand" href="/" aria-label="Foundry home">
+      <svg class="brand-mark" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><rect width="32" height="32" rx="7" fill="var(--accent)"/><path d="M10 8h13v4h-8.5v3.5H21v4h-6.5V25H10z" fill="#fff"/></svg>
+      <span>Foundry</span>
+    </a>
+    <nav class="topnav" aria-label="Main">
+      <a href="/docs/" aria-current="true">Docs</a>
+      <a href="/docs/installation/#download">Download</a>
+    </nav>
+    <div class="topbar-actions">
+      <button type="button" class="search-btn" x-cloak x-on:click="openSearch" aria-label="Search documentation" aria-keyshortcuts="Control+K Meta+K /">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span class="search-btn-label">Search</span>
+        <kbd class="search-btn-kbd">Ctrl K</kbd>
+      </button>
+      <button type="button" class="icon-btn" x-cloak x-on:click="toggleTheme" x-bind:aria-label="themeLabel" x-bind:title="themeLabel">
+        <svg x-show="isDark" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <svg x-show="isLight" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="sidebar" id="sidebar" x-bind:class="drawerClass" aria-label="Documentation navigation">
+    <nav class="nav">
+    <div class="nav-group">
+    <p class="nav-title">Getting started</p>
+    <ul>
+            <li><a href="/docs/">Introduction</a></li>
+            <li><a href="/docs/installation/">Installation</a></li>
+            <li><a href="/docs/usage/">Usage &amp; exceptions</a></li>
+            <li><a href="/docs/bootstrap/">Bootstrap</a></li>
+            <li><a href="/docs/design-principles/">Design principles</a></li>
+            <li><a href="/docs/php-versions/">PHP versions</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Guides</p>
+    <ul>
+            <li><a href="/docs/form-handling/">Form handling</a></li>
+            <li><a href="/docs/imports-exports/">Imports &amp; exports</a></li>
+            <li><a href="/docs/databases/" aria-current="page">Databases</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Errors &amp; Exception Handling</p>
+    <ul>
+            <li><a href="/docs/error-handler/">ErrorHandler</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Native Function Wrappers</p>
+    <ul>
+            <li><a href="/docs/json/">Json</a></li>
+            <li><a href="/docs/file/">File</a></li>
+            <li><a href="/docs/regex/">Regex</a></li>
+            <li><a href="/docs/cast/">Cast</a></li>
+            <li><a href="/docs/encoding/">Encoding</a></li>
+            <li><a href="/docs/upload/">Upload</a></li>
+            <li><a href="/docs/process/">Process</a></li>
+            <li><a href="/docs/zip/">Zip</a></li>
+            <li><a href="/docs/image/">Image</a></li>
+            <li><a href="/docs/ini/">Ini</a></li>
+            <li><a href="/docs/base64/">Base64</a></li>
+            <li><a href="/docs/serializer/">Serializer</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Text, Dates, and Numbers</p>
+    <ul>
+            <li><a href="/docs/str/">Str</a></li>
+            <li><a href="/docs/arr/">Arr</a></li>
+            <li><a href="/docs/date/">Date</a></li>
+            <li><a href="/docs/number/">Number</a></li>
+            <li><a href="/docs/money/">Money</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Validation</p>
+    <ul>
+            <li><a href="/docs/validator/">Validator</a></li>
+            <li><a href="/docs/ro-validator/">RoValidator</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Databases</p>
+    <ul>
+            <li><a href="/docs/mysql/">MySQL</a></li>
+            <li><a href="/docs/oracle/">Oracle</a></li>
+            <li><a href="/docs/sqlite/">SQLite</a></li>
+            <li><a href="/docs/paginator/">Paginator</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Import / Export</p>
+    <ul>
+            <li><a href="/docs/csv/">Csv</a></li>
+            <li><a href="/docs/xlsx/">Xlsx</a></li>
+            <li><a href="/docs/xml/">Xml</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Configuration &amp; Infrastructure</p>
+    <ul>
+            <li><a href="/docs/env/">Env</a></li>
+            <li><a href="/docs/config/">Config</a></li>
+            <li><a href="/docs/log/">Log</a></li>
+            <li><a href="/docs/http-client/">HttpClient</a></li>
+            <li><a href="/docs/cache/">Cache</a></li>
+            <li><a href="/docs/retry/">Retry</a></li>
+            <li><a href="/docs/rate-limiter/">RateLimiter</a></li>
+            <li><a href="/docs/crypt/">Crypt</a></li>
+            <li><a href="/docs/token/">Token</a></li>
+            <li><a href="/docs/mailer/">Mailer</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Web &amp; HTTP</p>
+    <ul>
+            <li><a href="/docs/request/">Request</a></li>
+            <li><a href="/docs/response/">Response</a></li>
+            <li><a href="/docs/session/">Session</a></li>
+            <li><a href="/docs/csrf/">Csrf</a></li>
+            <li><a href="/docs/view/">View</a></li>
+            <li><a href="/docs/url/">Url</a></li>
+            <li><a href="/docs/security-headers/">SecurityHeaders</a></li>
+            <li><a href="/docs/bot-detection/">BotDetection</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">UI Rendering Helpers</p>
+    <ul>
+            <li><a href="/docs/breadcrumbs/">Breadcrumbs</a></li>
+            <li><a href="/docs/flash/">Flash</a></li>
+            <li><a href="/docs/form-builder/">FormBuilder</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Development Tools</p>
+    <ul>
+            <li><a href="/docs/debug/">Debug</a></li>
+            <li><a href="/docs/timer/">Timer</a></li>
+            <li><a href="/docs/faker/">Faker</a></li>
+          </ul>
+  </div>
+  </nav>
+  </aside>
+  <div class="drawer-backdrop" x-cloak x-show="drawerOpen" x-on:click="closeDrawer"></div>
+
+  <main id="main" class="content" tabindex="-1">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <ol>
+                        <li><a href="/">Home</a></li>
+                                <li><a href="/docs/">Documentation</a></li>
+                                <li><span aria-current="page">Databases</span></li>
+                      </ol>
+    </nav>
+    
+    <article class="prose doc">
+  <header class="doc-head">
+    <p class="eyebrow">Guides</p>
+    <h1>Databases</h1>
+    <p class="lead">MySQL, Oracle and SQLite share one API - fetch helpers, array-based insert/update/delete, streaming cursors, transactions and safe pagination.</p>
+  </header>
+  <p><a class="code-link" href="/docs/mysql/"><code>MySQL</code></a>, <a class="code-link" href="/docs/oracle/"><code>Oracle</code></a> and <a class="code-link" href="/docs/sqlite/"><code>SQLite</code></a> are thin, strict wrappers with an <strong>identical public API</strong>. Code written against one of them reads the same with the others; only the constructor changes.</p>
+<h2 id="connecting">Connecting<a class="anchor" href="#connecting" aria-label="Permalink to this section">#</a></h2>
+<div class="codeblock" data-lang="php"><div class="codeblock-bar"><span class="codeblock-lang">PHP</span><button type="button" class="copy-btn" data-copy hidden>Copy</button></div><pre><code><span class="t-k">use</span> <span class="t-C">Foundry\Env</span>;
+<span class="t-k">use</span> <span class="t-C">Foundry\MySQL</span>;
+<span class="t-k">use</span> <span class="t-C">Foundry\SQLite</span>;
+
+<span class="t-v">$db</span> = <span class="t-k">new</span> <span class="t-f">MySQL</span>(
+    host: <span class="t-C">Env</span>::<span class="t-t">string</span>(<span class="t-s">&apos;DB_HOST&apos;</span>),
+    database: <span class="t-C">Env</span>::<span class="t-t">string</span>(<span class="t-s">&apos;DB_DATABASE&apos;</span>),
+    username: <span class="t-C">Env</span>::<span class="t-t">string</span>(<span class="t-s">&apos;DB_USERNAME&apos;</span>),
+    password: <span class="t-C">Env</span>::<span class="t-t">string</span>(<span class="t-s">&apos;DB_PASSWORD&apos;</span>),
+);
+
+<span class="t-v">$local</span> = <span class="t-k">new</span> <span class="t-f">SQLite</span>(__DIR__.<span class="t-s">&apos;/data/app.db&apos;</span>);          <span class="t-c">// a missing file is an error, never silently created</span></code></pre></div>
+<p>Connections open lazily on the first query. Credentials have no defaults, and the password parameter is marked <code>#[SensitiveParameter]</code>, so it never appears in stack traces.</p>
+<h2 id="the-shared-api">The shared API<a class="anchor" href="#the-shared-api" aria-label="Permalink to this section">#</a></h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">Method</th><th scope="col">Purpose</th></tr></thead><tbody><tr><td><code>fetchAll()</code></td><td>All rows as associative arrays.</td></tr><tr><td><code>fetchOne()</code></td><td>One row or <code>null</code>; fails if the query returns more than one row.</td></tr><tr><td><code>fetchOneOrFail()</code></td><td>One row, or an exception when there is none.</td></tr><tr><td><code>fetchValue()</code></td><td>The first column of a single row, for example <code>SELECT COUNT(*)</code>.</td></tr><tr><td><code>fetchColumn()</code></td><td>One column as a list.</td></tr><tr><td><code>fetchPairs()</code></td><td>Key / value pairs; duplicate keys are rejected instead of overwritten.</td></tr><tr><td><code>execute()</code></td><td>Any statement; returns the number of affected rows.</td></tr><tr><td><code>insert()</code>, <code>insertGetId()</code></td><td>Insert one row from an array.</td></tr><tr><td><code>insertMany()</code></td><td>Insert many rows, chunked, inside a single transaction.</td></tr><tr><td><code>update()</code>, <code>delete()</code></td><td>Array-based conditions; unconditional updates and deletes are rejected.</td></tr><tr><td><code>cursor()</code></td><td>A generator that streams rows one at a time.</td></tr><tr><td><code>transaction()</code></td><td>Runs a closure in a transaction; commits on success, rolls back on any exception.</td></tr><tr><td><code>paginate()</code></td><td>One page of results plus the total count.</td></tr><tr><td><code>whereIn()</code></td><td>Builds a safe <code>IN (...)</code> fragment with its parameters.</td></tr></tbody></table></div>
+<h2 id="queries-and-parameters">Queries and parameters<a class="anchor" href="#queries-and-parameters" aria-label="Permalink to this section">#</a></h2>
+<div class="codeblock" data-lang="php"><div class="codeblock-bar"><span class="codeblock-lang">PHP</span><button type="button" class="copy-btn" data-copy hidden>Copy</button></div><pre><code><span class="t-v">$users</span> = <span class="t-v">$db</span>-&gt;<span class="t-f">fetchAll</span>(<span class="t-s">&apos;SELECT * FROM users WHERE active = ?&apos;</span>, [<span class="t-n">1</span>]);
+<span class="t-v">$user</span> = <span class="t-v">$db</span>-&gt;<span class="t-f">fetchOneOrFail</span>(<span class="t-s">&apos;SELECT * FROM users WHERE id = :id&apos;</span>, [<span class="t-s">&apos;id&apos;</span> =&gt; <span class="t-v">$id</span>]);
+
+<span class="t-v">$id</span> = <span class="t-v">$db</span>-&gt;<span class="t-f">insertGetId</span>(<span class="t-s">&apos;users&apos;</span>, [<span class="t-s">&apos;name&apos;</span> =&gt; <span class="t-s">&apos;Ion&apos;</span>, <span class="t-s">&apos;email&apos;</span> =&gt; <span class="t-s">&apos;ion@example.com&apos;</span>]);
+<span class="t-v">$db</span>-&gt;<span class="t-f">update</span>(<span class="t-s">&apos;users&apos;</span>, [<span class="t-s">&apos;active&apos;</span> =&gt; <span class="t-n">0</span>], [<span class="t-s">&apos;id&apos;</span> =&gt; <span class="t-v">$id</span>]);
+
+<span class="t-v">$db</span>-&gt;<span class="t-f">transaction</span>(<span class="t-k">function</span> (<span class="t-C">MySQL</span> <span class="t-v">$db</span>) <span class="t-k">use</span> (<span class="t-v">$order</span>): <span class="t-t">void</span> {
+    <span class="t-v">$db</span>-&gt;<span class="t-f">insert</span>(<span class="t-s">&apos;orders&apos;</span>, <span class="t-v">$order</span>);
+    <span class="t-v">$db</span>-&gt;<span class="t-f">execute</span>(<span class="t-s">&apos;UPDATE stock SET qty = qty - 1 WHERE product_id = ?&apos;</span>, [<span class="t-v">$order</span>[<span class="t-s">&apos;product_id&apos;</span>]]);
+});</code></pre></div>
+<p>Parameters are positional (<code>?</code>) or named (<code>:id</code>), never mixed. Table and column names passed to <code>insert()</code>, <code>update()</code> and <code>delete()</code> are validated and quoted. With MySQL, native prepared statements are used (no emulation), the connection is <code>utf8mb4</code>, and several statements in one call are rejected.</p>
+<h2 id="engine-specifics">Engine specifics<a class="anchor" href="#engine-specifics" aria-label="Permalink to this section">#</a></h2>
+<ul><li><strong>MySQL</strong>: <code>INT</code> and <code>FLOAT</code> columns come back as <code>int</code> / <code>float</code>; <code>DECIMAL</code> stays a string to keep its precision.</li><li><strong>Oracle</strong> (oci8): ORA errors become exceptions; targets Oracle 11.2.0.4+ (<code>ROWNUM</code> pagination), with <code>nextVal()</code> for sequences.</li><li><strong>SQLite</strong>: the <code>foreign_keys</code> pragma is enabled; missing database files are never created implicitly.</li></ul>
+<h2 id="pagination-from-the-url">Pagination from the URL<a class="anchor" href="#pagination-from-the-url" aria-label="Permalink to this section">#</a></h2>
+<p><a class="code-link" href="/docs/paginator/"><code>Paginator</code></a> reads the page, sort and search parameters from the query string and accepts only whitelisted columns, so they are safe to put into SQL. See the <a class="code-link" href="/docs/paginator/"><code>Paginator</code></a> reference for the full API.</p></article>
+
+        <nav class="pager" aria-label="Previous and next pages">
+            <a class="pager-prev" href="/docs/imports-exports/" rel="prev"><span>Previous</span><strong>Imports &amp; exports</strong></a>
+                  <a class="pager-next" href="/docs/error-handler/" rel="next"><span>Next</span><strong>ErrorHandler</strong></a>
+          </nav>
+    
+    <div class="page-meta">
+            <span>Last updated <time datetime="2026-11-12T16:13:55+02:00">November 12, 2026</time></span>
+                  <a href="/docs/databases.md">View as Markdown</a>
+          </div>
+  </main>
+
+    <aside class="toc" aria-label="On this page">
+    <p class="toc-title">On this page</p>
+    <ul>
+            <li class="toc-l2"><a href="#connecting">Connecting</a></li>
+            <li class="toc-l2"><a href="#the-shared-api">The shared API</a></li>
+            <li class="toc-l2"><a href="#queries-and-parameters">Queries and parameters</a></li>
+            <li class="toc-l2"><a href="#engine-specifics">Engine specifics</a></li>
+            <li class="toc-l2"><a href="#pagination-from-the-url">Pagination from the URL</a></li>
+          </ul>
+  </aside>
+  </div>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <p><strong>Foundry</strong> — standalone, single-file PHP utility classes. &copy; 2026 · Proprietary license.</p>
+    <nav aria-label="Footer">
+      <a href="/docs/">Documentation</a>
+      <a href="/docs/installation/">Installation</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/sitemap.xml">Sitemap</a>
+    </nav>
+  </div>
+</footer>
+
+<div class="search-modal" x-cloak x-show="searchOpen" role="dialog" aria-modal="true" aria-label="Search documentation" x-on:keydown="onSearchKey">
+  <div class="search-backdrop" x-on:click="closeSearch"></div>
+  <div class="search-panel">
+    <div class="search-field">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <input x-ref="input" type="search" placeholder="Search classes, methods and guides" autocomplete="off" spellcheck="false" aria-label="Search" aria-controls="search-results" aria-autocomplete="list" x-bind:aria-activedescendant="activeId" x-on:input="onInput">
+      <button type="button" class="kbd-btn" x-on:click="closeSearch" aria-label="Close search">Esc</button>
+    </div>
+    <ul id="search-results" class="search-results" role="listbox" aria-label="Results" x-ref="list">
+      <template x-for="item in results" x-bind:key="item.id">
+        <li role="option" x-bind:id="item.id" x-bind:aria-selected="item.selected" x-bind:class="item.cls" x-bind:data-index="item.i" x-on:mousemove="hover" x-on:click="closeSearch">
+          <a x-bind:href="item.u" tabindex="-1">
+            <span class="r-kind" x-text="item.kl"></span>
+            <span class="r-main"><span class="r-title" x-text="item.t"></span><span class="r-desc" x-text="item.d"></span></span>
+            <span class="r-sec" x-text="item.s"></span>
+          </a>
+        </li>
+      </template>
+    </ul>
+    <p class="search-status" x-show="showStatus" x-text="statusText"></p>
+    <div class="search-foot" aria-hidden="true"><span><kbd>↑</kbd><kbd>↓</kbd> navigate</span><span><kbd>Enter</kbd> open</span><span><kbd>Esc</kbd> close</span></div>
+  </div>
+</div>
+</div>
+</body>
+</html>

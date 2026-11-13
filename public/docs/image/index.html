@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Image — Image validation and resizing (gd) | Foundry PHP</title>
+<meta name="description" content="PHP Image class: Image metadata, validation against decompression bombs, aspect-ratio resizing, thumbnail generation; requires gd. Standalone, single-file…">
+<link rel="canonical" href="https://foundry.insightdevhub.ro/docs/image/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f1115">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Foundry">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Image — Image validation and resizing (gd) | Foundry PHP">
+<meta property="og:description" content="PHP Image class: Image metadata, validation against decompression bombs, aspect-ratio resizing, thumbnail generation; requires gd. Standalone, single-file…">
+<meta property="og:url" content="https://foundry.insightdevhub.ro/docs/image/">
+<meta property="og:image" content="https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Foundry — standalone PHP utility classes">
+<meta property="article:modified_time" content="2026-11-12T17:19:17+02:00">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Image — Image validation and resizing (gd) | Foundry PHP">
+<meta name="twitter:description" content="PHP Image class: Image metadata, validation against decompression bombs, aspect-ratio resizing, thumbnail generation; requires gd. Standalone, single-file…">
+<meta name="twitter:image" content="https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2">
+<link rel="alternate" type="text/markdown" href="/docs/image.md" title="Markdown version">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="stylesheet" href="/assets/css/site.css?v=f05442ef0e">
+<script src="/assets/js/theme.js?v=b02059f0fb"></script>
+<script src="/assets/js/app.js?v=02d0b9d9f7" defer></script>
+<script src="/assets/vendor/alpine-csp.min.js?v=820bc95038" defer></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Image — PHP utility class reference","description":"PHP Image class: Image metadata, validation against decompression bombs, aspect-ratio resizing, thumbnail generation; requires gd. Standalone, single-file…","url":"https://foundry.insightdevhub.ro/docs/image/","mainEntityOfPage":"https://foundry.insightdevhub.ro/docs/image/","inLanguage":"en","image":"https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2","isPartOf":{"@type":"WebSite","name":"Foundry","url":"https://foundry.insightdevhub.ro/"},"proficiencyLevel":"Expert","dateModified":"2026-11-12T17:19:17+02:00","about":{"@type":"SoftwareSourceCode","name":"Foundry\\Image","programmingLanguage":"PHP","runtimePlatform":"PHP 8.3+","version":"1.2"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://foundry.insightdevhub.ro/"},{"@type":"ListItem","position":2,"name":"Documentation","item":"https://foundry.insightdevhub.ro/docs/"},{"@type":"ListItem","position":3,"name":"Native Function Wrappers","item":"https://foundry.insightdevhub.ro/docs/#native-function-wrappers"},{"@type":"ListItem","position":4,"name":"Image","item":"https://foundry.insightdevhub.ro/docs/image/"}]}</script>
+</head>
+<body class="is-docs">
+<div class="app" x-data="site" x-on:keydown.window="onKey">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="topbar-inner">
+        <button type="button" class="icon-btn menu-btn" x-cloak x-on:click="toggleDrawer" aria-controls="sidebar" x-bind:aria-expanded="drawerExpanded" aria-label="Open navigation">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+    </button>
+        <a class="brand" href="/" aria-label="Foundry home">
+      <svg class="brand-mark" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><rect width="32" height="32" rx="7" fill="var(--accent)"/><path d="M10 8h13v4h-8.5v3.5H21v4h-6.5V25H10z" fill="#fff"/></svg>
+      <span>Foundry</span>
+    </a>
+    <nav class="topnav" aria-label="Main">
+      <a href="/docs/" aria-current="true">Docs</a>
+      <a href="/docs/installation/#download">Download</a>
+    </nav>
+    <div class="topbar-actions">
+      <button type="button" class="search-btn" x-cloak x-on:click="openSearch" aria-label="Search documentation" aria-keyshortcuts="Control+K Meta+K /">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span class="search-btn-label">Search</span>
+        <kbd class="search-btn-kbd">Ctrl K</kbd>
+      </button>
+      <button type="button" class="icon-btn" x-cloak x-on:click="toggleTheme" x-bind:aria-label="themeLabel" x-bind:title="themeLabel">
+        <svg x-show="isDark" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <svg x-show="isLight" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="sidebar" id="sidebar" x-bind:class="drawerClass" aria-label="Documentation navigation">
+    <nav class="nav">
+    <div class="nav-group">
+    <p class="nav-title">Getting started</p>
+    <ul>
+            <li><a href="/docs/">Introduction</a></li>
+            <li><a href="/docs/installation/">Installation</a></li>
+            <li><a href="/docs/usage/">Usage &amp; exceptions</a></li>
+            <li><a href="/docs/bootstrap/">Bootstrap</a></li>
+            <li><a href="/docs/design-principles/">Design principles</a></li>
+            <li><a href="/docs/php-versions/">PHP versions</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Guides</p>
+    <ul>
+            <li><a href="/docs/form-handling/">Form handling</a></li>
+            <li><a href="/docs/imports-exports/">Imports &amp; exports</a></li>
+            <li><a href="/docs/databases/">Databases</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Errors &amp; Exception Handling</p>
+    <ul>
+            <li><a href="/docs/error-handler/">ErrorHandler</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Native Function Wrappers</p>
+    <ul>
+            <li><a href="/docs/json/">Json</a></li>
+            <li><a href="/docs/file/">File</a></li>
+            <li><a href="/docs/regex/">Regex</a></li>
+            <li><a href="/docs/cast/">Cast</a></li>
+            <li><a href="/docs/encoding/">Encoding</a></li>
+            <li><a href="/docs/upload/">Upload</a></li>
+            <li><a href="/docs/process/">Process</a></li>
+            <li><a href="/docs/zip/">Zip</a></li>
+            <li><a href="/docs/image/" aria-current="page">Image</a></li>
+            <li><a href="/docs/ini/">Ini</a></li>
+            <li><a href="/docs/base64/">Base64</a></li>
+            <li><a href="/docs/serializer/">Serializer</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Text, Dates, and Numbers</p>
+    <ul>
+            <li><a href="/docs/str/">Str</a></li>
+            <li><a href="/docs/arr/">Arr</a></li>
+            <li><a href="/docs/date/">Date</a></li>
+            <li><a href="/docs/number/">Number</a></li>
+            <li><a href="/docs/money/">Money</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Validation</p>
+    <ul>
+            <li><a href="/docs/validator/">Validator</a></li>
+            <li><a href="/docs/ro-validator/">RoValidator</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Databases</p>
+    <ul>
+            <li><a href="/docs/mysql/">MySQL</a></li>
+            <li><a href="/docs/oracle/">Oracle</a></li>
+            <li><a href="/docs/sqlite/">SQLite</a></li>
+            <li><a href="/docs/paginator/">Paginator</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Import / Export</p>
+    <ul>
+            <li><a href="/docs/csv/">Csv</a></li>
+            <li><a href="/docs/xlsx/">Xlsx</a></li>
+            <li><a href="/docs/xml/">Xml</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Configuration &amp; Infrastructure</p>
+    <ul>
+            <li><a href="/docs/env/">Env</a></li>
+            <li><a href="/docs/config/">Config</a></li>
+            <li><a href="/docs/log/">Log</a></li>
+            <li><a href="/docs/http-client/">HttpClient</a></li>
+            <li><a href="/docs/cache/">Cache</a></li>
+            <li><a href="/docs/retry/">Retry</a></li>
+            <li><a href="/docs/rate-limiter/">RateLimiter</a></li>
+            <li><a href="/docs/crypt/">Crypt</a></li>
+            <li><a href="/docs/token/">Token</a></li>
+            <li><a href="/docs/mailer/">Mailer</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Web &amp; HTTP</p>
+    <ul>
+            <li><a href="/docs/request/">Request</a></li>
+            <li><a href="/docs/response/">Response</a></li>
+            <li><a href="/docs/session/">Session</a></li>
+            <li><a href="/docs/csrf/">Csrf</a></li>
+            <li><a href="/docs/view/">View</a></li>
+            <li><a href="/docs/url/">Url</a></li>
+            <li><a href="/docs/security-headers/">SecurityHeaders</a></li>
+            <li><a href="/docs/bot-detection/">BotDetection</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">UI Rendering Helpers</p>
+    <ul>
+            <li><a href="/docs/breadcrumbs/">Breadcrumbs</a></li>
+            <li><a href="/docs/flash/">Flash</a></li>
+            <li><a href="/docs/form-builder/">FormBuilder</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Development Tools</p>
+    <ul>
+            <li><a href="/docs/debug/">Debug</a></li>
+            <li><a href="/docs/timer/">Timer</a></li>
+            <li><a href="/docs/faker/">Faker</a></li>
+          </ul>
+  </div>
+  </nav>
+  </aside>
+  <div class="drawer-backdrop" x-cloak x-show="drawerOpen" x-on:click="closeDrawer"></div>
+
+  <main id="main" class="content" tabindex="-1">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <ol>
+                        <li><a href="/">Home</a></li>
+                                <li><a href="/docs/">Documentation</a></li>
+                                <li><a href="/docs/#native-function-wrappers">Native Function Wrappers</a></li>
+                                <li><span aria-current="page">Image</span></li>
+                      </ol>
+    </nav>
+    
+    <article class="prose doc">
+  <header class="doc-head">
+    <p class="eyebrow"><a href="/docs/#native-function-wrappers">Native Function Wrappers</a></p>
+    <h1>Image</h1>
+    <p class="lead">Image information, validation, and resizing (JPEG, PNG, GIF, WebP) using the gd extension.</p>
+    <ul class="facts" aria-label="Class facts">
+      <li><span>Namespace</span><code>Foundry\Image</code></li>
+      <li><span>File</span><code>Image.php</code></li>
+      <li><span>Version</span><strong>1.2</strong></li>
+      <li><span>Requires</span><strong>PHP 8.3+</strong> <code class="ext">ext-gd</code></li>
+      <li><span>API</span><strong>4 public members</strong></li>
+    </ul>
+  </header>
+  <p>Natively, <code>getimagesize()</code> and imagecreatefrom*() return false with a warning, and a small image on disk can declare huge dimensions and exhaust gigabytes of memory upon decoding (&quot;decompression bomb&quot;); <code>validate()</code> verifies pixel counts before decoding, and <code>resize()</code> / <code>thumbnail()</code> also check that the decoded image fits in the remaining memory_limit (~5 bytes per pixel), throwing an exception instead of PHP&apos;s uncatchable &quot;Allowed memory size exhausted&quot; fatal error.</p>
+<p><code>resize()</code> and <code>thumbnail()</code> re-encode images, thereby stripping EXIF metadata (GPS, camera model). For animated GIFs, only the first frame is retained.</p>
+<h2 id="usage">Usage<a class="anchor" href="#usage" aria-label="Permalink to this section">#</a></h2>
+<div class="codeblock" data-lang="php"><div class="codeblock-bar"><span class="codeblock-lang">PHP</span><button type="button" class="copy-btn" data-copy hidden>Copy</button></div><pre><code><span class="t-k">require_once</span> <span class="t-s">&apos;Image.php&apos;</span>;
+<span class="t-k">use</span> <span class="t-C">Foundry\Image</span>;
+
+<span class="t-v">$info</span> = <span class="t-C">Image</span>::<span class="t-f">validate</span>(<span class="t-v">$path</span>);                       <span class="t-c">// [&apos;width&apos; =&gt; 1920, &apos;height&apos; =&gt; 1080, &apos;mimeType&apos; =&gt; &apos;image/jpeg&apos;]</span>
+<span class="t-C">Image</span>::<span class="t-f">resize</span>(<span class="t-v">$path</span>, <span class="t-v">$dir</span>.<span class="t-s">&apos;/large.jpg&apos;</span>, <span class="t-n">1600</span>, <span class="t-n">1600</span>);  <span class="t-c">// fits in 1600x1600, no upscaling</span>
+<span class="t-C">Image</span>::<span class="t-f">thumbnail</span>(<span class="t-v">$path</span>, <span class="t-v">$dir</span>.<span class="t-s">&apos;/thumb.webp&apos;</span>, <span class="t-n">200</span>, <span class="t-n">200</span>);<span class="t-c">// exact 200x200, center-cropped</span></code></pre></div>
+<h2 id="installation">Installation<a class="anchor" href="#installation" aria-label="Permalink to this section">#</a></h2>
+<p>Copy <code>Image.php</code> from the <a href="/docs/installation/#download">download archive</a> into your project and load it (or register the <a href="/docs/installation/#loading-the-classes">autoloader</a>):</p>
+<div class="codeblock" data-lang="php"><div class="codeblock-bar"><span class="codeblock-lang">PHP</span><button type="button" class="copy-btn" data-copy hidden>Copy</button></div><pre><code><span class="t-k">require_once</span> __DIR__.<span class="t-s">&apos;/lib/Utilities/Image.php&apos;</span>;
+
+<span class="t-k">use</span> <span class="t-C">Foundry\Image</span>;</code></pre></div>
+<p class="muted-note">Requires the PHP extension <code>gd</code> (check with <code>php -m</code>).</p>
+<h2 id="constants">Constants<a class="anchor" href="#constants" aria-label="Permalink to this section">#</a></h2>
+<div class="table-wrap"><table class="ref-table"><thead><tr><th scope="col">Constant</th><th scope="col">Type</th><th scope="col">Value</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>DEFAULT_TYPES</code></td><td><code class="type">list&lt;string&gt;</code></td><td><code class="value">[&apos;image/jpeg&apos;, &apos;image/png&apos;, &apos;image/gif&apos;, &apos;image/webp&apos;]</code></td><td>Default image types accepted by <code>validate()</code>.</td></tr><tr><td><code>DEFAULT_MAX_PIXELS</code></td><td><code class="type">int</code></td><td><code class="value">40_000_000</code></td><td>Default maximum pixel count (40 MP; typical phone photos are 12-50 MP).</td></tr></tbody></table></div>
+<h2 id="methods">Methods<a class="anchor" href="#methods" aria-label="Permalink to this section">#</a></h2>
+<nav class="method-index" aria-label="Image methods"><ul><li><a href="#method-info"><code>info()</code></a></li><li><a href="#method-validate"><code>validate()</code></a></li><li><a href="#method-resize"><code>resize()</code></a></li><li><a href="#method-thumbnail"><code>thumbnail()</code></a></li></ul></nav>
+<section class="member" id="method-info" aria-labelledby="method-info-title"><header class="member-head"><h3 id="method-info-title"><code>Image::info()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-info" aria-label="Permalink to info">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">info</span>(<span class="t-t">string</span> <span class="t-v">$path</span>): <span class="t-k">array</span></code></pre><p>Image dimensions and type read from headers (without decoding image data).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$path</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">array{width: int, height: int, mimeType: string}</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the file does not exist.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If the file is not a recognized image.</li></ul></div></section>
+<section class="member" id="method-validate" aria-labelledby="method-validate-title"><header class="member-head"><h3 id="method-validate-title"><code>Image::validate()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-validate" aria-label="Permalink to validate">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">validate</span>(
+    <span class="t-t">string</span> <span class="t-v">$path</span>,
+    <span class="t-k">array</span> <span class="t-v">$allowedTypes</span> = <span class="t-t">self</span>::<span class="t-n">DEFAULT_TYPES</span>,
+    <span class="t-t">int</span> <span class="t-v">$maxPixels</span> = <span class="t-t">self</span>::<span class="t-n">DEFAULT_MAX_PIXELS</span>,
+    ?<span class="t-t">int</span> <span class="t-v">$maxWidth</span> = <span class="t-t">null</span>,
+    ?<span class="t-t">int</span> <span class="t-v">$maxHeight</span> = <span class="t-t">null</span>,
+): <span class="t-k">array</span></code></pre><p>Verifies that the file is an allowed image type within reasonable dimensions.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$path</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td>The image file path.</td></tr><tr><td><code>$allowedTypes</code></td><td><code class="type">list&lt;string&gt;</code></td><td><code class="value">self::DEFAULT_TYPES</code></td><td>Allowed MIME types.</td></tr><tr><td><code>$maxPixels</code></td><td><code class="type">int</code></td><td><code class="value">self::DEFAULT_MAX_PIXELS</code></td><td>Maximum pixel count (width x height).</td></tr><tr><td><code>$maxWidth</code></td><td><code class="type">int|null</code></td><td><code class="value">null</code></td><td>Maximum width; null = no limit.</td></tr><tr><td><code>$maxHeight</code></td><td><code class="type">int|null</code></td><td><code class="value">null</code></td><td>Maximum height; null = no limit.</td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">array{width: int, height: int, mimeType: string}</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the file does not exist.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If the image is invalid or exceeds dimension limits.</li></ul></div></section>
+<section class="member" id="method-resize" aria-labelledby="method-resize-title"><header class="member-head"><h3 id="method-resize-title"><code>Image::resize()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-resize" aria-label="Permalink to resize">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">resize</span>(<span class="t-t">string</span> <span class="t-v">$source</span>, <span class="t-t">string</span> <span class="t-v">$target</span>, <span class="t-t">int</span> <span class="t-v">$maxWidth</span>, <span class="t-t">int</span> <span class="t-v">$maxHeight</span>, <span class="t-t">int</span> <span class="t-v">$quality</span> = <span class="t-n">85</span>): <span class="t-k">array</span></code></pre><p>Resizes an image to fit within <code>$maxWidth</code> x <code>$maxHeight</code> while preserving aspect ratio. Smaller images are not upscaled. Target format is inferred from the extension of <code>$target</code>.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$source</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td>Source image path.</td></tr><tr><td><code>$target</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td>Destination image path (.jpg, .jpeg, .png, .gif, .webp); overwritten.</td></tr><tr><td><code>$maxWidth</code></td><td><code class="type">int</code></td><td><span class="pill pill-req">required</span></td><td>Maximum width.</td></tr><tr><td><code>$maxHeight</code></td><td><code class="type">int</code></td><td><span class="pill pill-req">required</span></td><td>Maximum height.</td></tr><tr><td><code>$quality</code></td><td><code class="type">int</code></td><td><code class="value">85</code></td><td>JPEG/WebP quality (0-100).</td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">array{width: int, height: int}</code> <span>Resulting dimensions.</span></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — On invalid parameters.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If the source is not a valid image.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the image cannot be processed or saved.</li></ul></div></section>
+<section class="member" id="method-thumbnail" aria-labelledby="method-thumbnail-title"><header class="member-head"><h3 id="method-thumbnail-title"><code>Image::thumbnail()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-thumbnail" aria-label="Permalink to thumbnail">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">thumbnail</span>(<span class="t-t">string</span> <span class="t-v">$source</span>, <span class="t-t">string</span> <span class="t-v">$target</span>, <span class="t-t">int</span> <span class="t-v">$width</span>, <span class="t-t">int</span> <span class="t-v">$height</span>, <span class="t-t">int</span> <span class="t-v">$quality</span> = <span class="t-n">85</span>): <span class="t-t">void</span></code></pre><p>Creates a thumbnail of exactly <code>$width</code> x <code>$height</code>: the image is scaled to cover the area and center-cropped (like &quot;object-fit: cover&quot;).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$source</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td>Source image path.</td></tr><tr><td><code>$target</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td>Destination image path (.jpg, .jpeg, .png, .gif, .webp); overwritten.</td></tr><tr><td><code>$width</code></td><td><code class="type">int</code></td><td><span class="pill pill-req">required</span></td><td>Exact width.</td></tr><tr><td><code>$height</code></td><td><code class="type">int</code></td><td><span class="pill pill-req">required</span></td><td>Exact height.</td></tr><tr><td><code>$quality</code></td><td><code class="type">int</code></td><td><code class="value">85</code></td><td>JPEG/WebP quality (0-100).</td></tr></tbody></table></div><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — On invalid parameters.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If the source is not a valid image.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the image cannot be processed or saved.</li></ul></div></section></article>
+
+        <nav class="pager" aria-label="Previous and next pages">
+            <a class="pager-prev" href="/docs/zip/" rel="prev"><span>Previous</span><strong>Zip</strong></a>
+                  <a class="pager-next" href="/docs/ini/" rel="next"><span>Next</span><strong>Ini</strong></a>
+          </nav>
+    
+    <div class="page-meta">
+            <span>Last updated <time datetime="2026-11-12T17:19:17+02:00">November 12, 2026</time></span>
+                  <a href="/docs/image.md">View as Markdown</a>
+          </div>
+  </main>
+
+    <aside class="toc" aria-label="On this page">
+    <p class="toc-title">On this page</p>
+    <ul>
+            <li class="toc-l2"><a href="#usage">Usage</a></li>
+            <li class="toc-l2"><a href="#installation">Installation</a></li>
+            <li class="toc-l2"><a href="#constants">Constants</a></li>
+            <li class="toc-l2"><a href="#methods">Methods</a></li>
+            <li class="toc-l3"><a href="#method-info">info()</a></li>
+            <li class="toc-l3"><a href="#method-validate">validate()</a></li>
+            <li class="toc-l3"><a href="#method-resize">resize()</a></li>
+            <li class="toc-l3"><a href="#method-thumbnail">thumbnail()</a></li>
+          </ul>
+  </aside>
+  </div>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <p><strong>Foundry</strong> — standalone, single-file PHP utility classes. &copy; 2026 · Proprietary license.</p>
+    <nav aria-label="Footer">
+      <a href="/docs/">Documentation</a>
+      <a href="/docs/installation/">Installation</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/sitemap.xml">Sitemap</a>
+    </nav>
+  </div>
+</footer>
+
+<div class="search-modal" x-cloak x-show="searchOpen" role="dialog" aria-modal="true" aria-label="Search documentation" x-on:keydown="onSearchKey">
+  <div class="search-backdrop" x-on:click="closeSearch"></div>
+  <div class="search-panel">
+    <div class="search-field">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <input x-ref="input" type="search" placeholder="Search classes, methods and guides" autocomplete="off" spellcheck="false" aria-label="Search" aria-controls="search-results" aria-autocomplete="list" x-bind:aria-activedescendant="activeId" x-on:input="onInput">
+      <button type="button" class="kbd-btn" x-on:click="closeSearch" aria-label="Close search">Esc</button>
+    </div>
+    <ul id="search-results" class="search-results" role="listbox" aria-label="Results" x-ref="list">
+      <template x-for="item in results" x-bind:key="item.id">
+        <li role="option" x-bind:id="item.id" x-bind:aria-selected="item.selected" x-bind:class="item.cls" x-bind:data-index="item.i" x-on:mousemove="hover" x-on:click="closeSearch">
+          <a x-bind:href="item.u" tabindex="-1">
+            <span class="r-kind" x-text="item.kl"></span>
+            <span class="r-main"><span class="r-title" x-text="item.t"></span><span class="r-desc" x-text="item.d"></span></span>
+            <span class="r-sec" x-text="item.s"></span>
+          </a>
+        </li>
+      </template>
+    </ul>
+    <p class="search-status" x-show="showStatus" x-text="statusText"></p>
+    <div class="search-foot" aria-hidden="true"><span><kbd>↑</kbd><kbd>↓</kbd> navigate</span><span><kbd>Enter</kbd> open</span><span><kbd>Esc</kbd> close</span></div>
+  </div>
+</div>
+</div>
+</body>
+</html>

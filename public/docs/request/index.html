@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Request — Typed HTTP request in PHP | Foundry PHP</title>
+<meta name="description" content="PHP Request class: Encapsulates incoming HTTP requests with typed getters (int(&apos;id&apos;): missing or non-integer throws exception), JSON body decoding, trusted…">
+<link rel="canonical" href="https://foundry.insightdevhub.ro/docs/request/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f1115">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Foundry">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Request — Typed HTTP request in PHP | Foundry PHP">
+<meta property="og:description" content="PHP Request class: Encapsulates incoming HTTP requests with typed getters (int(&apos;id&apos;): missing or non-integer throws exception), JSON body decoding, trusted…">
+<meta property="og:url" content="https://foundry.insightdevhub.ro/docs/request/">
+<meta property="og:image" content="https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Foundry — standalone PHP utility classes">
+<meta property="article:modified_time" content="2026-11-10T21:51:05+02:00">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Request — Typed HTTP request in PHP | Foundry PHP">
+<meta name="twitter:description" content="PHP Request class: Encapsulates incoming HTTP requests with typed getters (int(&apos;id&apos;): missing or non-integer throws exception), JSON body decoding, trusted…">
+<meta name="twitter:image" content="https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2">
+<link rel="alternate" type="text/markdown" href="/docs/request.md" title="Markdown version">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="stylesheet" href="/assets/css/site.css?v=f05442ef0e">
+<script src="/assets/js/theme.js?v=b02059f0fb"></script>
+<script src="/assets/js/app.js?v=02d0b9d9f7" defer></script>
+<script src="/assets/vendor/alpine-csp.min.js?v=820bc95038" defer></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Request — PHP utility class reference","description":"PHP Request class: Encapsulates incoming HTTP requests with typed getters (int('id'): missing or non-integer throws exception), JSON body decoding, trusted…","url":"https://foundry.insightdevhub.ro/docs/request/","mainEntityOfPage":"https://foundry.insightdevhub.ro/docs/request/","inLanguage":"en","image":"https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2","isPartOf":{"@type":"WebSite","name":"Foundry","url":"https://foundry.insightdevhub.ro/"},"proficiencyLevel":"Expert","dateModified":"2026-11-10T21:51:05+02:00","about":{"@type":"SoftwareSourceCode","name":"Foundry\\Request","programmingLanguage":"PHP","runtimePlatform":"PHP 8.3+","version":"1.0"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://foundry.insightdevhub.ro/"},{"@type":"ListItem","position":2,"name":"Documentation","item":"https://foundry.insightdevhub.ro/docs/"},{"@type":"ListItem","position":3,"name":"Web & HTTP","item":"https://foundry.insightdevhub.ro/docs/#web-http"},{"@type":"ListItem","position":4,"name":"Request","item":"https://foundry.insightdevhub.ro/docs/request/"}]}</script>
+</head>
+<body class="is-docs">
+<div class="app" x-data="site" x-on:keydown.window="onKey">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="topbar-inner">
+        <button type="button" class="icon-btn menu-btn" x-cloak x-on:click="toggleDrawer" aria-controls="sidebar" x-bind:aria-expanded="drawerExpanded" aria-label="Open navigation">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+    </button>
+        <a class="brand" href="/" aria-label="Foundry home">
+      <svg class="brand-mark" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><rect width="32" height="32" rx="7" fill="var(--accent)"/><path d="M10 8h13v4h-8.5v3.5H21v4h-6.5V25H10z" fill="#fff"/></svg>
+      <span>Foundry</span>
+    </a>
+    <nav class="topnav" aria-label="Main">
+      <a href="/docs/" aria-current="true">Docs</a>
+      <a href="/docs/installation/#download">Download</a>
+    </nav>
+    <div class="topbar-actions">
+      <button type="button" class="search-btn" x-cloak x-on:click="openSearch" aria-label="Search documentation" aria-keyshortcuts="Control+K Meta+K /">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span class="search-btn-label">Search</span>
+        <kbd class="search-btn-kbd">Ctrl K</kbd>
+      </button>
+      <button type="button" class="icon-btn" x-cloak x-on:click="toggleTheme" x-bind:aria-label="themeLabel" x-bind:title="themeLabel">
+        <svg x-show="isDark" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <svg x-show="isLight" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="sidebar" id="sidebar" x-bind:class="drawerClass" aria-label="Documentation navigation">
+    <nav class="nav">
+    <div class="nav-group">
+    <p class="nav-title">Getting started</p>
+    <ul>
+            <li><a href="/docs/">Introduction</a></li>
+            <li><a href="/docs/installation/">Installation</a></li>
+            <li><a href="/docs/usage/">Usage &amp; exceptions</a></li>
+            <li><a href="/docs/bootstrap/">Bootstrap</a></li>
+            <li><a href="/docs/design-principles/">Design principles</a></li>
+            <li><a href="/docs/php-versions/">PHP versions</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Guides</p>
+    <ul>
+            <li><a href="/docs/form-handling/">Form handling</a></li>
+            <li><a href="/docs/imports-exports/">Imports &amp; exports</a></li>
+            <li><a href="/docs/databases/">Databases</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Errors &amp; Exception Handling</p>
+    <ul>
+            <li><a href="/docs/error-handler/">ErrorHandler</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Native Function Wrappers</p>
+    <ul>
+            <li><a href="/docs/json/">Json</a></li>
+            <li><a href="/docs/file/">File</a></li>
+            <li><a href="/docs/regex/">Regex</a></li>
+            <li><a href="/docs/cast/">Cast</a></li>
+            <li><a href="/docs/encoding/">Encoding</a></li>
+            <li><a href="/docs/upload/">Upload</a></li>
+            <li><a href="/docs/process/">Process</a></li>
+            <li><a href="/docs/zip/">Zip</a></li>
+            <li><a href="/docs/image/">Image</a></li>
+            <li><a href="/docs/ini/">Ini</a></li>
+            <li><a href="/docs/base64/">Base64</a></li>
+            <li><a href="/docs/serializer/">Serializer</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Text, Dates, and Numbers</p>
+    <ul>
+            <li><a href="/docs/str/">Str</a></li>
+            <li><a href="/docs/arr/">Arr</a></li>
+            <li><a href="/docs/date/">Date</a></li>
+            <li><a href="/docs/number/">Number</a></li>
+            <li><a href="/docs/money/">Money</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Validation</p>
+    <ul>
+            <li><a href="/docs/validator/">Validator</a></li>
+            <li><a href="/docs/ro-validator/">RoValidator</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Databases</p>
+    <ul>
+            <li><a href="/docs/mysql/">MySQL</a></li>
+            <li><a href="/docs/oracle/">Oracle</a></li>
+            <li><a href="/docs/sqlite/">SQLite</a></li>
+            <li><a href="/docs/paginator/">Paginator</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Import / Export</p>
+    <ul>
+            <li><a href="/docs/csv/">Csv</a></li>
+            <li><a href="/docs/xlsx/">Xlsx</a></li>
+            <li><a href="/docs/xml/">Xml</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Configuration &amp; Infrastructure</p>
+    <ul>
+            <li><a href="/docs/env/">Env</a></li>
+            <li><a href="/docs/config/">Config</a></li>
+            <li><a href="/docs/log/">Log</a></li>
+            <li><a href="/docs/http-client/">HttpClient</a></li>
+            <li><a href="/docs/cache/">Cache</a></li>
+            <li><a href="/docs/retry/">Retry</a></li>
+            <li><a href="/docs/rate-limiter/">RateLimiter</a></li>
+            <li><a href="/docs/crypt/">Crypt</a></li>
+            <li><a href="/docs/token/">Token</a></li>
+            <li><a href="/docs/mailer/">Mailer</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Web &amp; HTTP</p>
+    <ul>
+            <li><a href="/docs/request/" aria-current="page">Request</a></li>
+            <li><a href="/docs/response/">Response</a></li>
+            <li><a href="/docs/session/">Session</a></li>
+            <li><a href="/docs/csrf/">Csrf</a></li>
+            <li><a href="/docs/view/">View</a></li>
+            <li><a href="/docs/url/">Url</a></li>
+            <li><a href="/docs/security-headers/">SecurityHeaders</a></li>
+            <li><a href="/docs/bot-detection/">BotDetection</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">UI Rendering Helpers</p>
+    <ul>
+            <li><a href="/docs/breadcrumbs/">Breadcrumbs</a></li>
+            <li><a href="/docs/flash/">Flash</a></li>
+            <li><a href="/docs/form-builder/">FormBuilder</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Development Tools</p>
+    <ul>
+            <li><a href="/docs/debug/">Debug</a></li>
+            <li><a href="/docs/timer/">Timer</a></li>
+            <li><a href="/docs/faker/">Faker</a></li>
+          </ul>
+  </div>
+  </nav>
+  </aside>
+  <div class="drawer-backdrop" x-cloak x-show="drawerOpen" x-on:click="closeDrawer"></div>
+
+  <main id="main" class="content" tabindex="-1">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <ol>
+                        <li><a href="/">Home</a></li>
+                                <li><a href="/docs/">Documentation</a></li>
+                                <li><a href="/docs/#web-http">Web &amp; HTTP</a></li>
+                                <li><span aria-current="page">Request</span></li>
+                      </ol>
+    </nav>
+    
+    <article class="prose doc">
+  <header class="doc-head">
+    <p class="eyebrow"><a href="/docs/#web-http">Web &amp; HTTP</a></p>
+    <h1>Request</h1>
+    <p class="lead">Current HTTP request reading with strict types. Natively, <code>$_GET</code>[<code>&apos;id&apos;</code>] might be missing, could be an array (?id[]=1), or arbitrary text, while (int) <code>&apos;abc&apos;</code> = 0. Here, typed getters return exactly the requested type or throw an exception.</p>
+    <ul class="facts" aria-label="Class facts">
+      <li><span>Namespace</span><code>Foundry\Request</code></li>
+      <li><span>File</span><code>Request.php</code></li>
+      <li><span>Version</span><strong>1.0</strong></li>
+      <li><span>Requires</span><strong>PHP 8.3+</strong> <code class="ext">ext-mbstring</code></li>
+      <li><span>API</span><strong>40 public members</strong></li>
+    </ul>
+  </header>
+  <h2 id="rules">Rules<a class="anchor" href="#rules" aria-label="Permalink to this section">#</a></h2>
+<ul><li><code>int(&apos;id&apos;)</code>, <code>string(&apos;name&apos;)</code>, ... : missing, empty, or invalid parameter = UnexpectedValueException (in application: 400 response); OrNull variants return null when missing or empty</li><li><code>input()</code> looks in the request body (form, JSON, urlencoded PUT/PATCH/DELETE), then in the query string</li><li>invalid UTF-8 strings and arrays passed where a string is expected are rejected</li><li><code>ip()</code> only uses X-Forwarded-For from explicitly specified trusted proxies</li><li>error messages contain the parameter name, not the value.</li></ul>
+<h2 id="usage">Usage<a class="anchor" href="#usage" aria-label="Permalink to this section">#</a></h2>
+<div class="codeblock" data-lang="php"><div class="codeblock-bar"><span class="codeblock-lang">PHP</span><button type="button" class="copy-btn" data-copy hidden>Copy</button></div><pre><code><span class="t-k">require_once</span> <span class="t-s">&apos;Request.php&apos;</span>;
+<span class="t-k">use</span> <span class="t-C">Foundry\Request</span>;
+
+<span class="t-v">$request</span> = <span class="t-C">Request</span>::<span class="t-f">fromGlobals</span>();
+<span class="t-v">$id</span> = <span class="t-v">$request</span>-&gt;<span class="t-t">int</span>(<span class="t-s">&apos;id&apos;</span>);                        <span class="t-c">// &apos;12&apos; -&gt; 12; missing, &apos;12abc&apos;, ?id[]=1 -&gt; throws exception</span>
+<span class="t-v">$page</span> = <span class="t-v">$request</span>-&gt;<span class="t-f">intOrNull</span>(<span class="t-s">&apos;page&apos;</span>) ?? <span class="t-n">1</span>;
+<span class="t-v">$name</span> = <span class="t-v">$request</span>-&gt;<span class="t-t">string</span>(<span class="t-s">&apos;name&apos;</span>);
+<span class="t-v">$date</span> = <span class="t-v">$request</span>-&gt;<span class="t-f">date</span>(<span class="t-s">&apos;date&apos;</span>, <span class="t-s">&apos;d.m.Y&apos;</span>);          <span class="t-c">// DateTimeImmutable, real calendar date</span>
+<span class="t-v">$active</span> = <span class="t-v">$request</span>-&gt;<span class="t-f">boolOrNull</span>(<span class="t-s">&apos;active&apos;</span>) ?? <span class="t-t">false</span>; <span class="t-c">// checkbox</span>
+<span class="t-k">if</span> (<span class="t-v">$request</span>-&gt;<span class="t-f">isPost</span>() &amp;&amp; <span class="t-v">$request</span>-&gt;<span class="t-f">wantsJson</span>()) { ... }
+<span class="t-v">$ip</span> = <span class="t-v">$request</span>-&gt;<span class="t-f">ip</span>([<span class="t-s">&apos;10.0.0.0/8&apos;</span>]);               <span class="t-c">// behind an internal proxy</span></code></pre></div>
+<h2 id="installation">Installation<a class="anchor" href="#installation" aria-label="Permalink to this section">#</a></h2>
+<p>Copy <code>Request.php</code> from the <a href="/docs/installation/#download">download archive</a> into your project and load it (or register the <a href="/docs/installation/#loading-the-classes">autoloader</a>):</p>
+<div class="codeblock" data-lang="php"><div class="codeblock-bar"><span class="codeblock-lang">PHP</span><button type="button" class="copy-btn" data-copy hidden>Copy</button></div><pre><code><span class="t-k">require_once</span> __DIR__.<span class="t-s">&apos;/lib/Utilities/Request.php&apos;</span>;
+
+<span class="t-k">use</span> <span class="t-C">Foundry\Request</span>;</code></pre></div>
+<p class="muted-note">Requires the PHP extension <code>mbstring</code> (check with <code>php -m</code>).</p>
+<h2 id="methods">Methods<a class="anchor" href="#methods" aria-label="Permalink to this section">#</a></h2>
+<nav class="method-index" aria-label="Request methods"><ul><li><a href="#method-__construct"><code>__construct()</code></a></li><li><a href="#method-fromglobals"><code>fromGlobals()</code></a></li><li><a href="#method-method"><code>method()</code></a></li><li><a href="#method-ismethod"><code>isMethod()</code></a></li><li><a href="#method-isget"><code>isGet()</code></a></li><li><a href="#method-ispost"><code>isPost()</code></a></li><li><a href="#method-isajax"><code>isAjax()</code></a></li><li><a href="#method-isjson"><code>isJson()</code></a></li><li><a href="#method-wantsjson"><code>wantsJson()</code></a></li><li><a href="#method-issecure"><code>isSecure()</code></a></li><li><a href="#method-uri"><code>uri()</code></a></li><li><a href="#method-path"><code>path()</code></a></li><li><a href="#method-header"><code>header()</code></a></li><li><a href="#method-headers"><code>headers()</code></a></li><li><a href="#method-bearertoken"><code>bearerToken()</code></a></li><li><a href="#method-useragent"><code>userAgent()</code></a></li><li><a href="#method-cookie"><code>cookie()</code></a></li><li><a href="#method-ip"><code>ip()</code></a></li><li><a href="#method-query"><code>query()</code></a></li><li><a href="#method-post"><code>post()</code></a></li><li><a href="#method-input"><code>input()</code></a></li><li><a href="#method-all"><code>all()</code></a></li><li><a href="#method-only"><code>only()</code></a></li><li><a href="#method-except"><code>except()</code></a></li><li><a href="#method-has"><code>has()</code></a></li><li><a href="#method-filled"><code>filled()</code></a></li><li><a href="#method-string"><code>string()</code></a></li><li><a href="#method-stringornull"><code>stringOrNull()</code></a></li><li><a href="#method-int"><code>int()</code></a></li><li><a href="#method-intornull"><code>intOrNull()</code></a></li><li><a href="#method-float"><code>float()</code></a></li><li><a href="#method-floatornull"><code>floatOrNull()</code></a></li><li><a href="#method-bool"><code>bool()</code></a></li><li><a href="#method-boolornull"><code>boolOrNull()</code></a></li><li><a href="#method-date"><code>date()</code></a></li><li><a href="#method-dateornull"><code>dateOrNull()</code></a></li><li><a href="#method-array"><code>array()</code></a></li><li><a href="#method-body"><code>body()</code></a></li><li><a href="#method-json"><code>json()</code></a></li><li><a href="#method-file"><code>file()</code></a></li></ul></nav>
+<section class="member" id="method-__construct" aria-labelledby="method-__construct-title"><header class="member-head"><h3 id="method-__construct-title"><code>new Request()</code></h3><span class="badge badge-constructor">Constructor</span><a class="anchor" href="#method-__construct" aria-label="Permalink to __construct">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">__construct</span>(
+    <span class="t-k">private</span> <span class="t-k">readonly</span> <span class="t-k">array</span> <span class="t-v">$query</span> = [],
+    <span class="t-k">private</span> <span class="t-k">readonly</span> <span class="t-k">array</span> <span class="t-v">$post</span> = [],
+    <span class="t-k">private</span> <span class="t-k">readonly</span> <span class="t-k">array</span> <span class="t-v">$server</span> = [],
+    <span class="t-k">private</span> <span class="t-k">readonly</span> <span class="t-k">array</span> <span class="t-v">$files</span> = [],
+    <span class="t-k">private</span> <span class="t-k">readonly</span> <span class="t-k">array</span> <span class="t-v">$cookies</span> = [],
+    <span class="t-k">private</span> ?<span class="t-t">string</span> <span class="t-v">$body</span> = <span class="t-t">null</span>,
+)</code></pre><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$query</code></td><td><code class="type">array&lt;array-key, mixed&gt;</code></td><td><code class="value">[]</code></td><td>URL query parameters (<code>$_GET</code>).</td></tr><tr><td><code>$post</code></td><td><code class="type">array&lt;array-key, mixed&gt;</code></td><td><code class="value">[]</code></td><td>Form parameters (<code>$_POST</code>).</td></tr><tr><td><code>$server</code></td><td><code class="type">array&lt;array-key, mixed&gt;</code></td><td><code class="value">[]</code></td><td><code>$_SERVER</code> variables.</td></tr><tr><td><code>$files</code></td><td><code class="type">array&lt;array-key, mixed&gt;</code></td><td><code class="value">[]</code></td><td>Uploaded files (<code>$_FILES</code>).</td></tr><tr><td><code>$cookies</code></td><td><code class="type">array&lt;array-key, mixed&gt;</code></td><td><code class="value">[]</code></td><td>Cookie values (<code>$_COOKIE</code>).</td></tr><tr><td><code>$body</code></td><td><code class="type">string|null</code></td><td><code class="value">null</code></td><td>Raw request body; null = read from php://input on first access.</td></tr></tbody></table></div></section>
+<section class="member" id="method-fromglobals" aria-labelledby="method-fromglobals-title"><header class="member-head"><h3 id="method-fromglobals-title"><code>Request::fromGlobals()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-fromglobals" aria-label="Permalink to fromGlobals">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">fromGlobals</span>(): <span class="t-t">self</span></code></pre><dl class="returns"><dt>Returns</dt><dd><code class="type">Foundry\Request</code></dd></dl></section>
+<section class="member" id="method-method" aria-labelledby="method-method-title"><header class="member-head"><h3 id="method-method-title"><code>$request-&gt;method()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-method" aria-label="Permalink to method">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">method</span>(): <span class="t-t">string</span></code></pre><p>HTTP method in uppercase (defaults to GET).</p><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If the method is not a valid HTTP method name.</li></ul></div></section>
+<section class="member" id="method-ismethod" aria-labelledby="method-ismethod-title"><header class="member-head"><h3 id="method-ismethod-title"><code>$request-&gt;isMethod()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-ismethod" aria-label="Permalink to isMethod">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">isMethod</span>(<span class="t-t">string</span> <span class="t-v">$method</span>): <span class="t-t">bool</span></code></pre><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$method</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">bool</code></dd></dl></section>
+<section class="member" id="method-isget" aria-labelledby="method-isget-title"><header class="member-head"><h3 id="method-isget-title"><code>$request-&gt;isGet()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-isget" aria-label="Permalink to isGet">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">isGet</span>(): <span class="t-t">bool</span></code></pre><dl class="returns"><dt>Returns</dt><dd><code class="type">bool</code></dd></dl></section>
+<section class="member" id="method-ispost" aria-labelledby="method-ispost-title"><header class="member-head"><h3 id="method-ispost-title"><code>$request-&gt;isPost()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-ispost" aria-label="Permalink to isPost">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">isPost</span>(): <span class="t-t">bool</span></code></pre><dl class="returns"><dt>Returns</dt><dd><code class="type">bool</code></dd></dl></section>
+<section class="member" id="method-isajax" aria-labelledby="method-isajax-title"><header class="member-head"><h3 id="method-isajax-title"><code>$request-&gt;isAjax()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-isajax" aria-label="Permalink to isAjax">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">isAjax</span>(): <span class="t-t">bool</span></code></pre><p>Request initiated via JavaScript (X-Requested-With: XMLHttpRequest).</p><dl class="returns"><dt>Returns</dt><dd><code class="type">bool</code></dd></dl></section>
+<section class="member" id="method-isjson" aria-labelledby="method-isjson-title"><header class="member-head"><h3 id="method-isjson-title"><code>$request-&gt;isJson()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-isjson" aria-label="Permalink to isJson">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">isJson</span>(): <span class="t-t">bool</span></code></pre><p>The request body is JSON (Content-Type application/json or +json).</p><dl class="returns"><dt>Returns</dt><dd><code class="type">bool</code></dd></dl></section>
+<section class="member" id="method-wantsjson" aria-labelledby="method-wantsjson-title"><header class="member-head"><h3 id="method-wantsjson-title"><code>$request-&gt;wantsJson()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-wantsjson" aria-label="Permalink to wantsJson">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">wantsJson</span>(): <span class="t-t">bool</span></code></pre><p>The client expects JSON (Accept header contains json or the request is AJAX).</p><dl class="returns"><dt>Returns</dt><dd><code class="type">bool</code></dd></dl></section>
+<section class="member" id="method-issecure" aria-labelledby="method-issecure-title"><header class="member-head"><h3 id="method-issecure-title"><code>$request-&gt;isSecure()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-issecure" aria-label="Permalink to isSecure">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">isSecure</span>(<span class="t-t">bool</span> <span class="t-v">$trustForwarded</span> = <span class="t-t">false</span>): <span class="t-t">bool</span></code></pre><p>HTTPS connection. With <code>$trustForwarded</code>, X-Forwarded-Proto is used (only behind a trusted proxy).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$trustForwarded</code></td><td><code class="type">bool</code></td><td><code class="value">false</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">bool</code></dd></dl></section>
+<section class="member" id="method-uri" aria-labelledby="method-uri-title"><header class="member-head"><h3 id="method-uri-title"><code>$request-&gt;uri()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-uri" aria-label="Permalink to uri">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">uri</span>(): <span class="t-t">string</span></code></pre><p>Request URI path and query (<code>&apos;/polite?page=2&apos;</code>), without scheme and host.</p><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl></section>
+<section class="member" id="method-path" aria-labelledby="method-path-title"><header class="member-head"><h3 id="method-path-title"><code>$request-&gt;path()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-path" aria-label="Permalink to path">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">path</span>(): <span class="t-t">string</span></code></pre><p>Request path without query string (<code>&apos;/polite&apos;</code>), unencoded.</p><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl></section>
+<section class="member" id="method-header" aria-labelledby="method-header-title"><header class="member-head"><h3 id="method-header-title"><code>$request-&gt;header()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-header" aria-label="Permalink to header">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">header</span>(<span class="t-t">string</span> <span class="t-v">$name</span>): ?<span class="t-t">string</span></code></pre><p>Header value (case-insensitive) or null.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$name</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">?string</code></dd></dl></section>
+<section class="member" id="method-headers" aria-labelledby="method-headers-title"><header class="member-head"><h3 id="method-headers-title"><code>$request-&gt;headers()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-headers" aria-label="Permalink to headers">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">headers</span>(): <span class="t-k">array</span></code></pre><p>All headers, with names in normalized <code>&apos;content-type&apos;</code> format.</p><dl class="returns"><dt>Returns</dt><dd><code class="type">array&lt;string, string&gt;</code></dd></dl></section>
+<section class="member" id="method-bearertoken" aria-labelledby="method-bearertoken-title"><header class="member-head"><h3 id="method-bearertoken-title"><code>$request-&gt;bearerToken()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-bearertoken" aria-label="Permalink to bearerToken">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">bearerToken</span>(): ?<span class="t-t">string</span></code></pre><p>Token extracted from <code>&apos;Authorization: Bearer ...&apos;</code> or null.</p><dl class="returns"><dt>Returns</dt><dd><code class="type">?string</code></dd></dl></section>
+<section class="member" id="method-useragent" aria-labelledby="method-useragent-title"><header class="member-head"><h3 id="method-useragent-title"><code>$request-&gt;userAgent()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-useragent" aria-label="Permalink to userAgent">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">userAgent</span>(): ?<span class="t-t">string</span></code></pre><dl class="returns"><dt>Returns</dt><dd><code class="type">?string</code></dd></dl></section>
+<section class="member" id="method-cookie" aria-labelledby="method-cookie-title"><header class="member-head"><h3 id="method-cookie-title"><code>$request-&gt;cookie()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-cookie" aria-label="Permalink to cookie">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">cookie</span>(<span class="t-t">string</span> <span class="t-v">$name</span>): ?<span class="t-t">string</span></code></pre><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$name</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">?string</code></dd></dl></section>
+<section class="member" id="method-ip" aria-labelledby="method-ip-title"><header class="member-head"><h3 id="method-ip-title"><code>$request-&gt;ip()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-ip" aria-label="Permalink to ip">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">ip</span>(<span class="t-k">array</span> <span class="t-v">$trustedProxies</span> = []): <span class="t-t">string</span></code></pre><p>Client IP address. If <code>REMOTE_ADDR</code> matches one of <code>$trustedProxies</code> (IPs or CIDR: <code>&apos;10.0.0.0/8&apos;</code>), X-Forwarded-For is traversed from right to left, returning the first non-trusted IP. Without trusted proxies, the header is ignored (it could be spoofed by the client).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$trustedProxies</code></td><td><code class="type">list&lt;string&gt;</code></td><td><code class="value">[]</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If an entry in <code>$trustedProxies</code> is invalid.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If <code>REMOTE_ADDR</code> is missing or not a valid IP address.</li></ul></div></section>
+<section class="member" id="method-query" aria-labelledby="method-query-title"><header class="member-head"><h3 id="method-query-title"><code>$request-&gt;query()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-query" aria-label="Permalink to query">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">query</span>(<span class="t-t">string</span> <span class="t-v">$key</span>, <span class="t-t">mixed</span> <span class="t-v">$default</span> = <span class="t-t">null</span>): <span class="t-t">mixed</span></code></pre><p>Parameter from query string as received (string, array, or null if missing).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$key</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$default</code></td><td><code class="type">mixed</code></td><td><code class="value">null</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">mixed</code></dd></dl></section>
+<section class="member" id="method-post" aria-labelledby="method-post-title"><header class="member-head"><h3 id="method-post-title"><code>$request-&gt;post()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-post" aria-label="Permalink to post">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">post</span>(<span class="t-t">string</span> <span class="t-v">$key</span>, <span class="t-t">mixed</span> <span class="t-v">$default</span> = <span class="t-t">null</span>): <span class="t-t">mixed</span></code></pre><p>Parameter from request body (form, JSON, urlencoded PUT/PATCH/DELETE) as received.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$key</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$default</code></td><td><code class="type">mixed</code></td><td><code class="value">null</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">mixed</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If JSON body is invalid.</li></ul></div></section>
+<section class="member" id="method-input" aria-labelledby="method-input-title"><header class="member-head"><h3 id="method-input-title"><code>$request-&gt;input()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-input" aria-label="Permalink to input">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">input</span>(<span class="t-t">string</span> <span class="t-v">$key</span>, <span class="t-t">mixed</span> <span class="t-v">$default</span> = <span class="t-t">null</span>): <span class="t-t">mixed</span></code></pre><p>Parameter from body or, if missing, from query string, as received.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$key</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$default</code></td><td><code class="type">mixed</code></td><td><code class="value">null</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">mixed</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If JSON body is invalid.</li></ul></div></section>
+<section class="member" id="method-all" aria-labelledby="method-all-title"><header class="member-head"><h3 id="method-all-title"><code>$request-&gt;all()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-all" aria-label="Permalink to all">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">all</span>(): <span class="t-k">array</span></code></pre><p>All parameters: query string overridden by body.</p><dl class="returns"><dt>Returns</dt><dd><code class="type">array&lt;array-key, mixed&gt;</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If JSON body is invalid.</li></ul></div></section>
+<section class="member" id="method-only" aria-labelledby="method-only-title"><header class="member-head"><h3 id="method-only-title"><code>$request-&gt;only()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-only" aria-label="Permalink to only">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">only</span>(<span class="t-t">string</span> ...<span class="t-v">$keys</span>): <span class="t-k">array</span></code></pre><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$keys</code></td><td><code class="type">string</code></td><td><span class="pill">variadic</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">array&lt;array-key, mixed&gt;</code> <span>Only requested keys that exist.</span></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If JSON body is invalid.</li></ul></div></section>
+<section class="member" id="method-except" aria-labelledby="method-except-title"><header class="member-head"><h3 id="method-except-title"><code>$request-&gt;except()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-except" aria-label="Permalink to except">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">except</span>(<span class="t-t">string</span> ...<span class="t-v">$keys</span>): <span class="t-k">array</span></code></pre><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$keys</code></td><td><code class="type">string</code></td><td><span class="pill">variadic</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">array&lt;array-key, mixed&gt;</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If JSON body is invalid.</li></ul></div></section>
+<section class="member" id="method-has" aria-labelledby="method-has-title"><header class="member-head"><h3 id="method-has-title"><code>$request-&gt;has()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-has" aria-label="Permalink to has">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">has</span>(<span class="t-t">string</span> <span class="t-v">$key</span>): <span class="t-t">bool</span></code></pre><p>Checks if the parameter exists (even if empty).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$key</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">bool</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If JSON body is invalid.</li></ul></div></section>
+<section class="member" id="method-filled" aria-labelledby="method-filled-title"><header class="member-head"><h3 id="method-filled-title"><code>$request-&gt;filled()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-filled" aria-label="Permalink to filled">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">filled</span>(<span class="t-t">string</span> <span class="t-v">$key</span>): <span class="t-t">bool</span></code></pre><p>Checks if the parameter exists and is not blank (null, &apos;&apos;, whitespace-only, []).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$key</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">bool</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If JSON body is invalid.</li></ul></div></section>
+<section class="member" id="method-string" aria-labelledby="method-string-title"><header class="member-head"><h3 id="method-string-title"><code>$request-&gt;string()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-string" aria-label="Permalink to string">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-t">string</span>(<span class="t-t">string</span> <span class="t-v">$key</span>): <span class="t-t">string</span></code></pre><p>String value (unmodified: whitespace is preserved).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$key</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If missing, empty, not a string, or invalid UTF-8.</li></ul></div></section>
+<section class="member" id="method-stringornull" aria-labelledby="method-stringornull-title"><header class="member-head"><h3 id="method-stringornull-title"><code>$request-&gt;stringOrNull()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-stringornull" aria-label="Permalink to stringOrNull">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">stringOrNull</span>(<span class="t-t">string</span> <span class="t-v">$key</span>): ?<span class="t-t">string</span></code></pre><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$key</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">?string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If not a string or invalid UTF-8.</li></ul></div></section>
+<section class="member" id="method-int" aria-labelledby="method-int-title"><header class="member-head"><h3 id="method-int-title"><code>$request-&gt;int()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-int" aria-label="Permalink to int">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-t">int</span>(<span class="t-t">string</span> <span class="t-v">$key</span>): <span class="t-t">int</span></code></pre><p>Integer value: <code>&apos;12&apos;</code>, <code>&apos;-5&apos;</code> (trimmed whitespace; <code>&apos;012&apos;</code>, <code>&apos;1.0&apos;</code>, <code>&apos;12abc&apos;</code> rejected).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$key</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">int</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If missing, empty, or not an integer.</li></ul></div></section>
+<section class="member" id="method-intornull" aria-labelledby="method-intornull-title"><header class="member-head"><h3 id="method-intornull-title"><code>$request-&gt;intOrNull()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-intornull" aria-label="Permalink to intOrNull">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">intOrNull</span>(<span class="t-t">string</span> <span class="t-v">$key</span>): ?<span class="t-t">int</span></code></pre><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$key</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">?int</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If not an integer.</li></ul></div></section>
+<section class="member" id="method-float" aria-labelledby="method-float-title"><header class="member-head"><h3 id="method-float-title"><code>$request-&gt;float()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-float" aria-label="Permalink to float">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-t">float</span>(<span class="t-t">string</span> <span class="t-v">$key</span>): <span class="t-t">float</span></code></pre><p>Float value with decimal point: <code>&apos;1.5&apos;</code>, <code>&apos;-3&apos;</code> (no comma, exponent, or thousands separator).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$key</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">float</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If missing, empty, or not a number.</li></ul></div></section>
+<section class="member" id="method-floatornull" aria-labelledby="method-floatornull-title"><header class="member-head"><h3 id="method-floatornull-title"><code>$request-&gt;floatOrNull()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-floatornull" aria-label="Permalink to floatOrNull">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">floatOrNull</span>(<span class="t-t">string</span> <span class="t-v">$key</span>): ?<span class="t-t">float</span></code></pre><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$key</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">?float</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If not a number.</li></ul></div></section>
+<section class="member" id="method-bool" aria-labelledby="method-bool-title"><header class="member-head"><h3 id="method-bool-title"><code>$request-&gt;bool()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-bool" aria-label="Permalink to bool">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-t">bool</span>(<span class="t-t">string</span> <span class="t-v">$key</span>): <span class="t-t">bool</span></code></pre><p>Boolean: true/false, 1/0, yes/no, on/off, da/nu (case-insensitive).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$key</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">bool</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If missing, empty, or not a recognized boolean value.</li></ul></div></section>
+<section class="member" id="method-boolornull" aria-labelledby="method-boolornull-title"><header class="member-head"><h3 id="method-boolornull-title"><code>$request-&gt;boolOrNull()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-boolornull" aria-label="Permalink to boolOrNull">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">boolOrNull</span>(<span class="t-t">string</span> <span class="t-v">$key</span>): ?<span class="t-t">bool</span></code></pre><p>An unchecked checkbox is omitted entirely: <code>boolOrNull(&apos;activ&apos;)</code> ?? false.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$key</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">?bool</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If not a recognized boolean value.</li></ul></div></section>
+<section class="member" id="method-date" aria-labelledby="method-date-title"><header class="member-head"><h3 id="method-date-title"><code>$request-&gt;date()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-date" aria-label="Permalink to date">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">date</span>(<span class="t-t">string</span> <span class="t-v">$key</span>, <span class="t-t">string</span> <span class="t-v">$format</span> = <span class="t-s">&apos;Y-m-d&apos;</span>): <span class="t-C">DateTimeImmutable</span></code></pre><p>Real calendar date strictly matching the format (e.g. 31.02 and 2-digit years rejected).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$key</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$format</code></td><td><code class="type">string</code></td><td><code class="value">&apos;Y-m-d&apos;</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">DateTimeImmutable</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If missing, empty, or not a valid date.</li></ul></div></section>
+<section class="member" id="method-dateornull" aria-labelledby="method-dateornull-title"><header class="member-head"><h3 id="method-dateornull-title"><code>$request-&gt;dateOrNull()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-dateornull" aria-label="Permalink to dateOrNull">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">dateOrNull</span>(<span class="t-t">string</span> <span class="t-v">$key</span>, <span class="t-t">string</span> <span class="t-v">$format</span> = <span class="t-s">&apos;Y-m-d&apos;</span>): ?<span class="t-C">DateTimeImmutable</span></code></pre><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$key</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$format</code></td><td><code class="type">string</code></td><td><code class="value">&apos;Y-m-d&apos;</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">?DateTimeImmutable</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If not a valid date in the given format.</li></ul></div></section>
+<section class="member" id="method-array" aria-labelledby="method-array-title"><header class="member-head"><h3 id="method-array-title"><code>$request-&gt;array()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-array" aria-label="Permalink to array">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-k">array</span>(<span class="t-t">string</span> <span class="t-v">$key</span>): <span class="t-k">array</span></code></pre><p>List of values (multi-select, checkboxes name=&quot;x[]&quot;). Missing or empty = [].</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$key</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">array&lt;array-key, mixed&gt;</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If value is not an array.</li></ul></div></section>
+<section class="member" id="method-body" aria-labelledby="method-body-title"><header class="member-head"><h3 id="method-body-title"><code>$request-&gt;body()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-body" aria-label="Permalink to body">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">body</span>(): <span class="t-t">string</span></code></pre><p>Raw request body.</p><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If php://input cannot be read.</li></ul></div></section>
+<section class="member" id="method-json" aria-labelledby="method-json-title"><header class="member-head"><h3 id="method-json-title"><code>$request-&gt;json()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-json" aria-label="Permalink to json">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">json</span>(): <span class="t-k">array</span></code></pre><p>Decoded JSON body. Must be a JSON object or array.</p><dl class="returns"><dt>Returns</dt><dd><code class="type">array&lt;array-key, mixed&gt;</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If body is empty, invalid JSON, or a scalar.</li></ul></div></section>
+<section class="member" id="method-file" aria-labelledby="method-file-title"><header class="member-head"><h3 id="method-file-title"><code>$request-&gt;file()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-file" aria-label="Permalink to file">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">file</span>(<span class="t-t">string</span> <span class="t-v">$key</span>): ?<span class="t-k">array</span></code></pre><p>The <code>$_FILES</code> entry for a field or null if no file was uploaded. Validation (MIME inspection, size, storage) is performed via Upload.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$key</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">array&lt;array-key, mixed&gt;|null</code></dd></dl></section></article>
+
+        <nav class="pager" aria-label="Previous and next pages">
+            <a class="pager-prev" href="/docs/mailer/" rel="prev"><span>Previous</span><strong>Mailer</strong></a>
+                  <a class="pager-next" href="/docs/response/" rel="next"><span>Next</span><strong>Response</strong></a>
+          </nav>
+    
+    <div class="page-meta">
+            <span>Last updated <time datetime="2026-11-10T21:51:05+02:00">November 10, 2026</time></span>
+                  <a href="/docs/request.md">View as Markdown</a>
+          </div>
+  </main>
+
+    <aside class="toc" aria-label="On this page">
+    <p class="toc-title">On this page</p>
+    <ul>
+            <li class="toc-l2"><a href="#rules">Rules</a></li>
+            <li class="toc-l2"><a href="#usage">Usage</a></li>
+            <li class="toc-l2"><a href="#installation">Installation</a></li>
+            <li class="toc-l2"><a href="#methods">Methods</a></li>
+            <li class="toc-l3"><a href="#method-__construct">__construct()</a></li>
+            <li class="toc-l3"><a href="#method-fromglobals">fromGlobals()</a></li>
+            <li class="toc-l3"><a href="#method-method">method()</a></li>
+            <li class="toc-l3"><a href="#method-ismethod">isMethod()</a></li>
+            <li class="toc-l3"><a href="#method-isget">isGet()</a></li>
+            <li class="toc-l3"><a href="#method-ispost">isPost()</a></li>
+            <li class="toc-l3"><a href="#method-isajax">isAjax()</a></li>
+            <li class="toc-l3"><a href="#method-isjson">isJson()</a></li>
+            <li class="toc-l3"><a href="#method-wantsjson">wantsJson()</a></li>
+            <li class="toc-l3"><a href="#method-issecure">isSecure()</a></li>
+            <li class="toc-l3"><a href="#method-uri">uri()</a></li>
+            <li class="toc-l3"><a href="#method-path">path()</a></li>
+            <li class="toc-l3"><a href="#method-header">header()</a></li>
+            <li class="toc-l3"><a href="#method-headers">headers()</a></li>
+            <li class="toc-l3"><a href="#method-bearertoken">bearerToken()</a></li>
+            <li class="toc-l3"><a href="#method-useragent">userAgent()</a></li>
+            <li class="toc-l3"><a href="#method-cookie">cookie()</a></li>
+            <li class="toc-l3"><a href="#method-ip">ip()</a></li>
+            <li class="toc-l3"><a href="#method-query">query()</a></li>
+            <li class="toc-l3"><a href="#method-post">post()</a></li>
+            <li class="toc-l3"><a href="#method-input">input()</a></li>
+            <li class="toc-l3"><a href="#method-all">all()</a></li>
+            <li class="toc-l3"><a href="#method-only">only()</a></li>
+            <li class="toc-l3"><a href="#method-except">except()</a></li>
+            <li class="toc-l3"><a href="#method-has">has()</a></li>
+            <li class="toc-l3"><a href="#method-filled">filled()</a></li>
+            <li class="toc-l3"><a href="#method-string">string()</a></li>
+            <li class="toc-l3"><a href="#method-stringornull">stringOrNull()</a></li>
+            <li class="toc-l3"><a href="#method-int">int()</a></li>
+            <li class="toc-l3"><a href="#method-intornull">intOrNull()</a></li>
+            <li class="toc-l3"><a href="#method-float">float()</a></li>
+            <li class="toc-l3"><a href="#method-floatornull">floatOrNull()</a></li>
+            <li class="toc-l3"><a href="#method-bool">bool()</a></li>
+            <li class="toc-l3"><a href="#method-boolornull">boolOrNull()</a></li>
+            <li class="toc-l3"><a href="#method-date">date()</a></li>
+            <li class="toc-l3"><a href="#method-dateornull">dateOrNull()</a></li>
+            <li class="toc-l3"><a href="#method-array">array()</a></li>
+            <li class="toc-l3"><a href="#method-body">body()</a></li>
+            <li class="toc-l3"><a href="#method-json">json()</a></li>
+            <li class="toc-l3"><a href="#method-file">file()</a></li>
+          </ul>
+  </aside>
+  </div>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <p><strong>Foundry</strong> — standalone, single-file PHP utility classes. &copy; 2026 · Proprietary license.</p>
+    <nav aria-label="Footer">
+      <a href="/docs/">Documentation</a>
+      <a href="/docs/installation/">Installation</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/sitemap.xml">Sitemap</a>
+    </nav>
+  </div>
+</footer>
+
+<div class="search-modal" x-cloak x-show="searchOpen" role="dialog" aria-modal="true" aria-label="Search documentation" x-on:keydown="onSearchKey">
+  <div class="search-backdrop" x-on:click="closeSearch"></div>
+  <div class="search-panel">
+    <div class="search-field">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <input x-ref="input" type="search" placeholder="Search classes, methods and guides" autocomplete="off" spellcheck="false" aria-label="Search" aria-controls="search-results" aria-autocomplete="list" x-bind:aria-activedescendant="activeId" x-on:input="onInput">
+      <button type="button" class="kbd-btn" x-on:click="closeSearch" aria-label="Close search">Esc</button>
+    </div>
+    <ul id="search-results" class="search-results" role="listbox" aria-label="Results" x-ref="list">
+      <template x-for="item in results" x-bind:key="item.id">
+        <li role="option" x-bind:id="item.id" x-bind:aria-selected="item.selected" x-bind:class="item.cls" x-bind:data-index="item.i" x-on:mousemove="hover" x-on:click="closeSearch">
+          <a x-bind:href="item.u" tabindex="-1">
+            <span class="r-kind" x-text="item.kl"></span>
+            <span class="r-main"><span class="r-title" x-text="item.t"></span><span class="r-desc" x-text="item.d"></span></span>
+            <span class="r-sec" x-text="item.s"></span>
+          </a>
+        </li>
+      </template>
+    </ul>
+    <p class="search-status" x-show="showStatus" x-text="statusText"></p>
+    <div class="search-foot" aria-hidden="true"><span><kbd>↑</kbd><kbd>↓</kbd> navigate</span><span><kbd>Enter</kbd> open</span><span><kbd>Esc</kbd> close</span></div>
+  </div>
+</div>
+</div>
+</body>
+</html>

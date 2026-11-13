@@ -1,0 +1,595 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Documentation — Foundry PHP utility classes</title>
+<meta name="description" content="Reference documentation for all 51 Foundry classes: installation, design principles, guides and a complete method reference with parameters, return types and…">
+<link rel="canonical" href="https://foundry.insightdevhub.ro/docs/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f1115">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Foundry">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Documentation — Foundry PHP utility classes">
+<meta property="og:description" content="Reference documentation for all 51 Foundry classes: installation, design principles, guides and a complete method reference with parameters, return types and…">
+<meta property="og:url" content="https://foundry.insightdevhub.ro/docs/">
+<meta property="og:image" content="https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Foundry — standalone PHP utility classes">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Documentation — Foundry PHP utility classes">
+<meta name="twitter:description" content="Reference documentation for all 51 Foundry classes: installation, design principles, guides and a complete method reference with parameters, return types and…">
+<meta name="twitter:image" content="https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="stylesheet" href="/assets/css/site.css?v=f05442ef0e">
+<script src="/assets/js/theme.js?v=b02059f0fb"></script>
+<script src="/assets/js/app.js?v=02d0b9d9f7" defer></script>
+<script src="/assets/vendor/alpine-csp.min.js?v=820bc95038" defer></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://foundry.insightdevhub.ro/"},{"@type":"ListItem","position":2,"name":"Documentation","item":"https://foundry.insightdevhub.ro/docs/"}]}</script>
+</head>
+<body class="is-docs">
+<div class="app" x-data="site" x-on:keydown.window="onKey">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="topbar-inner">
+        <button type="button" class="icon-btn menu-btn" x-cloak x-on:click="toggleDrawer" aria-controls="sidebar" x-bind:aria-expanded="drawerExpanded" aria-label="Open navigation">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+    </button>
+        <a class="brand" href="/" aria-label="Foundry home">
+      <svg class="brand-mark" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><rect width="32" height="32" rx="7" fill="var(--accent)"/><path d="M10 8h13v4h-8.5v3.5H21v4h-6.5V25H10z" fill="#fff"/></svg>
+      <span>Foundry</span>
+    </a>
+    <nav class="topnav" aria-label="Main">
+      <a href="/docs/" aria-current="true">Docs</a>
+      <a href="/docs/installation/#download">Download</a>
+    </nav>
+    <div class="topbar-actions">
+      <button type="button" class="search-btn" x-cloak x-on:click="openSearch" aria-label="Search documentation" aria-keyshortcuts="Control+K Meta+K /">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span class="search-btn-label">Search</span>
+        <kbd class="search-btn-kbd">Ctrl K</kbd>
+      </button>
+      <button type="button" class="icon-btn" x-cloak x-on:click="toggleTheme" x-bind:aria-label="themeLabel" x-bind:title="themeLabel">
+        <svg x-show="isDark" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <svg x-show="isLight" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="sidebar" id="sidebar" x-bind:class="drawerClass" aria-label="Documentation navigation">
+    <nav class="nav">
+    <div class="nav-group">
+    <p class="nav-title">Getting started</p>
+    <ul>
+            <li><a href="/docs/" aria-current="page">Introduction</a></li>
+            <li><a href="/docs/installation/">Installation</a></li>
+            <li><a href="/docs/usage/">Usage &amp; exceptions</a></li>
+            <li><a href="/docs/bootstrap/">Bootstrap</a></li>
+            <li><a href="/docs/design-principles/">Design principles</a></li>
+            <li><a href="/docs/php-versions/">PHP versions</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Guides</p>
+    <ul>
+            <li><a href="/docs/form-handling/">Form handling</a></li>
+            <li><a href="/docs/imports-exports/">Imports &amp; exports</a></li>
+            <li><a href="/docs/databases/">Databases</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Errors &amp; Exception Handling</p>
+    <ul>
+            <li><a href="/docs/error-handler/">ErrorHandler</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Native Function Wrappers</p>
+    <ul>
+            <li><a href="/docs/json/">Json</a></li>
+            <li><a href="/docs/file/">File</a></li>
+            <li><a href="/docs/regex/">Regex</a></li>
+            <li><a href="/docs/cast/">Cast</a></li>
+            <li><a href="/docs/encoding/">Encoding</a></li>
+            <li><a href="/docs/upload/">Upload</a></li>
+            <li><a href="/docs/process/">Process</a></li>
+            <li><a href="/docs/zip/">Zip</a></li>
+            <li><a href="/docs/image/">Image</a></li>
+            <li><a href="/docs/ini/">Ini</a></li>
+            <li><a href="/docs/base64/">Base64</a></li>
+            <li><a href="/docs/serializer/">Serializer</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Text, Dates, and Numbers</p>
+    <ul>
+            <li><a href="/docs/str/">Str</a></li>
+            <li><a href="/docs/arr/">Arr</a></li>
+            <li><a href="/docs/date/">Date</a></li>
+            <li><a href="/docs/number/">Number</a></li>
+            <li><a href="/docs/money/">Money</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Validation</p>
+    <ul>
+            <li><a href="/docs/validator/">Validator</a></li>
+            <li><a href="/docs/ro-validator/">RoValidator</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Databases</p>
+    <ul>
+            <li><a href="/docs/mysql/">MySQL</a></li>
+            <li><a href="/docs/oracle/">Oracle</a></li>
+            <li><a href="/docs/sqlite/">SQLite</a></li>
+            <li><a href="/docs/paginator/">Paginator</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Import / Export</p>
+    <ul>
+            <li><a href="/docs/csv/">Csv</a></li>
+            <li><a href="/docs/xlsx/">Xlsx</a></li>
+            <li><a href="/docs/xml/">Xml</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Configuration &amp; Infrastructure</p>
+    <ul>
+            <li><a href="/docs/env/">Env</a></li>
+            <li><a href="/docs/config/">Config</a></li>
+            <li><a href="/docs/log/">Log</a></li>
+            <li><a href="/docs/http-client/">HttpClient</a></li>
+            <li><a href="/docs/cache/">Cache</a></li>
+            <li><a href="/docs/retry/">Retry</a></li>
+            <li><a href="/docs/rate-limiter/">RateLimiter</a></li>
+            <li><a href="/docs/crypt/">Crypt</a></li>
+            <li><a href="/docs/token/">Token</a></li>
+            <li><a href="/docs/mailer/">Mailer</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Web &amp; HTTP</p>
+    <ul>
+            <li><a href="/docs/request/">Request</a></li>
+            <li><a href="/docs/response/">Response</a></li>
+            <li><a href="/docs/session/">Session</a></li>
+            <li><a href="/docs/csrf/">Csrf</a></li>
+            <li><a href="/docs/view/">View</a></li>
+            <li><a href="/docs/url/">Url</a></li>
+            <li><a href="/docs/security-headers/">SecurityHeaders</a></li>
+            <li><a href="/docs/bot-detection/">BotDetection</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">UI Rendering Helpers</p>
+    <ul>
+            <li><a href="/docs/breadcrumbs/">Breadcrumbs</a></li>
+            <li><a href="/docs/flash/">Flash</a></li>
+            <li><a href="/docs/form-builder/">FormBuilder</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Development Tools</p>
+    <ul>
+            <li><a href="/docs/debug/">Debug</a></li>
+            <li><a href="/docs/timer/">Timer</a></li>
+            <li><a href="/docs/faker/">Faker</a></li>
+          </ul>
+  </div>
+  </nav>
+  </aside>
+  <div class="drawer-backdrop" x-cloak x-show="drawerOpen" x-on:click="closeDrawer"></div>
+
+  <main id="main" class="content" tabindex="-1">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <ol>
+                        <li><a href="/">Home</a></li>
+                                <li><span aria-current="page">Documentation</span></li>
+                      </ol>
+    </nav>
+    
+    <article class="prose doc">
+  <header class="doc-head">
+    <p class="eyebrow">Documentation</p>
+    <h1>Foundry documentation</h1>
+    <p class="lead">Foundry is a curated suite of 51 production-grade, single-file PHP utility classes. Any problem triggers an explicit, descriptive exception: never a silent <code>false</code>, an unexpected <code>null</code> or an unhandled warning.</p>
+  </header>
+
+  <p>Each utility is <strong>a single standalone file</strong> in the <code>Foundry</code> namespace. Copy only what you need: there are no Composer vendor trees and no third-party dependencies in production. The classes are written for PHP 8.3+ and are also available as automatically downgraded PHP 7.4 builds.</p>
+
+  <h2 id="getting-started">Getting started<a class="anchor" href="#getting-started" aria-label="Permalink to this section">#</a></h2>  <div class="cards">
+        <a class="card" href="/docs/installation/">
+      <span class="card-kicker">Getting started</span>
+      <strong>Installation</strong>
+      <span>Download the Foundry archive, copy the classes you need into your project and load them with require_once, an SPL autoloader or Composer PSR-4.</span>
+    </a>
+        <a class="card" href="/docs/usage/">
+      <span class="card-kicker">Getting started</span>
+      <strong>Usage and exceptions</strong>
+      <span>How Foundry classes are called, which exceptions they throw, how error messages are written, and when to catch them.</span>
+    </a>
+        <a class="card" href="/docs/bootstrap/">
+      <span class="card-kicker">Getting started</span>
+      <strong>Application bootstrap</strong>
+      <span>The few lines to run once in your entry point - environment, logging, error handling, security headers and sessions.</span>
+    </a>
+        <a class="card" href="/docs/design-principles/">
+      <span class="card-kicker">Getting started</span>
+      <strong>Design principles</strong>
+      <span>The rules every Foundry class follows - explicit errors, one file per tool, pure native PHP, no personal data in error messages - and what is deliberately left out.</span>
+    </a>
+        <a class="card" href="/docs/php-versions/">
+      <span class="card-kicker">Getting started</span>
+      <strong>PHP versions</strong>
+      <span>Foundry is written for PHP 8.3+ and can be downgraded automatically to PHP 7.4. Here is how the two targets relate and how they differ.</span>
+    </a>
+        <a class="card" href="/docs/form-handling/">
+      <span class="card-kicker">Guides</span>
+      <strong>Form handling</strong>
+      <span>A complete form workflow with Foundry - reading the request, CSRF protection, validation, saving, flash messages and the redirect.</span>
+    </a>
+        <a class="card" href="/docs/imports-exports/">
+      <span class="card-kicker">Guides</span>
+      <strong>Large imports and exports</strong>
+      <span>Import and export millions of CSV and Excel rows with constant memory - schema validation, batches, resumable cursors and streaming writers.</span>
+    </a>
+        <a class="card" href="/docs/databases/">
+      <span class="card-kicker">Guides</span>
+      <strong>Databases</strong>
+      <span>MySQL, Oracle and SQLite share one API - fetch helpers, array-based insert/update/delete, streaming cursors, transactions and safe pagination.</span>
+    </a>
+      </div>
+
+    <h2 id="errors-exception-handling">Errors &amp; Exception Handling<a class="anchor" href="#errors-exception-handling" aria-label="Permalink to this section">#</a></h2>  <div class="table-wrap">
+    <table class="catalog-table">
+      <thead><tr><th scope="col">Class</th><th scope="col">Overview</th></tr></thead>
+      <tbody>
+                <tr>
+          <td><a class="code-link" href="/docs/error-handler/"><code>ErrorHandler</code></a></td>
+          <td>Explicitly registered: converts warnings to ErrorException, logs deprecations, handles uncaught exceptions and fatal errors with logging and a generic 500 response (detailed traces in debug mode only).</td>
+        </tr>
+              </tbody>
+    </table>
+  </div>
+    <h2 id="native-function-wrappers">Native Function Wrappers<a class="anchor" href="#native-function-wrappers" aria-label="Permalink to this section">#</a></h2>  <div class="table-wrap">
+    <table class="catalog-table">
+      <thead><tr><th scope="col">Class</th><th scope="col">Overview</th></tr></thead>
+      <tbody>
+                <tr>
+          <td><a class="code-link" href="/docs/json/"><code>Json</code></a></td>
+          <td>Strict encode/decode, atomic file I/O; preserves large integers, strips BOM safely.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/file/"><code>File</code></a></td>
+          <td>Streaming reads, atomic writes, stream-based copying, safe directory creation (concurrency-safe), MIME detection from file bytes.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/regex/"><code>Regex</code></a></td>
+          <td>Strict preg_* wrapper throwing exceptions on invalid patterns or execution failures.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/cast/"><code>Cast</code></a></td>
+          <td>Strict type conversions toInt/toFloat/toBool/toString (rejects <code>&apos;12abc&apos;</code>, <code>&apos;1,5&apos;</code>, &apos;&apos;).</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/encoding/"><code>Encoding</code></a></td>
+          <td>Windows-1250 &lt;-&gt; UTF-8 conversion, Romanian cedilla &lt;-&gt; comma normalization, UTF-8 validity verification, BOM detection.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/upload/"><code>Upload</code></a></td>
+          <td>Secure file uploads: MIME detection from file inspection, whitelist-checked extension, cryptographically random names.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/process/"><code>Process</code></a></td>
+          <td>Safe command execution without shell expansion, exit code validation, stdin support, configurable timeouts.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/zip/"><code>Zip</code></a></td>
+          <td>Secure archive creation and extraction (protected against zip slip, symlink attacks, and zip bombs).</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/image/"><code>Image</code></a></td>
+          <td>Image metadata, validation against decompression bombs, aspect-ratio resizing, thumbnail generation; requires gd.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/ini/"><code>Ini</code></a></td>
+          <td>Strict .ini file parser with line-accurate error reporting and no implicit type coercion.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/base64/"><code>Base64</code></a></td>
+          <td>Strict decoding, URL-safe Base64 (RFC 4648), hex conversion.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/serializer/"><code>Serializer</code></a></td>
+          <td>Secure unserialize wrapper disabling arbitrary class instantiation and enforcing max_depth; prefer Json for new data.</td>
+        </tr>
+              </tbody>
+    </table>
+  </div>
+    <h2 id="text-dates-and-numbers">Text, Dates, and Numbers<a class="anchor" href="#text-dates-and-numbers" aria-label="Permalink to this section">#</a></h2>  <div class="table-wrap">
+    <table class="catalog-table">
+      <thead><tr><th scope="col">Class</th><th scope="col">Overview</th></tr></thead>
+      <tbody>
+                <tr>
+          <td><a class="code-link" href="/docs/str/"><code>Str</code></a></td>
+          <td>URL slugging, diacritic stripping, data masking (credit card, IBAN, email), case conversions, <code>e()</code> helper; fully UTF-8 compliant.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/arr/"><code>Arr</code></a></td>
+          <td>Dot notation access (missing keys throw exceptions), pluck, keyBy, groupBy, sortBy, strict searches.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/date/"><code>Date</code></a></td>
+          <td>Strict parsing (31.02 fails), localization formatting, Romanian public holidays, business day calculations.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/number/"><code>Number</code></a></td>
+          <td>Romanian and European number formatting and parsing (1.234,50), independent of thread-unsafe setlocale.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/money/"><code>Money</code></a></td>
+          <td>Currency amounts as exact strings, bcmath arithmetic, bankers rounding, loss-free installment splitting.</td>
+        </tr>
+              </tbody>
+    </table>
+  </div>
+    <h2 id="validation">Validation<a class="anchor" href="#validation" aria-label="Permalink to this section">#</a></h2>  <div class="table-wrap">
+    <table class="catalog-table">
+      <thead><tr><th scope="col">Class</th><th scope="col">Overview</th></tr></thead>
+      <tbody>
+                <tr>
+          <td><a class="code-link" href="/docs/validator/"><code>Validator</code></a></td>
+          <td>Rule-based attribute validation (<code>&apos;required|email|max:255&apos;</code>), single error per field, stable translation error codes, custom callbacks.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/ro-validator/"><code>RoValidator</code></a></td>
+          <td>Romanian specific validators: CNP, CUI/CIF, IBAN, phone numbers, postal codes, identity card series; returns boolean, usable directly in Validator.</td>
+        </tr>
+              </tbody>
+    </table>
+  </div>
+    <h2 id="databases">Databases<a class="anchor" href="#databases" aria-label="Permalink to this section">#</a></h2>  <div class="table-wrap">
+    <table class="catalog-table">
+      <thead><tr><th scope="col">Class</th><th scope="col">Overview</th></tr></thead>
+      <tbody>
+                <tr>
+          <td><a class="code-link" href="/docs/mysql/"><code>MySQL</code></a></td>
+          <td>Secure PDO wrapper, verified SQL identifiers, enforced credentials.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/oracle/"><code>Oracle</code></a></td>
+          <td>oci8 with ORA errors as exceptions; targets Oracle 11.2.0.4+ (ROWNUM pagination, sequences).</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/sqlite/"><code>SQLite</code></a></td>
+          <td>PDO; missing files are never silently created, foreign_keys PRAGMA enabled.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/paginator/"><code>Paginator</code></a></td>
+          <td>URL-based pagination, sorting, and search limited strictly to whitelisted columns.</td>
+        </tr>
+              </tbody>
+    </table>
+  </div>
+    <h2 id="import-export">Import / Export<a class="anchor" href="#import-export" aria-label="Permalink to this section">#</a></h2>  <div class="table-wrap">
+    <table class="catalog-table">
+      <thead><tr><th scope="col">Class</th><th scope="col">Overview</th></tr></thead>
+      <tbody>
+                <tr>
+          <td><a class="code-link" href="/docs/csv/"><code>Csv</code></a></td>
+          <td>Streaming reader (auto-detected delimiter, BOM, Windows-1250 support), atomic writer, batch validation import.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/xlsx/"><code>Xlsx</code></a></td>
+          <td>Zero-dependency .xlsx reader/writer: streaming generation, split-archive ZIP exports when exceeding sheet limits, batch import.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/xml/"><code>Xml</code></a></td>
+          <td>Secure XML parsing (immune to XXE), XSD schema validation (e.g., ANAF e-Factura), XPath querying, streaming I/O.</td>
+        </tr>
+              </tbody>
+    </table>
+  </div>
+    <h2 id="configuration-infrastructure">Configuration &amp; Infrastructure<a class="anchor" href="#configuration-infrastructure" aria-label="Permalink to this section">#</a></h2>  <div class="table-wrap">
+    <table class="catalog-table">
+      <thead><tr><th scope="col">Class</th><th scope="col">Overview</th></tr></thead>
+      <tbody>
+                <tr>
+          <td><a class="code-link" href="/docs/env/"><code>Env</code></a></td>
+          <td>.env file loader (phpdotenv syntax), schema validation, and typed casting.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/config/"><code>Config</code></a></td>
+          <td>Nested PHP configuration arrays with dot notation; missing keys throw exceptions.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/log/"><code>Log</code></a></td>
+          <td>PSR-3 compliant file logger, automatic sensitive data masking, daily log rotation.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/http-client/"><code>HttpClient</code></a></td>
+          <td>cURL wrapper converting network failures and non-2xx statuses to exceptions, SSL verification enabled, default timeouts.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/cache/"><code>Cache</code></a></td>
+          <td>JSON file-based cache with atomic file writes and <code>remember()</code> closure caching.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/retry/"><code>Retry</code></a></td>
+          <td>Exponential backoff retry handler with jitter for transient failures.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/rate-limiter/"><code>RateLimiter</code></a></td>
+          <td>Sliding/fixed window rate limiting by key (e.g., client IP), concurrency-safe.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/crypt/"><code>Crypt</code></a></td>
+          <td>AES-256-GCM authenticated encryption with key rotation support and HMAC validation.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/token/"><code>Token</code></a></td>
+          <td>Cryptographically secure random tokens and HMAC-SHA256 JWTs with mandatory exp.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/mailer/"><code>Mailer</code></a></td>
+          <td>Native SMTP transport (TLS, proxy support), multipart HTML/plain-text, attachments.</td>
+        </tr>
+              </tbody>
+    </table>
+  </div>
+    <h2 id="web-http">Web &amp; HTTP<a class="anchor" href="#web-http" aria-label="Permalink to this section">#</a></h2>  <div class="table-wrap">
+    <table class="catalog-table">
+      <thead><tr><th scope="col">Class</th><th scope="col">Overview</th></tr></thead>
+      <tbody>
+                <tr>
+          <td><a class="code-link" href="/docs/request/"><code>Request</code></a></td>
+          <td>Encapsulates incoming HTTP requests with typed getters (<code>int(&apos;id&apos;)</code>: missing or non-integer throws exception), JSON body decoding, trusted proxy IP resolution.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/response/"><code>Response</code></a></td>
+          <td>Immutable HTTP response object dispatched via <code>send()</code>: JSON, redirects, streaming downloads, secure cookies.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/session/"><code>Session</code></a></td>
+          <td>Explicit session initialization with hardened cookie options, flash data, <code>old()</code> form retention, idle timeout invalidation.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/csrf/"><code>Csrf</code></a></td>
+          <td>Session-bound anti-CSRF token verification for POST/PUT/PATCH/DELETE requests.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/view/"><code>View</code></a></td>
+          <td>Isolated PHP template renderer confined to a base directory.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/url/"><code>Url</code></a></td>
+          <td>Query parameter builder, current URL generation against trusted hosts, local redirect validation (isLocal).</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/security-headers/"><code>SecurityHeaders</code></a></td>
+          <td>Content Security Policy (CSP) with nonce generation, HSTS on HTTPS, and essential defensive HTTP headers.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/bot-detection/"><code>BotDetection</code></a></td>
+          <td>Honeypot field verification and HMAC-timestamped minimum submission time checking for public forms.</td>
+        </tr>
+              </tbody>
+    </table>
+  </div>
+    <h2 id="ui-rendering-helpers">UI Rendering Helpers<a class="anchor" href="#ui-rendering-helpers" aria-label="Permalink to this section">#</a></h2>  <div class="table-wrap">
+    <table class="catalog-table">
+      <thead><tr><th scope="col">Class</th><th scope="col">Overview</th></tr></thead>
+      <tbody>
+                <tr>
+          <td><a class="code-link" href="/docs/breadcrumbs/"><code>Breadcrumbs</code></a></td>
+          <td>Hierarchical trail management with automated schema.org JSON-LD generation for search engines.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/flash/"><code>Flash</code></a></td>
+          <td>Flash messaging for sequential requests (success, warning, error, info), exposed as raw arrays.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/form-builder/"><code>FormBuilder</code></a></td>
+          <td>Schema-driven form structure generation and Validator rule mapping directly from table column metadata.</td>
+        </tr>
+              </tbody>
+    </table>
+  </div>
+    <h2 id="development-tools">Development Tools<a class="anchor" href="#development-tools" aria-label="Permalink to this section">#</a></h2>  <div class="table-wrap">
+    <table class="catalog-table">
+      <thead><tr><th scope="col">Class</th><th scope="col">Overview</th></tr></thead>
+      <tbody>
+                <tr>
+          <td><a class="code-link" href="/docs/debug/"><code>Debug</code></a></td>
+          <td>Safe <code>dump()</code> / <code>dd()</code> utilities disabled by default (<a class="code-link" href="/docs/debug/#method-enable"><code>Debug::enable()</code></a> required), with automated sensitive data redaction.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/timer/"><code>Timer</code></a></td>
+          <td>High-precision stage profiling and memory tracking; includes a statistical <code>benchmark()</code> helper.</td>
+        </tr>
+                <tr>
+          <td><a class="code-link" href="/docs/faker/"><code>Faker</code></a></td>
+          <td>Generates realistic Romanian test data (valid CNP, CUI, IBAN, physical addresses), with optional deterministic seeding.</td>
+        </tr>
+              </tbody>
+    </table>
+  </div>
+  </article>
+
+        <nav class="pager" aria-label="Previous and next pages">
+      <span></span>            <a class="pager-next" href="/docs/installation/" rel="next"><span>Next</span><strong>Installation</strong></a>
+          </nav>
+    
+    <div class="page-meta">
+            <span>Last updated <time datetime="2026-11-12T17:30:02+02:00">November 12, 2026</time></span>
+                </div>
+  </main>
+
+    <aside class="toc" aria-label="On this page">
+    <p class="toc-title">On this page</p>
+    <ul>
+            <li class="toc-l2"><a href="#getting-started">Getting started</a></li>
+            <li class="toc-l2"><a href="#errors-exception-handling">Errors &amp; Exception Handling</a></li>
+            <li class="toc-l2"><a href="#native-function-wrappers">Native Function Wrappers</a></li>
+            <li class="toc-l2"><a href="#text-dates-and-numbers">Text, Dates, and Numbers</a></li>
+            <li class="toc-l2"><a href="#validation">Validation</a></li>
+            <li class="toc-l2"><a href="#databases">Databases</a></li>
+            <li class="toc-l2"><a href="#import-export">Import / Export</a></li>
+            <li class="toc-l2"><a href="#configuration-infrastructure">Configuration &amp; Infrastructure</a></li>
+            <li class="toc-l2"><a href="#web-http">Web &amp; HTTP</a></li>
+            <li class="toc-l2"><a href="#ui-rendering-helpers">UI Rendering Helpers</a></li>
+            <li class="toc-l2"><a href="#development-tools">Development Tools</a></li>
+          </ul>
+  </aside>
+  </div>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <p><strong>Foundry</strong> — standalone, single-file PHP utility classes. &copy; 2026 · Proprietary license.</p>
+    <nav aria-label="Footer">
+      <a href="/docs/">Documentation</a>
+      <a href="/docs/installation/">Installation</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/sitemap.xml">Sitemap</a>
+    </nav>
+  </div>
+</footer>
+
+<div class="search-modal" x-cloak x-show="searchOpen" role="dialog" aria-modal="true" aria-label="Search documentation" x-on:keydown="onSearchKey">
+  <div class="search-backdrop" x-on:click="closeSearch"></div>
+  <div class="search-panel">
+    <div class="search-field">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <input x-ref="input" type="search" placeholder="Search classes, methods and guides" autocomplete="off" spellcheck="false" aria-label="Search" aria-controls="search-results" aria-autocomplete="list" x-bind:aria-activedescendant="activeId" x-on:input="onInput">
+      <button type="button" class="kbd-btn" x-on:click="closeSearch" aria-label="Close search">Esc</button>
+    </div>
+    <ul id="search-results" class="search-results" role="listbox" aria-label="Results" x-ref="list">
+      <template x-for="item in results" x-bind:key="item.id">
+        <li role="option" x-bind:id="item.id" x-bind:aria-selected="item.selected" x-bind:class="item.cls" x-bind:data-index="item.i" x-on:mousemove="hover" x-on:click="closeSearch">
+          <a x-bind:href="item.u" tabindex="-1">
+            <span class="r-kind" x-text="item.kl"></span>
+            <span class="r-main"><span class="r-title" x-text="item.t"></span><span class="r-desc" x-text="item.d"></span></span>
+            <span class="r-sec" x-text="item.s"></span>
+          </a>
+        </li>
+      </template>
+    </ul>
+    <p class="search-status" x-show="showStatus" x-text="statusText"></p>
+    <div class="search-foot" aria-hidden="true"><span><kbd>↑</kbd><kbd>↓</kbd> navigate</span><span><kbd>Enter</kbd> open</span><span><kbd>Esc</kbd> close</span></div>
+  </div>
+</div>
+</div>
+</body>
+</html>

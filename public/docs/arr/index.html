@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arr — Array helpers with dot notation | Foundry PHP</title>
+<meta name="description" content="PHP Arr class: Dot notation access (missing keys throw exceptions), pluck, keyBy, groupBy, sortBy, strict searches. Standalone, single-file, zero dependencies.">
+<link rel="canonical" href="https://foundry.insightdevhub.ro/docs/arr/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f1115">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Foundry">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Arr — Array helpers with dot notation | Foundry PHP">
+<meta property="og:description" content="PHP Arr class: Dot notation access (missing keys throw exceptions), pluck, keyBy, groupBy, sortBy, strict searches. Standalone, single-file, zero dependencies.">
+<meta property="og:url" content="https://foundry.insightdevhub.ro/docs/arr/">
+<meta property="og:image" content="https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Foundry — standalone PHP utility classes">
+<meta property="article:modified_time" content="2026-11-12T17:30:02+02:00">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Arr — Array helpers with dot notation | Foundry PHP">
+<meta name="twitter:description" content="PHP Arr class: Dot notation access (missing keys throw exceptions), pluck, keyBy, groupBy, sortBy, strict searches. Standalone, single-file, zero dependencies.">
+<meta name="twitter:image" content="https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2">
+<link rel="alternate" type="text/markdown" href="/docs/arr.md" title="Markdown version">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="stylesheet" href="/assets/css/site.css?v=f05442ef0e">
+<script src="/assets/js/theme.js?v=b02059f0fb"></script>
+<script src="/assets/js/app.js?v=02d0b9d9f7" defer></script>
+<script src="/assets/vendor/alpine-csp.min.js?v=820bc95038" defer></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Arr — PHP utility class reference","description":"PHP Arr class: Dot notation access (missing keys throw exceptions), pluck, keyBy, groupBy, sortBy, strict searches. Standalone, single-file, zero dependencies.","url":"https://foundry.insightdevhub.ro/docs/arr/","mainEntityOfPage":"https://foundry.insightdevhub.ro/docs/arr/","inLanguage":"en","image":"https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2","isPartOf":{"@type":"WebSite","name":"Foundry","url":"https://foundry.insightdevhub.ro/"},"proficiencyLevel":"Expert","dateModified":"2026-11-12T17:30:02+02:00","about":{"@type":"SoftwareSourceCode","name":"Foundry\\Arr","programmingLanguage":"PHP","runtimePlatform":"PHP 8.3+","version":"1.1"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://foundry.insightdevhub.ro/"},{"@type":"ListItem","position":2,"name":"Documentation","item":"https://foundry.insightdevhub.ro/docs/"},{"@type":"ListItem","position":3,"name":"Text, Dates, and Numbers","item":"https://foundry.insightdevhub.ro/docs/#text-dates-and-numbers"},{"@type":"ListItem","position":4,"name":"Arr","item":"https://foundry.insightdevhub.ro/docs/arr/"}]}</script>
+</head>
+<body class="is-docs">
+<div class="app" x-data="site" x-on:keydown.window="onKey">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="topbar-inner">
+        <button type="button" class="icon-btn menu-btn" x-cloak x-on:click="toggleDrawer" aria-controls="sidebar" x-bind:aria-expanded="drawerExpanded" aria-label="Open navigation">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+    </button>
+        <a class="brand" href="/" aria-label="Foundry home">
+      <svg class="brand-mark" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><rect width="32" height="32" rx="7" fill="var(--accent)"/><path d="M10 8h13v4h-8.5v3.5H21v4h-6.5V25H10z" fill="#fff"/></svg>
+      <span>Foundry</span>
+    </a>
+    <nav class="topnav" aria-label="Main">
+      <a href="/docs/" aria-current="true">Docs</a>
+      <a href="/docs/installation/#download">Download</a>
+    </nav>
+    <div class="topbar-actions">
+      <button type="button" class="search-btn" x-cloak x-on:click="openSearch" aria-label="Search documentation" aria-keyshortcuts="Control+K Meta+K /">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span class="search-btn-label">Search</span>
+        <kbd class="search-btn-kbd">Ctrl K</kbd>
+      </button>
+      <button type="button" class="icon-btn" x-cloak x-on:click="toggleTheme" x-bind:aria-label="themeLabel" x-bind:title="themeLabel">
+        <svg x-show="isDark" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <svg x-show="isLight" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="sidebar" id="sidebar" x-bind:class="drawerClass" aria-label="Documentation navigation">
+    <nav class="nav">
+    <div class="nav-group">
+    <p class="nav-title">Getting started</p>
+    <ul>
+            <li><a href="/docs/">Introduction</a></li>
+            <li><a href="/docs/installation/">Installation</a></li>
+            <li><a href="/docs/usage/">Usage &amp; exceptions</a></li>
+            <li><a href="/docs/bootstrap/">Bootstrap</a></li>
+            <li><a href="/docs/design-principles/">Design principles</a></li>
+            <li><a href="/docs/php-versions/">PHP versions</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Guides</p>
+    <ul>
+            <li><a href="/docs/form-handling/">Form handling</a></li>
+            <li><a href="/docs/imports-exports/">Imports &amp; exports</a></li>
+            <li><a href="/docs/databases/">Databases</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Errors &amp; Exception Handling</p>
+    <ul>
+            <li><a href="/docs/error-handler/">ErrorHandler</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Native Function Wrappers</p>
+    <ul>
+            <li><a href="/docs/json/">Json</a></li>
+            <li><a href="/docs/file/">File</a></li>
+            <li><a href="/docs/regex/">Regex</a></li>
+            <li><a href="/docs/cast/">Cast</a></li>
+            <li><a href="/docs/encoding/">Encoding</a></li>
+            <li><a href="/docs/upload/">Upload</a></li>
+            <li><a href="/docs/process/">Process</a></li>
+            <li><a href="/docs/zip/">Zip</a></li>
+            <li><a href="/docs/image/">Image</a></li>
+            <li><a href="/docs/ini/">Ini</a></li>
+            <li><a href="/docs/base64/">Base64</a></li>
+            <li><a href="/docs/serializer/">Serializer</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Text, Dates, and Numbers</p>
+    <ul>
+            <li><a href="/docs/str/">Str</a></li>
+            <li><a href="/docs/arr/" aria-current="page">Arr</a></li>
+            <li><a href="/docs/date/">Date</a></li>
+            <li><a href="/docs/number/">Number</a></li>
+            <li><a href="/docs/money/">Money</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Validation</p>
+    <ul>
+            <li><a href="/docs/validator/">Validator</a></li>
+            <li><a href="/docs/ro-validator/">RoValidator</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Databases</p>
+    <ul>
+            <li><a href="/docs/mysql/">MySQL</a></li>
+            <li><a href="/docs/oracle/">Oracle</a></li>
+            <li><a href="/docs/sqlite/">SQLite</a></li>
+            <li><a href="/docs/paginator/">Paginator</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Import / Export</p>
+    <ul>
+            <li><a href="/docs/csv/">Csv</a></li>
+            <li><a href="/docs/xlsx/">Xlsx</a></li>
+            <li><a href="/docs/xml/">Xml</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Configuration &amp; Infrastructure</p>
+    <ul>
+            <li><a href="/docs/env/">Env</a></li>
+            <li><a href="/docs/config/">Config</a></li>
+            <li><a href="/docs/log/">Log</a></li>
+            <li><a href="/docs/http-client/">HttpClient</a></li>
+            <li><a href="/docs/cache/">Cache</a></li>
+            <li><a href="/docs/retry/">Retry</a></li>
+            <li><a href="/docs/rate-limiter/">RateLimiter</a></li>
+            <li><a href="/docs/crypt/">Crypt</a></li>
+            <li><a href="/docs/token/">Token</a></li>
+            <li><a href="/docs/mailer/">Mailer</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Web &amp; HTTP</p>
+    <ul>
+            <li><a href="/docs/request/">Request</a></li>
+            <li><a href="/docs/response/">Response</a></li>
+            <li><a href="/docs/session/">Session</a></li>
+            <li><a href="/docs/csrf/">Csrf</a></li>
+            <li><a href="/docs/view/">View</a></li>
+            <li><a href="/docs/url/">Url</a></li>
+            <li><a href="/docs/security-headers/">SecurityHeaders</a></li>
+            <li><a href="/docs/bot-detection/">BotDetection</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">UI Rendering Helpers</p>
+    <ul>
+            <li><a href="/docs/breadcrumbs/">Breadcrumbs</a></li>
+            <li><a href="/docs/flash/">Flash</a></li>
+            <li><a href="/docs/form-builder/">FormBuilder</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Development Tools</p>
+    <ul>
+            <li><a href="/docs/debug/">Debug</a></li>
+            <li><a href="/docs/timer/">Timer</a></li>
+            <li><a href="/docs/faker/">Faker</a></li>
+          </ul>
+  </div>
+  </nav>
+  </aside>
+  <div class="drawer-backdrop" x-cloak x-show="drawerOpen" x-on:click="closeDrawer"></div>
+
+  <main id="main" class="content" tabindex="-1">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <ol>
+                        <li><a href="/">Home</a></li>
+                                <li><a href="/docs/">Documentation</a></li>
+                                <li><a href="/docs/#text-dates-and-numbers">Text, Dates, and Numbers</a></li>
+                                <li><span aria-current="page">Arr</span></li>
+                      </ol>
+    </nav>
+    
+    <article class="prose doc">
+  <header class="doc-head">
+    <p class="eyebrow"><a href="/docs/#text-dates-and-numbers">Text, Dates, and Numbers</a></p>
+    <h1>Arr</h1>
+    <p class="lead">Array operations with strict comparisons and explicit errors.</p>
+    <ul class="facts" aria-label="Class facts">
+      <li><span>Namespace</span><code>Foundry\Arr</code></li>
+      <li><span>File</span><code>Arr.php</code></li>
+      <li><span>Version</span><strong>1.1</strong></li>
+      <li><span>Requires</span><strong>PHP 8.3+</strong></li>
+      <li><span>API</span><strong>24 public members</strong></li>
+    </ul>
+  </header>
+  <h2 id="pitfalls-of-native-functions-avoided">Pitfalls of native functions avoided<a class="anchor" href="#pitfalls-of-native-functions-avoided" aria-label="Permalink to this section">#</a></h2>
+<ul><li><code>array_column()</code> silently skips rows missing the requested key; <code>pluck()</code> throws an exception</li><li><code>array_column()</code> with an index silently overwrites duplicates; <code>keyBy()</code> throws an exception</li><li><code>in_array()</code> / <code>array_search()</code> perform loose comparisons by default (<code>&apos;abc&apos;</code> == 0 in PHP 7); here everything is strict</li><li><code>array_search()</code> returns 0 or false, easily confused; <code>search()</code> throws an exception if missing</li><li><code>array_find()</code>, <code>array_any()</code>, <code>array_all()</code> only exist starting from PHP 8.4.</li></ul>
+<p>Dot notation: <code>&apos;user.address.city&apos;</code> reads <code>$array</code>[<code>&apos;user&apos;</code>][<code>&apos;address&apos;</code>][<code>&apos;city&apos;</code>]. A literal existing key (<code>&apos;user.name&apos;</code> =&gt; ...) takes precedence over dot notation. For object elements, only public properties are read.</p>
+<p>The field used by pluck/keyBy/groupBy/sortBy/where/sum is a key (dot notation supported) or a Closure. A string is never interpreted as a function name (<code>&apos;count&apos;</code> is a key).</p>
+<p>Callbacks receive (<code>$value</code>, <code>$key</code>) and must return bool (otherwise an exception is thrown).</p>
+<p>Error messages include the requested keys and item position, never raw values from the array.</p>
+<h2 id="usage">Usage<a class="anchor" href="#usage" aria-label="Permalink to this section">#</a></h2>
+<div class="codeblock" data-lang="php"><div class="codeblock-bar"><span class="codeblock-lang">PHP</span><button type="button" class="copy-btn" data-copy hidden>Copy</button></div><pre><code><span class="t-k">require_once</span> <span class="t-s">&apos;Arr.php&apos;</span>;
+<span class="t-k">use</span> <span class="t-C">Foundry\Arr</span>;
+
+<span class="t-v">$city</span> = <span class="t-C">Arr</span>::<span class="t-f">get</span>(<span class="t-v">$data</span>, <span class="t-s">&apos;user.address.city&apos;</span>);          <span class="t-c">// throws an exception if missing</span>
+<span class="t-v">$city</span> = <span class="t-C">Arr</span>::<span class="t-f">get</span>(<span class="t-v">$data</span>, <span class="t-s">&apos;user.address.city&apos;</span>, <span class="t-s">&apos;&apos;</span>);      <span class="t-c">// default value</span>
+<span class="t-v">$input</span> = <span class="t-C">Arr</span>::<span class="t-k">require</span>(<span class="t-v">$_POST</span>, [<span class="t-s">&apos;name&apos;</span>, <span class="t-s">&apos;email&apos;</span>]);      <span class="t-c">// all missing keys reported at once</span>
+<span class="t-v">$emails</span> = <span class="t-C">Arr</span>::<span class="t-f">pluck</span>(<span class="t-v">$users</span>, <span class="t-s">&apos;email&apos;</span>);
+<span class="t-v">$byId</span> = <span class="t-C">Arr</span>::<span class="t-f">keyBy</span>(<span class="t-v">$users</span>, <span class="t-s">&apos;id&apos;</span>);
+<span class="t-v">$admin</span> = <span class="t-C">Arr</span>::<span class="t-f">first</span>(<span class="t-v">$users</span>, <span class="t-k">fn</span> (<span class="t-k">array</span> <span class="t-v">$user</span>): <span class="t-t">bool</span> =&gt; <span class="t-v">$user</span>[<span class="t-s">&apos;role&apos;</span>] === <span class="t-s">&apos;admin&apos;</span>);</code></pre></div>
+<h2 id="installation">Installation<a class="anchor" href="#installation" aria-label="Permalink to this section">#</a></h2>
+<p>Copy <code>Arr.php</code> from the <a href="/docs/installation/#download">download archive</a> into your project and load it (or register the <a href="/docs/installation/#loading-the-classes">autoloader</a>):</p>
+<div class="codeblock" data-lang="php"><div class="codeblock-bar"><span class="codeblock-lang">PHP</span><button type="button" class="copy-btn" data-copy hidden>Copy</button></div><pre><code><span class="t-k">require_once</span> __DIR__.<span class="t-s">&apos;/lib/Utilities/Arr.php&apos;</span>;
+
+<span class="t-k">use</span> <span class="t-C">Foundry\Arr</span>;</code></pre></div>
+<p class="muted-note">No PHP extensions required beyond a default PHP 8.3+ installation.</p>
+<h2 id="methods">Methods<a class="anchor" href="#methods" aria-label="Permalink to this section">#</a></h2>
+<nav class="method-index" aria-label="Arr methods"><ul><li><a href="#method-get"><code>get()</code></a></li><li><a href="#method-has"><code>has()</code></a></li><li><a href="#method-require"><code>require()</code></a></li><li><a href="#method-set"><code>set()</code></a></li><li><a href="#method-forget"><code>forget()</code></a></li><li><a href="#method-only"><code>only()</code></a></li><li><a href="#method-except"><code>except()</code></a></li><li><a href="#method-pluck"><code>pluck()</code></a></li><li><a href="#method-keyby"><code>keyBy()</code></a></li><li><a href="#method-groupby"><code>groupBy()</code></a></li><li><a href="#method-first"><code>first()</code></a></li><li><a href="#method-last"><code>last()</code></a></li><li><a href="#method-find"><code>find()</code></a></li><li><a href="#method-findkey"><code>findKey()</code></a></li><li><a href="#method-any"><code>any()</code></a></li><li><a href="#method-all"><code>all()</code></a></li><li><a href="#method-contains"><code>contains()</code></a></li><li><a href="#method-search"><code>search()</code></a></li><li><a href="#method-flatten"><code>flatten()</code></a></li><li><a href="#method-wrap"><code>wrap()</code></a></li><li><a href="#method-sortby"><code>sortBy()</code></a></li><li><a href="#method-where"><code>where()</code></a></li><li><a href="#method-sum"><code>sum()</code></a></li><li><a href="#method-isassoc"><code>isAssoc()</code></a></li></ul></nav>
+<section class="member" id="method-get" aria-labelledby="method-get-title"><header class="member-head"><h3 id="method-get-title"><code>Arr::get()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-get" aria-label="Permalink to get">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">get</span>(<span class="t-k">array</span> <span class="t-v">$array</span>, <span class="t-t">string</span>|<span class="t-t">int</span> <span class="t-v">$key</span>, <span class="t-t">mixed</span> <span class="t-v">$default</span> = <span class="t-t">null</span>): <span class="t-t">mixed</span></code></pre><p>Gets the value of a key (with dot notation support). With two arguments the key is required; with a third argument, it acts as the default value.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$array</code></td><td><code class="type">array&lt;array-key, mixed&gt;</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$key</code></td><td><code class="type">string|int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$default</code></td><td><code class="type">mixed</code></td><td><code class="value">null</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">mixed</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.outofboundsexception.php" rel="noopener" target="_blank"><code>OutOfBoundsException</code></a> — If the key is missing and no default value is provided.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If the key contains an empty segment (<code>&apos;a..b&apos;</code>).</li></ul></div></section>
+<section class="member" id="method-has" aria-labelledby="method-has-title"><header class="member-head"><h3 id="method-has-title"><code>Arr::has()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-has" aria-label="Permalink to has">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">has</span>(<span class="t-k">array</span> <span class="t-v">$array</span>, <span class="t-t">string</span>|<span class="t-t">int</span> <span class="t-v">$key</span>): <span class="t-t">bool</span></code></pre><p>Checks whether a key exists (a null value counts as existing).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$array</code></td><td><code class="type">array&lt;array-key, mixed&gt;</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$key</code></td><td><code class="type">string|int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">bool</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If the key contains an empty segment.</li></ul></div></section>
+<section class="member" id="method-require" aria-labelledby="method-require-title"><header class="member-head"><h3 id="method-require-title"><code>Arr::require()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-require" aria-label="Permalink to require">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-k">require</span>(<span class="t-k">array</span> <span class="t-v">$array</span>, <span class="t-k">array</span> <span class="t-v">$keys</span>): <span class="t-k">array</span></code></pre><p>Returns the values of the requested keys, all of which are required. All missing keys are reported at once.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$array</code></td><td><code class="type">array&lt;array-key, mixed&gt;</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$keys</code></td><td><code class="type">list&lt;string|int&gt;</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">array&lt;array-key, mixed&gt;</code> <span>Requested key =&gt; value, in the order specified in <code>$keys</code>.</span></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.outofboundsexception.php" rel="noopener" target="_blank"><code>OutOfBoundsException</code></a> — If at least one key is missing.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If a key contains an empty segment.</li></ul></div></section>
+<section class="member" id="method-set" aria-labelledby="method-set-title"><header class="member-head"><h3 id="method-set-title"><code>Arr::set()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-set" aria-label="Permalink to set">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">set</span>(<span class="t-k">array</span> <span class="t-v">$array</span>, <span class="t-t">string</span>|<span class="t-t">int</span> <span class="t-v">$key</span>, <span class="t-t">mixed</span> <span class="t-v">$value</span>): <span class="t-k">array</span></code></pre><p>Returns a copy of the array with the value set (using dot notation); missing levels are created.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$array</code></td><td><code class="type">array&lt;array-key, mixed&gt;</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$key</code></td><td><code class="type">string|int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$value</code></td><td><code class="type">mixed</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">array&lt;array-key, mixed&gt;</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If an intermediate level exists and is not an array.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If the key contains an empty segment.</li></ul></div></section>
+<section class="member" id="method-forget" aria-labelledby="method-forget-title"><header class="member-head"><h3 id="method-forget-title"><code>Arr::forget()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-forget" aria-label="Permalink to forget">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">forget</span>(<span class="t-k">array</span> <span class="t-v">$array</span>, <span class="t-t">string</span>|<span class="t-t">int</span> <span class="t-v">$key</span>): <span class="t-k">array</span></code></pre><p>Returns a copy of the array without the given key (using dot notation). A missing key is not an error.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$array</code></td><td><code class="type">array&lt;array-key, mixed&gt;</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$key</code></td><td><code class="type">string|int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">array&lt;array-key, mixed&gt;</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If the key contains an empty segment.</li></ul></div></section>
+<section class="member" id="method-only" aria-labelledby="method-only-title"><header class="member-head"><h3 id="method-only-title"><code>Arr::only()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-only" aria-label="Permalink to only">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">only</span>(<span class="t-k">array</span> <span class="t-v">$array</span>, <span class="t-k">array</span> <span class="t-v">$keys</span>): <span class="t-k">array</span></code></pre><p>Returns only the specified keys (top-level only, without dot notation); missing keys are ignored.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$array</code></td><td><code class="type">array&lt;TKey, TValue&gt;</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$keys</code></td><td><code class="type">list&lt;array-key&gt;</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">array&lt;TKey, TValue&gt;</code></dd></dl></section>
+<section class="member" id="method-except" aria-labelledby="method-except-title"><header class="member-head"><h3 id="method-except-title"><code>Arr::except()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-except" aria-label="Permalink to except">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">except</span>(<span class="t-k">array</span> <span class="t-v">$array</span>, <span class="t-k">array</span> <span class="t-v">$keys</span>): <span class="t-k">array</span></code></pre><p>Returns all keys except the specified ones (top-level only, without dot notation).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$array</code></td><td><code class="type">array&lt;TKey, TValue&gt;</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$keys</code></td><td><code class="type">list&lt;array-key&gt;</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">array&lt;TKey, TValue&gt;</code></dd></dl></section>
+<section class="member" id="method-pluck" aria-labelledby="method-pluck-title"><header class="member-head"><h3 id="method-pluck-title"><code>Arr::pluck()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-pluck" aria-label="Permalink to pluck">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">pluck</span>(<span class="t-k">array</span> <span class="t-v">$items</span>, <span class="t-t">string</span>|<span class="t-t">int</span>|<span class="t-C">Closure</span> <span class="t-v">$value</span>, <span class="t-t">string</span>|<span class="t-t">int</span>|<span class="t-C">Closure</span>|<span class="t-t">null</span> <span class="t-v">$key</span> = <span class="t-t">null</span>): <span class="t-k">array</span></code></pre><p>Returns the values of a field from each item; with <code>$key</code>, the result is keyed by another field.</p><p><a class="code-link" href="/docs/arr/#method-pluck"><code>Arr::pluck($users, &apos;email&apos;)</code></a>            -&gt; [<code>&apos;a@x.ro&apos;</code>, <code>&apos;b@x.ro&apos;</code>] <a class="code-link" href="/docs/arr/#method-pluck"><code>Arr::pluck($users, &apos;email&apos;, &apos;id&apos;)</code></a>      -&gt; [10 =&gt; <code>&apos;a@x.ro&apos;</code>, 11 =&gt; <code>&apos;b@x.ro&apos;</code>]</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$items</code></td><td><code class="type">array&lt;array-key, TValue&gt;</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$value</code></td><td><code class="type">Closure|string|int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$key</code></td><td><code class="type">Closure|string|int|null</code></td><td><code class="value">null</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">array&lt;array-key, mixed&gt;</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.outofboundsexception.php" rel="noopener" target="_blank"><code>OutOfBoundsException</code></a> — If an item does not have the requested field.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If the index is not an int/string or is duplicated.</li></ul></div></section>
+<section class="member" id="method-keyby" aria-labelledby="method-keyby-title"><header class="member-head"><h3 id="method-keyby-title"><code>Arr::keyBy()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-keyby" aria-label="Permalink to keyBy">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">keyBy</span>(<span class="t-k">array</span> <span class="t-v">$items</span>, <span class="t-t">string</span>|<span class="t-t">int</span>|<span class="t-C">Closure</span> <span class="t-v">$key</span>): <span class="t-k">array</span></code></pre><p>Returns the items keyed by a field. A duplicate index is an error (preventing accidental item loss).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$items</code></td><td><code class="type">array&lt;array-key, TValue&gt;</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$key</code></td><td><code class="type">Closure|string|int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">array&lt;array-key, TValue&gt;</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.outofboundsexception.php" rel="noopener" target="_blank"><code>OutOfBoundsException</code></a> — If an item does not have the requested field.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If the index is not an int/string or is duplicated.</li></ul></div></section>
+<section class="member" id="method-groupby" aria-labelledby="method-groupby-title"><header class="member-head"><h3 id="method-groupby-title"><code>Arr::groupBy()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-groupby" aria-label="Permalink to groupBy">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">groupBy</span>(<span class="t-k">array</span> <span class="t-v">$items</span>, <span class="t-t">string</span>|<span class="t-t">int</span>|<span class="t-C">Closure</span> <span class="t-v">$key</span>): <span class="t-k">array</span></code></pre><p>Groups items by a field: [field value =&gt; list of items].</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$items</code></td><td><code class="type">array&lt;array-key, TValue&gt;</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$key</code></td><td><code class="type">Closure|string|int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">array&lt;array-key, list&lt;TValue&gt;&gt;</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.outofboundsexception.php" rel="noopener" target="_blank"><code>OutOfBoundsException</code></a> — If an item does not have the requested field.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If the grouping value is not an int/string.</li></ul></div></section>
+<section class="member" id="method-first" aria-labelledby="method-first-title"><header class="member-head"><h3 id="method-first-title"><code>Arr::first()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-first" aria-label="Permalink to first">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">first</span>(<span class="t-k">array</span> <span class="t-v">$array</span>, ?<span class="t-C">Closure</span> <span class="t-v">$callback</span> = <span class="t-t">null</span>, <span class="t-t">mixed</span> <span class="t-v">$default</span> = <span class="t-t">null</span>): <span class="t-t">mixed</span></code></pre><p>Returns the first element (matching the callback, if provided). With <code>$default</code>, it is returned instead of throwing an exception.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$array</code></td><td><code class="type">array&lt;array-key, TValue&gt;</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$callback</code></td><td><code class="type">(Closure(TValue, array-key): bool)|null</code></td><td><code class="value">null</code></td><td></td></tr><tr><td><code>$default</code></td><td><code class="type">mixed</code></td><td><code class="value">null</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">TValue|mixed</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.outofboundsexception.php" rel="noopener" target="_blank"><code>OutOfBoundsException</code></a> — If no matching element is found and no <code>$default</code> is provided.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If the callback does not return a bool.</li></ul></div></section>
+<section class="member" id="method-last" aria-labelledby="method-last-title"><header class="member-head"><h3 id="method-last-title"><code>Arr::last()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-last" aria-label="Permalink to last">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">last</span>(<span class="t-k">array</span> <span class="t-v">$array</span>, ?<span class="t-C">Closure</span> <span class="t-v">$callback</span> = <span class="t-t">null</span>, <span class="t-t">mixed</span> <span class="t-v">$default</span> = <span class="t-t">null</span>): <span class="t-t">mixed</span></code></pre><p>Returns the last element (matching the callback, if provided). With <code>$default</code>, it is returned instead of throwing an exception.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$array</code></td><td><code class="type">array&lt;array-key, TValue&gt;</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$callback</code></td><td><code class="type">(Closure(TValue, array-key): bool)|null</code></td><td><code class="value">null</code></td><td></td></tr><tr><td><code>$default</code></td><td><code class="type">mixed</code></td><td><code class="value">null</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">TValue|mixed</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.outofboundsexception.php" rel="noopener" target="_blank"><code>OutOfBoundsException</code></a> — If no matching element is found and no <code>$default</code> is provided.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If the callback does not return a bool.</li></ul></div></section>
+<section class="member" id="method-find" aria-labelledby="method-find-title"><header class="member-head"><h3 id="method-find-title"><code>Arr::find()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-find" aria-label="Permalink to find">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">find</span>(<span class="t-k">array</span> <span class="t-v">$array</span>, <span class="t-C">Closure</span> <span class="t-v">$callback</span>): <span class="t-t">mixed</span></code></pre><p>Returns the first element that satisfies the callback, or null (like <code>array_find()</code> in PHP 8.4). When null can be a valid element value, use <code>first()</code>.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$array</code></td><td><code class="type">array&lt;array-key, TValue&gt;</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$callback</code></td><td><code class="type">Closure</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">TValue|null</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If the callback does not return a bool.</li></ul></div></section>
+<section class="member" id="method-findkey" aria-labelledby="method-findkey-title"><header class="member-head"><h3 id="method-findkey-title"><code>Arr::findKey()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-findkey" aria-label="Permalink to findKey">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">findKey</span>(<span class="t-k">array</span> <span class="t-v">$array</span>, <span class="t-C">Closure</span> <span class="t-v">$callback</span>): <span class="t-t">string</span>|<span class="t-t">int</span>|<span class="t-t">null</span></code></pre><p>Returns the key of the first element that satisfies the callback, or null (like <code>array_find_key()</code> in PHP 8.4).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$array</code></td><td><code class="type">array&lt;array-key, TValue&gt;</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$callback</code></td><td><code class="type">Closure</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string|int|null</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If the callback does not return a bool.</li></ul></div></section>
+<section class="member" id="method-any" aria-labelledby="method-any-title"><header class="member-head"><h3 id="method-any-title"><code>Arr::any()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-any" aria-label="Permalink to any">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">any</span>(<span class="t-k">array</span> <span class="t-v">$array</span>, <span class="t-C">Closure</span> <span class="t-v">$callback</span>): <span class="t-t">bool</span></code></pre><p>Checks whether at least one element satisfies the callback (like <code>array_any()</code> in PHP 8.4). Empty array -&gt; false.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$array</code></td><td><code class="type">array&lt;array-key, TValue&gt;</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$callback</code></td><td><code class="type">Closure</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">bool</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If the callback does not return a bool.</li></ul></div></section>
+<section class="member" id="method-all" aria-labelledby="method-all-title"><header class="member-head"><h3 id="method-all-title"><code>Arr::all()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-all" aria-label="Permalink to all">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">all</span>(<span class="t-k">array</span> <span class="t-v">$array</span>, <span class="t-C">Closure</span> <span class="t-v">$callback</span>): <span class="t-t">bool</span></code></pre><p>Checks whether all elements satisfy the callback (like <code>array_all()</code> in PHP 8.4). Empty array -&gt; true.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$array</code></td><td><code class="type">array&lt;array-key, TValue&gt;</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$callback</code></td><td><code class="type">Closure</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">bool</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If the callback does not return a bool.</li></ul></div></section>
+<section class="member" id="method-contains" aria-labelledby="method-contains-title"><header class="member-head"><h3 id="method-contains-title"><code>Arr::contains()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-contains" aria-label="Permalink to contains">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">contains</span>(<span class="t-k">array</span> <span class="t-v">$array</span>, <span class="t-t">mixed</span> <span class="t-v">$value</span>): <span class="t-t">bool</span></code></pre><p>Checks strictly (===) whether the value exists in the array.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$array</code></td><td><code class="type">array&lt;array-key, mixed&gt;</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$value</code></td><td><code class="type">mixed</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">bool</code></dd></dl></section>
+<section class="member" id="method-search" aria-labelledby="method-search-title"><header class="member-head"><h3 id="method-search-title"><code>Arr::search()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-search" aria-label="Permalink to search">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">search</span>(<span class="t-k">array</span> <span class="t-v">$array</span>, <span class="t-t">mixed</span> <span class="t-v">$value</span>): <span class="t-t">string</span>|<span class="t-t">int</span></code></pre><p>Returns the key of the first occurrence of the value (strict comparison).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$array</code></td><td><code class="type">array&lt;array-key, mixed&gt;</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$value</code></td><td><code class="type">mixed</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string|int</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.outofboundsexception.php" rel="noopener" target="_blank"><code>OutOfBoundsException</code></a> — If the value does not exist in the array.</li></ul></div></section>
+<section class="member" id="method-flatten" aria-labelledby="method-flatten-title"><header class="member-head"><h3 id="method-flatten-title"><code>Arr::flatten()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-flatten" aria-label="Permalink to flatten">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">flatten</span>(<span class="t-k">array</span> <span class="t-v">$array</span>, <span class="t-t">int</span> <span class="t-v">$depth</span> = <span class="t-n">PHP_INT_MAX</span>): <span class="t-k">array</span></code></pre><p>Flattens nested arrays into a single list up to the specified depth. Keys are not preserved.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$array</code></td><td><code class="type">array&lt;array-key, mixed&gt;</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$depth</code></td><td><code class="type">int</code></td><td><code class="value">PHP_INT_MAX</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">list&lt;mixed&gt;</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If <code>$depth</code> is less than 1.</li></ul></div></section>
+<section class="member" id="method-wrap" aria-labelledby="method-wrap-title"><header class="member-head"><h3 id="method-wrap-title"><code>Arr::wrap()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-wrap" aria-label="Permalink to wrap">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">wrap</span>(<span class="t-t">mixed</span> <span class="t-v">$value</span>): <span class="t-k">array</span></code></pre><p>Wraps a value into an array: null -&gt; [], array -&gt; unchanged, anything else -&gt; [value].</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$value</code></td><td><code class="type">mixed</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">array&lt;array-key, mixed&gt;</code></dd></dl></section>
+<section class="member" id="method-sortby" aria-labelledby="method-sortby-title"><header class="member-head"><h3 id="method-sortby-title"><code>Arr::sortBy()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-sortby" aria-label="Permalink to sortBy">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">sortBy</span>(<span class="t-k">array</span> <span class="t-v">$items</span>, <span class="t-t">string</span>|<span class="t-t">int</span>|<span class="t-C">Closure</span> <span class="t-v">$key</span>, <span class="t-t">bool</span> <span class="t-v">$descending</span> = <span class="t-t">false</span>): <span class="t-k">array</span></code></pre><p>Returns the items sorted by a field (stable sort). A list remains a list; for associative arrays, keys are preserved. Values must be of the same kind: numbers, strings, bool, or dates (DateTimeInterface); a mixed set (e.g. string and int, null) is an error.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$items</code></td><td><code class="type">array&lt;array-key, TValue&gt;</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$key</code></td><td><code class="type">Closure|string|int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$descending</code></td><td><code class="type">bool</code></td><td><code class="value">false</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">array&lt;array-key, TValue&gt;</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.outofboundsexception.php" rel="noopener" target="_blank"><code>OutOfBoundsException</code></a> — If an item does not have the requested field.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If the values cannot be compared with each other.</li></ul></div></section>
+<section class="member" id="method-where" aria-labelledby="method-where-title"><header class="member-head"><h3 id="method-where-title"><code>Arr::where()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-where" aria-label="Permalink to where">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">where</span>(<span class="t-k">array</span> <span class="t-v">$items</span>, <span class="t-t">string</span>|<span class="t-t">int</span>|<span class="t-C">Closure</span> <span class="t-v">$key</span>, <span class="t-t">mixed</span> <span class="t-v">$value</span>): <span class="t-k">array</span></code></pre><p>Returns the items whose field is strictly equal (===) to the given value. A list remains a list; for associative arrays, keys are preserved.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$items</code></td><td><code class="type">array&lt;array-key, TValue&gt;</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$key</code></td><td><code class="type">Closure|string|int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$value</code></td><td><code class="type">mixed</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">array&lt;array-key, TValue&gt;</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.outofboundsexception.php" rel="noopener" target="_blank"><code>OutOfBoundsException</code></a> — If an item does not have the requested field.</li></ul></div></section>
+<section class="member" id="method-sum" aria-labelledby="method-sum-title"><header class="member-head"><h3 id="method-sum-title"><code>Arr::sum()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-sum" aria-label="Permalink to sum">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">sum</span>(<span class="t-k">array</span> <span class="t-v">$items</span>, <span class="t-t">string</span>|<span class="t-t">int</span>|<span class="t-C">Closure</span>|<span class="t-t">null</span> <span class="t-v">$key</span> = <span class="t-t">null</span>): <span class="t-t">int</span>|<span class="t-t">float</span></code></pre><p>Returns the sum of values (or of a specific field). Values must be int or float: a numeric string (e.g. from a database) is an error and must be cast explicitly. For monetary amounts, use Money rather than float.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$items</code></td><td><code class="type">array&lt;array-key, TValue&gt;</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$key</code></td><td><code class="type">Closure|string|int|null</code></td><td><code class="value">null</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">int|float</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.outofboundsexception.php" rel="noopener" target="_blank"><code>OutOfBoundsException</code></a> — If an item does not have the requested field.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.unexpectedvalueexception.php" rel="noopener" target="_blank"><code>UnexpectedValueException</code></a> — If a value is not an int or float.</li></ul></div></section>
+<section class="member" id="method-isassoc" aria-labelledby="method-isassoc-title"><header class="member-head"><h3 id="method-isassoc-title"><code>Arr::isAssoc()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-isassoc" aria-label="Permalink to isAssoc">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">isAssoc</span>(<span class="t-k">array</span> <span class="t-v">$array</span>): <span class="t-t">bool</span></code></pre><p>Checks whether the array has associative keys (is not a sequential list 0, 1, 2...). Empty array -&gt; false.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$array</code></td><td><code class="type">array&lt;array-key, mixed&gt;</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">bool</code></dd></dl></section></article>
+
+        <nav class="pager" aria-label="Previous and next pages">
+            <a class="pager-prev" href="/docs/str/" rel="prev"><span>Previous</span><strong>Str</strong></a>
+                  <a class="pager-next" href="/docs/date/" rel="next"><span>Next</span><strong>Date</strong></a>
+          </nav>
+    
+    <div class="page-meta">
+            <span>Last updated <time datetime="2026-11-12T17:30:02+02:00">November 12, 2026</time></span>
+                  <a href="/docs/arr.md">View as Markdown</a>
+          </div>
+  </main>
+
+    <aside class="toc" aria-label="On this page">
+    <p class="toc-title">On this page</p>
+    <ul>
+            <li class="toc-l2"><a href="#pitfalls-of-native-functions-avoided">Pitfalls of native functions avoided</a></li>
+            <li class="toc-l2"><a href="#usage">Usage</a></li>
+            <li class="toc-l2"><a href="#installation">Installation</a></li>
+            <li class="toc-l2"><a href="#methods">Methods</a></li>
+            <li class="toc-l3"><a href="#method-get">get()</a></li>
+            <li class="toc-l3"><a href="#method-has">has()</a></li>
+            <li class="toc-l3"><a href="#method-require">require()</a></li>
+            <li class="toc-l3"><a href="#method-set">set()</a></li>
+            <li class="toc-l3"><a href="#method-forget">forget()</a></li>
+            <li class="toc-l3"><a href="#method-only">only()</a></li>
+            <li class="toc-l3"><a href="#method-except">except()</a></li>
+            <li class="toc-l3"><a href="#method-pluck">pluck()</a></li>
+            <li class="toc-l3"><a href="#method-keyby">keyBy()</a></li>
+            <li class="toc-l3"><a href="#method-groupby">groupBy()</a></li>
+            <li class="toc-l3"><a href="#method-first">first()</a></li>
+            <li class="toc-l3"><a href="#method-last">last()</a></li>
+            <li class="toc-l3"><a href="#method-find">find()</a></li>
+            <li class="toc-l3"><a href="#method-findkey">findKey()</a></li>
+            <li class="toc-l3"><a href="#method-any">any()</a></li>
+            <li class="toc-l3"><a href="#method-all">all()</a></li>
+            <li class="toc-l3"><a href="#method-contains">contains()</a></li>
+            <li class="toc-l3"><a href="#method-search">search()</a></li>
+            <li class="toc-l3"><a href="#method-flatten">flatten()</a></li>
+            <li class="toc-l3"><a href="#method-wrap">wrap()</a></li>
+            <li class="toc-l3"><a href="#method-sortby">sortBy()</a></li>
+            <li class="toc-l3"><a href="#method-where">where()</a></li>
+            <li class="toc-l3"><a href="#method-sum">sum()</a></li>
+            <li class="toc-l3"><a href="#method-isassoc">isAssoc()</a></li>
+          </ul>
+  </aside>
+  </div>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <p><strong>Foundry</strong> — standalone, single-file PHP utility classes. &copy; 2026 · Proprietary license.</p>
+    <nav aria-label="Footer">
+      <a href="/docs/">Documentation</a>
+      <a href="/docs/installation/">Installation</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/sitemap.xml">Sitemap</a>
+    </nav>
+  </div>
+</footer>
+
+<div class="search-modal" x-cloak x-show="searchOpen" role="dialog" aria-modal="true" aria-label="Search documentation" x-on:keydown="onSearchKey">
+  <div class="search-backdrop" x-on:click="closeSearch"></div>
+  <div class="search-panel">
+    <div class="search-field">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <input x-ref="input" type="search" placeholder="Search classes, methods and guides" autocomplete="off" spellcheck="false" aria-label="Search" aria-controls="search-results" aria-autocomplete="list" x-bind:aria-activedescendant="activeId" x-on:input="onInput">
+      <button type="button" class="kbd-btn" x-on:click="closeSearch" aria-label="Close search">Esc</button>
+    </div>
+    <ul id="search-results" class="search-results" role="listbox" aria-label="Results" x-ref="list">
+      <template x-for="item in results" x-bind:key="item.id">
+        <li role="option" x-bind:id="item.id" x-bind:aria-selected="item.selected" x-bind:class="item.cls" x-bind:data-index="item.i" x-on:mousemove="hover" x-on:click="closeSearch">
+          <a x-bind:href="item.u" tabindex="-1">
+            <span class="r-kind" x-text="item.kl"></span>
+            <span class="r-main"><span class="r-title" x-text="item.t"></span><span class="r-desc" x-text="item.d"></span></span>
+            <span class="r-sec" x-text="item.s"></span>
+          </a>
+        </li>
+      </template>
+    </ul>
+    <p class="search-status" x-show="showStatus" x-text="statusText"></p>
+    <div class="search-foot" aria-hidden="true"><span><kbd>↑</kbd><kbd>↓</kbd> navigate</span><span><kbd>Enter</kbd> open</span><span><kbd>Esc</kbd> close</span></div>
+  </div>
+</div>
+</div>
+</body>
+</html>

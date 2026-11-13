@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paginator — Safe pagination, sorting and search | Foundry PHP</title>
+<meta name="description" content="PHP Paginator class: URL-based pagination, sorting, and search limited strictly to whitelisted columns. Standalone, single-file, zero dependencies.">
+<link rel="canonical" href="https://foundry.insightdevhub.ro/docs/paginator/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f1115">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Foundry">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Paginator — Safe pagination, sorting and search | Foundry PHP">
+<meta property="og:description" content="PHP Paginator class: URL-based pagination, sorting, and search limited strictly to whitelisted columns. Standalone, single-file, zero dependencies.">
+<meta property="og:url" content="https://foundry.insightdevhub.ro/docs/paginator/">
+<meta property="og:image" content="https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Foundry — standalone PHP utility classes">
+<meta property="article:modified_time" content="2026-11-10T21:51:05+02:00">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Paginator — Safe pagination, sorting and search | Foundry PHP">
+<meta name="twitter:description" content="PHP Paginator class: URL-based pagination, sorting, and search limited strictly to whitelisted columns. Standalone, single-file, zero dependencies.">
+<meta name="twitter:image" content="https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2">
+<link rel="alternate" type="text/markdown" href="/docs/paginator.md" title="Markdown version">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="stylesheet" href="/assets/css/site.css?v=f05442ef0e">
+<script src="/assets/js/theme.js?v=b02059f0fb"></script>
+<script src="/assets/js/app.js?v=02d0b9d9f7" defer></script>
+<script src="/assets/vendor/alpine-csp.min.js?v=820bc95038" defer></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Paginator — PHP utility class reference","description":"PHP Paginator class: URL-based pagination, sorting, and search limited strictly to whitelisted columns. Standalone, single-file, zero dependencies.","url":"https://foundry.insightdevhub.ro/docs/paginator/","mainEntityOfPage":"https://foundry.insightdevhub.ro/docs/paginator/","inLanguage":"en","image":"https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2","isPartOf":{"@type":"WebSite","name":"Foundry","url":"https://foundry.insightdevhub.ro/"},"proficiencyLevel":"Expert","dateModified":"2026-11-10T21:51:05+02:00","about":{"@type":"SoftwareSourceCode","name":"Foundry\\Paginator","programmingLanguage":"PHP","runtimePlatform":"PHP 8.3+","version":"1.0"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://foundry.insightdevhub.ro/"},{"@type":"ListItem","position":2,"name":"Documentation","item":"https://foundry.insightdevhub.ro/docs/"},{"@type":"ListItem","position":3,"name":"Databases","item":"https://foundry.insightdevhub.ro/docs/#databases"},{"@type":"ListItem","position":4,"name":"Paginator","item":"https://foundry.insightdevhub.ro/docs/paginator/"}]}</script>
+</head>
+<body class="is-docs">
+<div class="app" x-data="site" x-on:keydown.window="onKey">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="topbar-inner">
+        <button type="button" class="icon-btn menu-btn" x-cloak x-on:click="toggleDrawer" aria-controls="sidebar" x-bind:aria-expanded="drawerExpanded" aria-label="Open navigation">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+    </button>
+        <a class="brand" href="/" aria-label="Foundry home">
+      <svg class="brand-mark" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><rect width="32" height="32" rx="7" fill="var(--accent)"/><path d="M10 8h13v4h-8.5v3.5H21v4h-6.5V25H10z" fill="#fff"/></svg>
+      <span>Foundry</span>
+    </a>
+    <nav class="topnav" aria-label="Main">
+      <a href="/docs/" aria-current="true">Docs</a>
+      <a href="/docs/installation/#download">Download</a>
+    </nav>
+    <div class="topbar-actions">
+      <button type="button" class="search-btn" x-cloak x-on:click="openSearch" aria-label="Search documentation" aria-keyshortcuts="Control+K Meta+K /">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span class="search-btn-label">Search</span>
+        <kbd class="search-btn-kbd">Ctrl K</kbd>
+      </button>
+      <button type="button" class="icon-btn" x-cloak x-on:click="toggleTheme" x-bind:aria-label="themeLabel" x-bind:title="themeLabel">
+        <svg x-show="isDark" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <svg x-show="isLight" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="sidebar" id="sidebar" x-bind:class="drawerClass" aria-label="Documentation navigation">
+    <nav class="nav">
+    <div class="nav-group">
+    <p class="nav-title">Getting started</p>
+    <ul>
+            <li><a href="/docs/">Introduction</a></li>
+            <li><a href="/docs/installation/">Installation</a></li>
+            <li><a href="/docs/usage/">Usage &amp; exceptions</a></li>
+            <li><a href="/docs/bootstrap/">Bootstrap</a></li>
+            <li><a href="/docs/design-principles/">Design principles</a></li>
+            <li><a href="/docs/php-versions/">PHP versions</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Guides</p>
+    <ul>
+            <li><a href="/docs/form-handling/">Form handling</a></li>
+            <li><a href="/docs/imports-exports/">Imports &amp; exports</a></li>
+            <li><a href="/docs/databases/">Databases</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Errors &amp; Exception Handling</p>
+    <ul>
+            <li><a href="/docs/error-handler/">ErrorHandler</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Native Function Wrappers</p>
+    <ul>
+            <li><a href="/docs/json/">Json</a></li>
+            <li><a href="/docs/file/">File</a></li>
+            <li><a href="/docs/regex/">Regex</a></li>
+            <li><a href="/docs/cast/">Cast</a></li>
+            <li><a href="/docs/encoding/">Encoding</a></li>
+            <li><a href="/docs/upload/">Upload</a></li>
+            <li><a href="/docs/process/">Process</a></li>
+            <li><a href="/docs/zip/">Zip</a></li>
+            <li><a href="/docs/image/">Image</a></li>
+            <li><a href="/docs/ini/">Ini</a></li>
+            <li><a href="/docs/base64/">Base64</a></li>
+            <li><a href="/docs/serializer/">Serializer</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Text, Dates, and Numbers</p>
+    <ul>
+            <li><a href="/docs/str/">Str</a></li>
+            <li><a href="/docs/arr/">Arr</a></li>
+            <li><a href="/docs/date/">Date</a></li>
+            <li><a href="/docs/number/">Number</a></li>
+            <li><a href="/docs/money/">Money</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Validation</p>
+    <ul>
+            <li><a href="/docs/validator/">Validator</a></li>
+            <li><a href="/docs/ro-validator/">RoValidator</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Databases</p>
+    <ul>
+            <li><a href="/docs/mysql/">MySQL</a></li>
+            <li><a href="/docs/oracle/">Oracle</a></li>
+            <li><a href="/docs/sqlite/">SQLite</a></li>
+            <li><a href="/docs/paginator/" aria-current="page">Paginator</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Import / Export</p>
+    <ul>
+            <li><a href="/docs/csv/">Csv</a></li>
+            <li><a href="/docs/xlsx/">Xlsx</a></li>
+            <li><a href="/docs/xml/">Xml</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Configuration &amp; Infrastructure</p>
+    <ul>
+            <li><a href="/docs/env/">Env</a></li>
+            <li><a href="/docs/config/">Config</a></li>
+            <li><a href="/docs/log/">Log</a></li>
+            <li><a href="/docs/http-client/">HttpClient</a></li>
+            <li><a href="/docs/cache/">Cache</a></li>
+            <li><a href="/docs/retry/">Retry</a></li>
+            <li><a href="/docs/rate-limiter/">RateLimiter</a></li>
+            <li><a href="/docs/crypt/">Crypt</a></li>
+            <li><a href="/docs/token/">Token</a></li>
+            <li><a href="/docs/mailer/">Mailer</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Web &amp; HTTP</p>
+    <ul>
+            <li><a href="/docs/request/">Request</a></li>
+            <li><a href="/docs/response/">Response</a></li>
+            <li><a href="/docs/session/">Session</a></li>
+            <li><a href="/docs/csrf/">Csrf</a></li>
+            <li><a href="/docs/view/">View</a></li>
+            <li><a href="/docs/url/">Url</a></li>
+            <li><a href="/docs/security-headers/">SecurityHeaders</a></li>
+            <li><a href="/docs/bot-detection/">BotDetection</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">UI Rendering Helpers</p>
+    <ul>
+            <li><a href="/docs/breadcrumbs/">Breadcrumbs</a></li>
+            <li><a href="/docs/flash/">Flash</a></li>
+            <li><a href="/docs/form-builder/">FormBuilder</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Development Tools</p>
+    <ul>
+            <li><a href="/docs/debug/">Debug</a></li>
+            <li><a href="/docs/timer/">Timer</a></li>
+            <li><a href="/docs/faker/">Faker</a></li>
+          </ul>
+  </div>
+  </nav>
+  </aside>
+  <div class="drawer-backdrop" x-cloak x-show="drawerOpen" x-on:click="closeDrawer"></div>
+
+  <main id="main" class="content" tabindex="-1">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <ol>
+                        <li><a href="/">Home</a></li>
+                                <li><a href="/docs/">Documentation</a></li>
+                                <li><a href="/docs/#databases">Databases</a></li>
+                                <li><span aria-current="page">Paginator</span></li>
+                      </ol>
+    </nav>
+    
+    <article class="prose doc">
+  <header class="doc-head">
+    <p class="eyebrow"><a href="/docs/#databases">Databases</a></p>
+    <h1>Paginator</h1>
+    <p class="lead">Pagination, sorting, and search parameters from the URL, validated and transformed into safe SQL fragments. Works with MySQL, Oracle, and SQLite (via the wrapper&apos;s <code>paginate()</code> method).</p>
+    <ul class="facts" aria-label="Class facts">
+      <li><span>Namespace</span><code>Foundry\Paginator</code></li>
+      <li><span>File</span><code>Paginator.php</code></li>
+      <li><span>Version</span><strong>1.0</strong></li>
+      <li><span>Requires</span><strong>PHP 8.3+</strong> <code class="ext">ext-mbstring</code></li>
+      <li><span>API</span><strong>7 public members</strong></li>
+    </ul>
+  </header>
+  <p>URL parameters represent user input: an invalid value (?page=abc, an unknown sort column, ?per_page=100000) falls back to the default value rather than producing an error. Misconfiguration (by the developer) throws an exception.</p>
+<h2 id="security">Security<a class="anchor" href="#security" aria-label="Permalink to this section">#</a></h2>
+<ul><li>Sorting is only permitted on keys defined in <code>$sortable</code>; the SQL receives the expression associated with the key (written by the developer), never raw URL input</li><li>Search uses bound parameters, and %, _, and ! in the search term are escaped (LIKE ... ESCAPE <code>&apos;!&apos;</code>, supported across MySQL, Oracle, and SQLite).</li></ul>
+<h2 id="usage">Usage<a class="anchor" href="#usage" aria-label="Permalink to this section">#</a></h2>
+<div class="codeblock" data-lang="php"><div class="codeblock-bar"><span class="codeblock-lang">PHP</span><button type="button" class="copy-btn" data-copy hidden>Copy</button></div><pre><code><span class="t-k">require_once</span> <span class="t-s">&apos;Paginator.php&apos;</span>;
+<span class="t-k">use</span> <span class="t-C">Foundry\Paginator</span>;
+
+<span class="t-v">$pager</span> = <span class="t-C">Paginator</span>::<span class="t-f">fromRequest</span>(<span class="t-v">$_GET</span>,
+    sortable: [<span class="t-s">&apos;name&apos;</span> =&gt; [<span class="t-s">&apos;u.last_name&apos;</span>, <span class="t-s">&apos;u.first_name&apos;</span>], <span class="t-s">&apos;created&apos;</span> =&gt; <span class="t-s">&apos;u.created_at&apos;</span>],
+    defaultSort: <span class="t-s">&apos;created&apos;</span>, defaultOrder: <span class="t-s">&apos;desc&apos;</span>);
+
+[<span class="t-v">$search</span>, <span class="t-v">$searchParams</span>] = <span class="t-v">$pager</span>-&gt;<span class="t-f">searchCondition</span>([<span class="t-s">&apos;u.last_name&apos;</span>, <span class="t-s">&apos;u.email&apos;</span>]);
+<span class="t-v">$result</span> = <span class="t-v">$db</span>-&gt;<span class="t-f">paginate</span>(
+    <span class="t-s">"</span><span class="t-s">SELECT u.* FROM users u WHERE u.active = ? AND </span>{<span class="t-v">$search</span>}<span class="t-s"> ORDER BY </span><span class="t-s">"</span>.<span class="t-v">$pager</span>-&gt;<span class="t-f">orderBy</span>(),
+    [<span class="t-n">1</span>, ...<span class="t-v">$searchParams</span>], <span class="t-v">$pager</span>-&gt;page, <span class="t-v">$pager</span>-&gt;perPage);
+
+<span class="t-k">foreach</span> (<span class="t-v">$pager</span>-&gt;<span class="t-f">pageNumbers</span>(<span class="t-v">$result</span>[<span class="t-s">&apos;total&apos;</span>]) <span class="t-k">as</span> <span class="t-v">$number</span>) {
+    <span class="t-k">echo</span> <span class="t-v">$number</span> === <span class="t-t">null</span> ? <span class="t-s">&apos;...&apos;</span> : <span class="t-s">&apos;&lt;a href=&quot;?&apos;</span>.<span class="t-f">http_build_query</span>(<span class="t-v">$pager</span>-&gt;<span class="t-f">query</span>(<span class="t-v">$number</span>)).<span class="t-s">&apos;&quot;&gt;&apos;</span>.<span class="t-v">$number</span>.<span class="t-s">&apos;&lt;/a&gt;&apos;</span>;
+}</code></pre></div>
+<h2 id="installation">Installation<a class="anchor" href="#installation" aria-label="Permalink to this section">#</a></h2>
+<p>Copy <code>Paginator.php</code> from the <a href="/docs/installation/#download">download archive</a> into your project and load it (or register the <a href="/docs/installation/#loading-the-classes">autoloader</a>):</p>
+<div class="codeblock" data-lang="php"><div class="codeblock-bar"><span class="codeblock-lang">PHP</span><button type="button" class="copy-btn" data-copy hidden>Copy</button></div><pre><code><span class="t-k">require_once</span> __DIR__.<span class="t-s">&apos;/lib/Utilities/Paginator.php&apos;</span>;
+
+<span class="t-k">use</span> <span class="t-C">Foundry\Paginator</span>;</code></pre></div>
+<p class="muted-note">Requires the PHP extension <code>mbstring</code> (check with <code>php -m</code>).</p>
+<h2 id="constants">Constants<a class="anchor" href="#constants" aria-label="Permalink to this section">#</a></h2>
+<div class="table-wrap"><table class="ref-table"><thead><tr><th scope="col">Constant</th><th scope="col">Type</th><th scope="col">Value</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>MAX_PAGE</code></td><td><code class="type">int</code></td><td><code class="value">1_000_000</code></td><td>Maximum page accepted from the URL (prevents huge offsets).</td></tr><tr><td><code>MAX_SEARCH_LENGTH</code></td><td><code class="type">int</code></td><td><code class="value">100</code></td><td>Maximum search term length in characters.</td></tr><tr><td><code>MAX_SEARCH_WORDS</code></td><td><code class="type">int</code></td><td><code class="value">10</code></td><td>Maximum number of search words (subsequent words are ignored).</td></tr></tbody></table></div>
+<h2 id="properties">Properties<a class="anchor" href="#properties" aria-label="Permalink to this section">#</a></h2>
+<div class="table-wrap"><table class="ref-table"><thead><tr><th scope="col">Property</th><th scope="col">Type</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$page</code> <span class="pill">readonly</span></td><td><code class="type">int</code></td><td></td></tr><tr><td><code>$perPage</code> <span class="pill">readonly</span></td><td><code class="type">int</code></td><td></td></tr><tr><td><code>$sort</code> <span class="pill">readonly</span></td><td><code class="type">string</code></td><td></td></tr><tr><td><code>$order</code> <span class="pill">readonly</span></td><td><code class="type">string</code></td><td></td></tr><tr><td><code>$search</code> <span class="pill">readonly</span></td><td><code class="type">string</code></td><td></td></tr></tbody></table></div>
+<h2 id="methods">Methods<a class="anchor" href="#methods" aria-label="Permalink to this section">#</a></h2>
+<nav class="method-index" aria-label="Paginator methods"><ul><li><a href="#method-fromrequest"><code>fromRequest()</code></a></li><li><a href="#method-offset"><code>offset()</code></a></li><li><a href="#method-orderby"><code>orderBy()</code></a></li><li><a href="#method-searchcondition"><code>searchCondition()</code></a></li><li><a href="#method-pages"><code>pages()</code></a></li><li><a href="#method-pagenumbers"><code>pageNumbers()</code></a></li><li><a href="#method-query"><code>query()</code></a></li></ul></nav>
+<section class="member" id="method-fromrequest" aria-labelledby="method-fromrequest-title"><header class="member-head"><h3 id="method-fromrequest-title"><code>Paginator::fromRequest()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-fromrequest" aria-label="Permalink to fromRequest">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">fromRequest</span>(
+    <span class="t-k">array</span> <span class="t-v">$query</span>,
+    <span class="t-k">array</span> <span class="t-v">$sortable</span>,
+    <span class="t-t">string</span> <span class="t-v">$defaultSort</span>,
+    <span class="t-t">string</span> <span class="t-v">$defaultOrder</span> = <span class="t-s">&apos;asc&apos;</span>,
+    <span class="t-t">int</span> <span class="t-v">$perPage</span> = <span class="t-n">20</span>,
+    <span class="t-t">int</span> <span class="t-v">$maxPerPage</span> = <span class="t-n">100</span>,
+): <span class="t-t">self</span></code></pre><p>Reads page, per_page, sort, order, and search from URL parameters (typically <code>$_GET</code>).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$query</code></td><td><code class="type">array&lt;array-key, mixed&gt;</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$sortable</code></td><td><code class="type">array&lt;string, string|list&lt;string&gt;&gt;</code></td><td><span class="pill pill-req">required</span></td><td>URL key -&gt; SQL <code>column(s)</code> mapping (e.g., <code>&apos;name&apos;</code> =&gt; [<code>&apos;u.last_name&apos;</code>, <code>&apos;u.first_name&apos;</code>]).</td></tr><tr><td><code>$defaultSort</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$defaultOrder</code></td><td><code class="type">string</code></td><td><code class="value">&apos;asc&apos;</code></td><td></td></tr><tr><td><code>$perPage</code></td><td><code class="type">int</code></td><td><code class="value">20</code></td><td></td></tr><tr><td><code>$maxPerPage</code></td><td><code class="type">int</code></td><td><code class="value">100</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">Foundry\Paginator</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If the configuration is invalid.</li></ul></div></section>
+<section class="member" id="method-offset" aria-labelledby="method-offset-title"><header class="member-head"><h3 id="method-offset-title"><code>$paginator-&gt;offset()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-offset" aria-label="Permalink to offset">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">offset</span>(): <span class="t-t">int</span></code></pre><p>Offset of the first row on the current page (for LIMIT ... OFFSET, if not using <code>paginate()</code>).</p><dl class="returns"><dt>Returns</dt><dd><code class="type">int</code></dd></dl></section>
+<section class="member" id="method-orderby" aria-labelledby="method-orderby-title"><header class="member-head"><h3 id="method-orderby-title"><code>$paginator-&gt;orderBy()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-orderby" aria-label="Permalink to orderBy">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">orderBy</span>(): <span class="t-t">string</span></code></pre><p>The ORDER BY clause fragment (without the keyword): <code>&apos;u.last_name DESC, u.first_name DESC&apos;</code>. For a stable order across pages, the last column should be unique (e.g., u.id).</p><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl></section>
+<section class="member" id="method-searchcondition" aria-labelledby="method-searchcondition-title"><header class="member-head"><h3 id="method-searchcondition-title"><code>$paginator-&gt;searchCondition()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-searchcondition" aria-label="Permalink to searchCondition">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">searchCondition</span>(<span class="t-k">array</span> <span class="t-v">$columns</span>, <span class="t-t">bool</span> <span class="t-v">$caseInsensitive</span> = <span class="t-t">false</span>, <span class="t-t">bool</span> <span class="t-v">$named</span> = <span class="t-t">false</span>): <span class="t-k">array</span></code></pre><p>Search condition: each word must match in at least one of the columns. With an empty search string: [<code>&apos;1 = 1&apos;</code>, []]. Parameters are positional (?), or named (:paginator_search_0, ...) when <code>$named</code> = true, to match the query style.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$columns</code></td><td><code class="type">list&lt;string&gt;</code></td><td><span class="pill pill-req">required</span></td><td>SQL columns to search in (written by the developer).</td></tr><tr><td><code>$caseInsensitive</code></td><td><code class="type">bool</code></td><td><code class="value">false</code></td><td></td></tr><tr><td><code>$named</code></td><td><code class="type">bool</code></td><td><code class="value">false</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">array{0: string, 1: array&lt;array-key, string&gt;}</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If the column list is empty.</li></ul></div></section>
+<section class="member" id="method-pages" aria-labelledby="method-pages-title"><header class="member-head"><h3 id="method-pages-title"><code>$paginator-&gt;pages()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-pages" aria-label="Permalink to pages">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">pages</span>(<span class="t-t">int</span> <span class="t-v">$total</span>): <span class="t-t">int</span></code></pre><p>Total number of pages for a given record count (minimum 1).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$total</code></td><td><code class="type">int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">int</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If total is negative.</li></ul></div></section>
+<section class="member" id="method-pagenumbers" aria-labelledby="method-pagenumbers-title"><header class="member-head"><h3 id="method-pagenumbers-title"><code>$paginator-&gt;pageNumbers()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-pagenumbers" aria-label="Permalink to pageNumbers">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">pageNumbers</span>(<span class="t-t">int</span> <span class="t-v">$total</span>, <span class="t-t">int</span> <span class="t-v">$window</span> = <span class="t-n">2</span>): <span class="t-k">array</span></code></pre><p>Page numbers for navigation, with null for skipped ranges: page 6 of 20, window 2 -&gt; [1, null, 4, 5, 6, 7, 8, null, 20].</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$total</code></td><td><code class="type">int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$window</code></td><td><code class="type">int</code></td><td><code class="value">2</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">list&lt;int|null&gt;</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If total or window is negative.</li></ul></div></section>
+<section class="member" id="method-query" aria-labelledby="method-query-title"><header class="member-head"><h3 id="method-query-title"><code>$paginator-&gt;query()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-query" aria-label="Permalink to query">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">query</span>(<span class="t-t">int</span> <span class="t-v">$page</span>): <span class="t-k">array</span></code></pre><p>URL parameters for page <code>$page</code>: incoming parameters (including custom application filters) with normalized values. For links: <code>&apos;?&apos;</code>.http_build_query(<code>$pager</code>-&gt;<code>query(3)</code>).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$page</code></td><td><code class="type">int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">array&lt;array-key, mixed&gt;</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If <code>$page</code> is less than 1.</li></ul></div></section></article>
+
+        <nav class="pager" aria-label="Previous and next pages">
+            <a class="pager-prev" href="/docs/sqlite/" rel="prev"><span>Previous</span><strong>SQLite</strong></a>
+                  <a class="pager-next" href="/docs/csv/" rel="next"><span>Next</span><strong>Csv</strong></a>
+          </nav>
+    
+    <div class="page-meta">
+            <span>Last updated <time datetime="2026-11-10T21:51:05+02:00">November 10, 2026</time></span>
+                  <a href="/docs/paginator.md">View as Markdown</a>
+          </div>
+  </main>
+
+    <aside class="toc" aria-label="On this page">
+    <p class="toc-title">On this page</p>
+    <ul>
+            <li class="toc-l2"><a href="#security">Security</a></li>
+            <li class="toc-l2"><a href="#usage">Usage</a></li>
+            <li class="toc-l2"><a href="#installation">Installation</a></li>
+            <li class="toc-l2"><a href="#constants">Constants</a></li>
+            <li class="toc-l2"><a href="#properties">Properties</a></li>
+            <li class="toc-l2"><a href="#methods">Methods</a></li>
+            <li class="toc-l3"><a href="#method-fromrequest">fromRequest()</a></li>
+            <li class="toc-l3"><a href="#method-offset">offset()</a></li>
+            <li class="toc-l3"><a href="#method-orderby">orderBy()</a></li>
+            <li class="toc-l3"><a href="#method-searchcondition">searchCondition()</a></li>
+            <li class="toc-l3"><a href="#method-pages">pages()</a></li>
+            <li class="toc-l3"><a href="#method-pagenumbers">pageNumbers()</a></li>
+            <li class="toc-l3"><a href="#method-query">query()</a></li>
+          </ul>
+  </aside>
+  </div>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <p><strong>Foundry</strong> — standalone, single-file PHP utility classes. &copy; 2026 · Proprietary license.</p>
+    <nav aria-label="Footer">
+      <a href="/docs/">Documentation</a>
+      <a href="/docs/installation/">Installation</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/sitemap.xml">Sitemap</a>
+    </nav>
+  </div>
+</footer>
+
+<div class="search-modal" x-cloak x-show="searchOpen" role="dialog" aria-modal="true" aria-label="Search documentation" x-on:keydown="onSearchKey">
+  <div class="search-backdrop" x-on:click="closeSearch"></div>
+  <div class="search-panel">
+    <div class="search-field">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <input x-ref="input" type="search" placeholder="Search classes, methods and guides" autocomplete="off" spellcheck="false" aria-label="Search" aria-controls="search-results" aria-autocomplete="list" x-bind:aria-activedescendant="activeId" x-on:input="onInput">
+      <button type="button" class="kbd-btn" x-on:click="closeSearch" aria-label="Close search">Esc</button>
+    </div>
+    <ul id="search-results" class="search-results" role="listbox" aria-label="Results" x-ref="list">
+      <template x-for="item in results" x-bind:key="item.id">
+        <li role="option" x-bind:id="item.id" x-bind:aria-selected="item.selected" x-bind:class="item.cls" x-bind:data-index="item.i" x-on:mousemove="hover" x-on:click="closeSearch">
+          <a x-bind:href="item.u" tabindex="-1">
+            <span class="r-kind" x-text="item.kl"></span>
+            <span class="r-main"><span class="r-title" x-text="item.t"></span><span class="r-desc" x-text="item.d"></span></span>
+            <span class="r-sec" x-text="item.s"></span>
+          </a>
+        </li>
+      </template>
+    </ul>
+    <p class="search-status" x-show="showStatus" x-text="statusText"></p>
+    <div class="search-foot" aria-hidden="true"><span><kbd>↑</kbd><kbd>↓</kbd> navigate</span><span><kbd>Enter</kbd> open</span><span><kbd>Esc</kbd> close</span></div>
+  </div>
+</div>
+</div>
+</body>
+</html>

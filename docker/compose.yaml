@@ -1,0 +1,33 @@
+services:
+  foundry-docs:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: localhost/foundry-library:latest
+    container_name: foundry-library
+    restart: unless-stopped
+    user: "101:101"
+    ports:
+      # Securely bind to localhost on port 8083 (routed via Cloudflare Tunnel)
+      - "127.0.0.1:8083:8080"
+    # Security hardening: read-only filesystem, drop all capabilities, no new privileges
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    # In-memory tmpfs for temporary files (pid, buffers)
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=8m
+    # Strict resource limits for a static site
+    pids_limit: 10
+    deploy:
+      resources:
+        limits:
+          cpus: "0.10"
+          memory: 32M
+        reservations:
+          memory: 8M
+    volumes:
+      # Mount public/ directly so updates appear immediately without rebuilding the image
+      - ../public:/usr/share/nginx/html:ro,Z

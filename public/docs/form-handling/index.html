@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Form handling — Foundry PHP utilities</title>
+<meta name="description" content="A complete form workflow with Foundry - reading the request, CSRF protection, validation, saving, flash messages and the redirect.">
+<link rel="canonical" href="https://foundry.insightdevhub.ro/docs/form-handling/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f1115">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Foundry">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Form handling — Foundry PHP utilities">
+<meta property="og:description" content="A complete form workflow with Foundry - reading the request, CSRF protection, validation, saving, flash messages and the redirect.">
+<meta property="og:url" content="https://foundry.insightdevhub.ro/docs/form-handling/">
+<meta property="og:image" content="https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Foundry — standalone PHP utility classes">
+<meta property="article:modified_time" content="2026-11-12T16:13:55+02:00">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Form handling — Foundry PHP utilities">
+<meta name="twitter:description" content="A complete form workflow with Foundry - reading the request, CSRF protection, validation, saving, flash messages and the redirect.">
+<meta name="twitter:image" content="https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2">
+<link rel="alternate" type="text/markdown" href="/docs/form-handling.md" title="Markdown version">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="stylesheet" href="/assets/css/site.css?v=f05442ef0e">
+<script src="/assets/js/theme.js?v=b02059f0fb"></script>
+<script src="/assets/js/app.js?v=02d0b9d9f7" defer></script>
+<script src="/assets/vendor/alpine-csp.min.js?v=820bc95038" defer></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Form handling","description":"A complete form workflow with Foundry - reading the request, CSRF protection, validation, saving, flash messages and the redirect.","url":"https://foundry.insightdevhub.ro/docs/form-handling/","mainEntityOfPage":"https://foundry.insightdevhub.ro/docs/form-handling/","inLanguage":"en","image":"https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2","isPartOf":{"@type":"WebSite","name":"Foundry","url":"https://foundry.insightdevhub.ro/"},"proficiencyLevel":"Expert","dateModified":"2026-11-12T16:13:55+02:00"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://foundry.insightdevhub.ro/"},{"@type":"ListItem","position":2,"name":"Documentation","item":"https://foundry.insightdevhub.ro/docs/"},{"@type":"ListItem","position":3,"name":"Form handling","item":"https://foundry.insightdevhub.ro/docs/form-handling/"}]}</script>
+</head>
+<body class="is-docs">
+<div class="app" x-data="site" x-on:keydown.window="onKey">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="topbar-inner">
+        <button type="button" class="icon-btn menu-btn" x-cloak x-on:click="toggleDrawer" aria-controls="sidebar" x-bind:aria-expanded="drawerExpanded" aria-label="Open navigation">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+    </button>
+        <a class="brand" href="/" aria-label="Foundry home">
+      <svg class="brand-mark" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><rect width="32" height="32" rx="7" fill="var(--accent)"/><path d="M10 8h13v4h-8.5v3.5H21v4h-6.5V25H10z" fill="#fff"/></svg>
+      <span>Foundry</span>
+    </a>
+    <nav class="topnav" aria-label="Main">
+      <a href="/docs/" aria-current="true">Docs</a>
+      <a href="/docs/installation/#download">Download</a>
+    </nav>
+    <div class="topbar-actions">
+      <button type="button" class="search-btn" x-cloak x-on:click="openSearch" aria-label="Search documentation" aria-keyshortcuts="Control+K Meta+K /">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span class="search-btn-label">Search</span>
+        <kbd class="search-btn-kbd">Ctrl K</kbd>
+      </button>
+      <button type="button" class="icon-btn" x-cloak x-on:click="toggleTheme" x-bind:aria-label="themeLabel" x-bind:title="themeLabel">
+        <svg x-show="isDark" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <svg x-show="isLight" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="sidebar" id="sidebar" x-bind:class="drawerClass" aria-label="Documentation navigation">
+    <nav class="nav">
+    <div class="nav-group">
+    <p class="nav-title">Getting started</p>
+    <ul>
+            <li><a href="/docs/">Introduction</a></li>
+            <li><a href="/docs/installation/">Installation</a></li>
+            <li><a href="/docs/usage/">Usage &amp; exceptions</a></li>
+            <li><a href="/docs/bootstrap/">Bootstrap</a></li>
+            <li><a href="/docs/design-principles/">Design principles</a></li>
+            <li><a href="/docs/php-versions/">PHP versions</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Guides</p>
+    <ul>
+            <li><a href="/docs/form-handling/" aria-current="page">Form handling</a></li>
+            <li><a href="/docs/imports-exports/">Imports &amp; exports</a></li>
+            <li><a href="/docs/databases/">Databases</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Errors &amp; Exception Handling</p>
+    <ul>
+            <li><a href="/docs/error-handler/">ErrorHandler</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Native Function Wrappers</p>
+    <ul>
+            <li><a href="/docs/json/">Json</a></li>
+            <li><a href="/docs/file/">File</a></li>
+            <li><a href="/docs/regex/">Regex</a></li>
+            <li><a href="/docs/cast/">Cast</a></li>
+            <li><a href="/docs/encoding/">Encoding</a></li>
+            <li><a href="/docs/upload/">Upload</a></li>
+            <li><a href="/docs/process/">Process</a></li>
+            <li><a href="/docs/zip/">Zip</a></li>
+            <li><a href="/docs/image/">Image</a></li>
+            <li><a href="/docs/ini/">Ini</a></li>
+            <li><a href="/docs/base64/">Base64</a></li>
+            <li><a href="/docs/serializer/">Serializer</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Text, Dates, and Numbers</p>
+    <ul>
+            <li><a href="/docs/str/">Str</a></li>
+            <li><a href="/docs/arr/">Arr</a></li>
+            <li><a href="/docs/date/">Date</a></li>
+            <li><a href="/docs/number/">Number</a></li>
+            <li><a href="/docs/money/">Money</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Validation</p>
+    <ul>
+            <li><a href="/docs/validator/">Validator</a></li>
+            <li><a href="/docs/ro-validator/">RoValidator</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Databases</p>
+    <ul>
+            <li><a href="/docs/mysql/">MySQL</a></li>
+            <li><a href="/docs/oracle/">Oracle</a></li>
+            <li><a href="/docs/sqlite/">SQLite</a></li>
+            <li><a href="/docs/paginator/">Paginator</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Import / Export</p>
+    <ul>
+            <li><a href="/docs/csv/">Csv</a></li>
+            <li><a href="/docs/xlsx/">Xlsx</a></li>
+            <li><a href="/docs/xml/">Xml</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Configuration &amp; Infrastructure</p>
+    <ul>
+            <li><a href="/docs/env/">Env</a></li>
+            <li><a href="/docs/config/">Config</a></li>
+            <li><a href="/docs/log/">Log</a></li>
+            <li><a href="/docs/http-client/">HttpClient</a></li>
+            <li><a href="/docs/cache/">Cache</a></li>
+            <li><a href="/docs/retry/">Retry</a></li>
+            <li><a href="/docs/rate-limiter/">RateLimiter</a></li>
+            <li><a href="/docs/crypt/">Crypt</a></li>
+            <li><a href="/docs/token/">Token</a></li>
+            <li><a href="/docs/mailer/">Mailer</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Web &amp; HTTP</p>
+    <ul>
+            <li><a href="/docs/request/">Request</a></li>
+            <li><a href="/docs/response/">Response</a></li>
+            <li><a href="/docs/session/">Session</a></li>
+            <li><a href="/docs/csrf/">Csrf</a></li>
+            <li><a href="/docs/view/">View</a></li>
+            <li><a href="/docs/url/">Url</a></li>
+            <li><a href="/docs/security-headers/">SecurityHeaders</a></li>
+            <li><a href="/docs/bot-detection/">BotDetection</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">UI Rendering Helpers</p>
+    <ul>
+            <li><a href="/docs/breadcrumbs/">Breadcrumbs</a></li>
+            <li><a href="/docs/flash/">Flash</a></li>
+            <li><a href="/docs/form-builder/">FormBuilder</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Development Tools</p>
+    <ul>
+            <li><a href="/docs/debug/">Debug</a></li>
+            <li><a href="/docs/timer/">Timer</a></li>
+            <li><a href="/docs/faker/">Faker</a></li>
+          </ul>
+  </div>
+  </nav>
+  </aside>
+  <div class="drawer-backdrop" x-cloak x-show="drawerOpen" x-on:click="closeDrawer"></div>
+
+  <main id="main" class="content" tabindex="-1">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <ol>
+                        <li><a href="/">Home</a></li>
+                                <li><a href="/docs/">Documentation</a></li>
+                                <li><span aria-current="page">Form handling</span></li>
+                      </ol>
+    </nav>
+    
+    <article class="prose doc">
+  <header class="doc-head">
+    <p class="eyebrow">Guides</p>
+    <h1>Form handling</h1>
+    <p class="lead">A complete form workflow with Foundry - reading the request, CSRF protection, validation, saving, flash messages and the redirect.</p>
+  </header>
+  <p>This guide puts together <a class="code-link" href="/docs/request/"><code>Request</code></a>, <a class="code-link" href="/docs/csrf/"><code>Csrf</code></a>, <a class="code-link" href="/docs/validator/"><code>Validator</code></a>, <a class="code-link" href="/docs/ro-validator/"><code>RoValidator</code></a>, <a class="code-link" href="/docs/session/"><code>Session</code></a>, <a class="code-link" href="/docs/flash/"><code>Flash</code></a> and <a class="code-link" href="/docs/response/"><code>Response</code></a> in the classic POST / redirect / GET flow.</p>
+<h2 id="the-controller">The controller<a class="anchor" href="#the-controller" aria-label="Permalink to this section">#</a></h2>
+<div class="codeblock" data-lang="php"><div class="codeblock-bar"><span class="codeblock-lang">PHP</span><button type="button" class="copy-btn" data-copy hidden>Copy</button></div><pre><code><span class="t-k">use</span> <span class="t-C">Foundry\Csrf</span>;
+<span class="t-k">use</span> <span class="t-C">Foundry\Flash</span>;
+<span class="t-k">use</span> <span class="t-C">Foundry\Request</span>;
+<span class="t-k">use</span> <span class="t-C">Foundry\Response</span>;
+<span class="t-k">use</span> <span class="t-C">Foundry\RoValidator</span>;
+<span class="t-k">use</span> <span class="t-C">Foundry\Session</span>;
+<span class="t-k">use</span> <span class="t-C">Foundry\Validator</span>;
+
+<span class="t-v">$request</span> = <span class="t-C">Request</span>::<span class="t-f">fromGlobals</span>();
+
+<span class="t-k">if</span> (<span class="t-v">$request</span>-&gt;<span class="t-f">isPost</span>()) {
+    <span class="t-C">Csrf</span>::<span class="t-f">check</span>();                                    <span class="t-c">// invalid token -&gt; exception (HTTP status 419)</span>
+
+    <span class="t-v">$validator</span> = <span class="t-k">new</span> <span class="t-f">Validator</span>(<span class="t-v">$request</span>-&gt;<span class="t-f">all</span>(), [
+        <span class="t-s">&apos;email&apos;</span> =&gt; <span class="t-s">&apos;required|email|max:255&apos;</span>,
+        <span class="t-s">&apos;cnp&apos;</span> =&gt; [<span class="t-s">&apos;required&apos;</span>, <span class="t-s">&apos;cnp&apos;</span> =&gt; <span class="t-C">RoValidator</span>::<span class="t-f">cnp</span>(...)],
+        <span class="t-s">&apos;birth_date&apos;</span> =&gt; <span class="t-s">&apos;required|date:d.m.Y&apos;</span>,
+    ]);
+
+    <span class="t-k">if</span> (<span class="t-v">$validator</span>-&gt;<span class="t-f">fails</span>()) {
+        <span class="t-C">Session</span>::<span class="t-f">flashInput</span>(<span class="t-v">$request</span>-&gt;<span class="t-f">only</span>(<span class="t-s">&apos;email&apos;</span>, <span class="t-s">&apos;birth_date&apos;</span>));
+        <span class="t-C">Session</span>::<span class="t-f">flash</span>(<span class="t-s">&apos;errors&apos;</span>, <span class="t-v">$validator</span>-&gt;<span class="t-f">errors</span>());
+        <span class="t-C">Response</span>::<span class="t-f">redirect</span>(<span class="t-s">&apos;/clients/new&apos;</span>)-&gt;<span class="t-f">send</span>();
+
+        <span class="t-k">return</span>;
+    }
+
+    <span class="t-v">$db</span>-&gt;<span class="t-f">insert</span>(<span class="t-s">&apos;clients&apos;</span>, <span class="t-v">$validator</span>-&gt;<span class="t-f">validated</span>());
+    <span class="t-C">Flash</span>::<span class="t-f">success</span>(<span class="t-s">&apos;Client was saved successfully.&apos;</span>);
+    <span class="t-C">Response</span>::<span class="t-f">redirect</span>(<span class="t-s">&apos;/clients&apos;</span>)-&gt;<span class="t-f">send</span>();
+
+    <span class="t-k">return</span>;
+}</code></pre></div>
+<h2 id="step-by-step">Step by step<a class="anchor" href="#step-by-step" aria-label="Permalink to this section">#</a></h2>
+<ol><li><a class="code-link" href="/docs/request/#method-fromglobals"><code>Request::fromGlobals()</code></a> wraps the superglobals with typed getters. <code>$request-&gt;int(&apos;id&apos;)</code> returns an integer or throws: a missing value, an array (<code>?id[]=1</code>) or <code>&apos;12abc&apos;</code> never slips through.</li><li><a class="code-link" href="/docs/csrf/#method-check"><code>Csrf::check()</code></a> verifies the session-bound token for POST, PUT, PATCH and DELETE requests and throws when it is missing or wrong.</li><li><a class="code-link" href="/docs/validator/"><code>Validator</code></a> applies rules per field. Invalid data does <strong>not</strong> throw: each field gets one error, with a stable code (<code>codes()</code>) and a message (<code>errors()</code>).</li><li>Custom rules are closures. <a class="code-link" href="/docs/ro-validator/"><code>RoValidator</code></a> methods return booleans, so they plug in directly as <code>&apos;cnp&apos; =&gt; RoValidator::cnp(...)</code>.</li><li>On failure, the input and the errors are flashed to the session and the user is redirected back to the form.</li><li>On success, <code>validated()</code> returns only the validated fields, ready for <code>insert()</code>. A flash message confirms the result after the redirect.</li></ol>
+<div class="callout callout-warning"><p><strong>Warning:</strong> <a class="code-link" href="/docs/response/#method-send"><code>Response::send()</code></a> does not stop the script. The <code>return</code> after each redirect is required.</p></div>
+<h2 id="the-template">The template<a class="anchor" href="#the-template" aria-label="Permalink to this section">#</a></h2>
+<p>The UI helpers return data, not HTML, so the markup stays yours. Use <code>e()</code> (or <a class="code-link" href="/docs/view/#method-escape"><code>View::escape()</code></a>) for every value you print:</p>
+<div class="codeblock" data-lang="php"><div class="codeblock-bar"><span class="codeblock-lang">PHP</span><button type="button" class="copy-btn" data-copy hidden>Copy</button></div><pre><code><span class="t-k">&lt;?php </span><span class="t-k">use</span> <span class="t-k">function</span> <span class="t-C">Foundry\e</span>; <span class="t-k">?&gt;
+</span><span class="t-k">&lt;?php </span><span class="t-k">foreach</span> (<span class="t-C">Flash</span>::<span class="t-f">pull</span>() <span class="t-k">as</span> <span class="t-v">$message</span>): <span class="t-k">?&gt;
+</span>    &lt;div class=&quot;alert alert-&lt;?= <span class="t-f">e</span>(<span class="t-v">$message</span>[<span class="t-s">&apos;type&apos;</span>]) <span class="t-k">?&gt;</span>&quot;&gt;&lt;?= <span class="t-f">e</span>(<span class="t-v">$message</span>[<span class="t-s">&apos;message&apos;</span>]) <span class="t-k">?&gt;</span>&lt;/div&gt;
+<span class="t-k">&lt;?php </span>endforeach <span class="t-k">?&gt;
+</span>
+&lt;form method=&quot;post&quot; action=&quot;/clients/new&quot;&gt;
+    &lt;?= <span class="t-C">Csrf</span>::<span class="t-f">field</span>() <span class="t-k">?&gt;
+</span>
+    &lt;label for=&quot;email&quot;&gt;Email&lt;/label&gt;
+    &lt;input id=&quot;email&quot; name=&quot;email&quot; value=&quot;&lt;?= <span class="t-f">e</span>(<span class="t-C">Session</span>::<span class="t-f">old</span>(<span class="t-s">&apos;email&apos;</span>)) <span class="t-k">?&gt;</span>&quot;&gt;
+    <span class="t-k">&lt;?php </span><span class="t-k">if</span> (<span class="t-k">isset</span>(<span class="t-C">Session</span>::<span class="t-f">flashed</span>(<span class="t-s">&apos;errors&apos;</span>, [])[<span class="t-s">&apos;email&apos;</span>])): <span class="t-k">?&gt;
+</span>        &lt;p class=&quot;error&quot;&gt;&lt;?= <span class="t-f">e</span>(<span class="t-C">Session</span>::<span class="t-f">flashed</span>(<span class="t-s">&apos;errors&apos;</span>)[<span class="t-s">&apos;email&apos;</span>]) <span class="t-k">?&gt;</span>&lt;/p&gt;
+    <span class="t-k">&lt;?php </span>endif <span class="t-k">?&gt;
+</span>
+    &lt;button type=&quot;submit&quot;&gt;Save&lt;/button&gt;
+&lt;/form&gt;</code></pre></div>
+<h2 id="public-forms">Public forms<a class="anchor" href="#public-forms" aria-label="Permalink to this section">#</a></h2>
+<p>For forms anyone can submit (contact, registration, password reset), add <a class="code-link" href="/docs/bot-detection/"><code>BotDetection</code></a> (a honeypot field plus a signed minimum fill time) and <a class="code-link" href="/docs/rate-limiter/"><code>RateLimiter</code></a> (for example 5 attempts per minute per IP address).</p></article>
+
+        <nav class="pager" aria-label="Previous and next pages">
+            <a class="pager-prev" href="/docs/php-versions/" rel="prev"><span>Previous</span><strong>PHP versions</strong></a>
+                  <a class="pager-next" href="/docs/imports-exports/" rel="next"><span>Next</span><strong>Imports &amp; exports</strong></a>
+          </nav>
+    
+    <div class="page-meta">
+            <span>Last updated <time datetime="2026-11-12T16:13:55+02:00">November 12, 2026</time></span>
+                  <a href="/docs/form-handling.md">View as Markdown</a>
+          </div>
+  </main>
+
+    <aside class="toc" aria-label="On this page">
+    <p class="toc-title">On this page</p>
+    <ul>
+            <li class="toc-l2"><a href="#the-controller">The controller</a></li>
+            <li class="toc-l2"><a href="#step-by-step">Step by step</a></li>
+            <li class="toc-l2"><a href="#the-template">The template</a></li>
+            <li class="toc-l2"><a href="#public-forms">Public forms</a></li>
+          </ul>
+  </aside>
+  </div>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <p><strong>Foundry</strong> — standalone, single-file PHP utility classes. &copy; 2026 · Proprietary license.</p>
+    <nav aria-label="Footer">
+      <a href="/docs/">Documentation</a>
+      <a href="/docs/installation/">Installation</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/sitemap.xml">Sitemap</a>
+    </nav>
+  </div>
+</footer>
+
+<div class="search-modal" x-cloak x-show="searchOpen" role="dialog" aria-modal="true" aria-label="Search documentation" x-on:keydown="onSearchKey">
+  <div class="search-backdrop" x-on:click="closeSearch"></div>
+  <div class="search-panel">
+    <div class="search-field">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <input x-ref="input" type="search" placeholder="Search classes, methods and guides" autocomplete="off" spellcheck="false" aria-label="Search" aria-controls="search-results" aria-autocomplete="list" x-bind:aria-activedescendant="activeId" x-on:input="onInput">
+      <button type="button" class="kbd-btn" x-on:click="closeSearch" aria-label="Close search">Esc</button>
+    </div>
+    <ul id="search-results" class="search-results" role="listbox" aria-label="Results" x-ref="list">
+      <template x-for="item in results" x-bind:key="item.id">
+        <li role="option" x-bind:id="item.id" x-bind:aria-selected="item.selected" x-bind:class="item.cls" x-bind:data-index="item.i" x-on:mousemove="hover" x-on:click="closeSearch">
+          <a x-bind:href="item.u" tabindex="-1">
+            <span class="r-kind" x-text="item.kl"></span>
+            <span class="r-main"><span class="r-title" x-text="item.t"></span><span class="r-desc" x-text="item.d"></span></span>
+            <span class="r-sec" x-text="item.s"></span>
+          </a>
+        </li>
+      </template>
+    </ul>
+    <p class="search-status" x-show="showStatus" x-text="statusText"></p>
+    <div class="search-foot" aria-hidden="true"><span><kbd>↑</kbd><kbd>↓</kbd> navigate</span><span><kbd>Enter</kbd> open</span><span><kbd>Esc</kbd> close</span></div>
+  </div>
+</div>
+</div>
+</body>
+</html>

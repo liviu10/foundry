@@ -1,0 +1,104 @@
+# Foundry
+
+> Foundry is a suite of 51 standalone, single-file PHP utility classes (PHP 8.3+, with PHP 7.4 builds) with zero third-party dependencies. Every failure throws an explicit, descriptive SPL exception instead of returning false or null.
+
+All classes live in the `Foundry` namespace and are independent of each other: copy only the files you need into a project and load them with require_once, an SPL autoloader or Composer PSR-4. Error messages never contain user data. Every documentation page has a Markdown version (same URL, `.md` instead of `/`).
+
+## Getting started
+
+- [Installation](https://foundry.insightdevhub.ro/docs/installation.md): Download the Foundry archive, copy the classes you need into your project and load them with require_once, an SPL autoloader or Composer PSR-4.
+- [Usage and exceptions](https://foundry.insightdevhub.ro/docs/usage.md): How Foundry classes are called, which exceptions they throw, how error messages are written, and when to catch them.
+- [Application bootstrap](https://foundry.insightdevhub.ro/docs/bootstrap.md): The few lines to run once in your entry point - environment, logging, error handling, security headers and sessions.
+- [Design principles](https://foundry.insightdevhub.ro/docs/design-principles.md): The rules every Foundry class follows - explicit errors, one file per tool, pure native PHP, no personal data in error messages - and what is deliberately left out.
+- [PHP versions](https://foundry.insightdevhub.ro/docs/php-versions.md): Foundry is written for PHP 8.3+ and can be downgraded automatically to PHP 7.4. Here is how the two targets relate and how they differ.
+
+## Guides
+
+- [Form handling](https://foundry.insightdevhub.ro/docs/form-handling.md): A complete form workflow with Foundry - reading the request, CSRF protection, validation, saving, flash messages and the redirect.
+- [Large imports and exports](https://foundry.insightdevhub.ro/docs/imports-exports.md): Import and export millions of CSV and Excel rows with constant memory - schema validation, batches, resumable cursors and streaming writers.
+- [Databases](https://foundry.insightdevhub.ro/docs/databases.md): MySQL, Oracle and SQLite share one API - fetch helpers, array-based insert/update/delete, streaming cursors, transactions and safe pagination.
+
+## Errors & Exception Handling
+
+- [ErrorHandler](https://foundry.insightdevhub.ro/docs/error-handler.md): Explicitly registered: converts warnings to ErrorException, logs deprecations, handles uncaught exceptions and fatal errors with logging and a generic 500 response (detailed traces in debug mode only).
+
+## Native Function Wrappers
+
+- [Json](https://foundry.insightdevhub.ro/docs/json.md): Strict encode/decode, atomic file I/O; preserves large integers, strips BOM safely.
+- [File](https://foundry.insightdevhub.ro/docs/file.md): Streaming reads, atomic writes, stream-based copying, safe directory creation (concurrency-safe), MIME detection from file bytes.
+- [Regex](https://foundry.insightdevhub.ro/docs/regex.md): Strict preg_* wrapper throwing exceptions on invalid patterns or execution failures.
+- [Cast](https://foundry.insightdevhub.ro/docs/cast.md): Strict type conversions toInt/toFloat/toBool/toString (rejects '12abc', '1,5', '').
+- [Encoding](https://foundry.insightdevhub.ro/docs/encoding.md): Windows-1250 <-> UTF-8 conversion, Romanian cedilla <-> comma normalization, UTF-8 validity verification, BOM detection.
+- [Upload](https://foundry.insightdevhub.ro/docs/upload.md): Secure file uploads: MIME detection from file inspection, whitelist-checked extension, cryptographically random names.
+- [Process](https://foundry.insightdevhub.ro/docs/process.md): Safe command execution without shell expansion, exit code validation, stdin support, configurable timeouts.
+- [Zip](https://foundry.insightdevhub.ro/docs/zip.md): Secure archive creation and extraction (protected against zip slip, symlink attacks, and zip bombs).
+- [Image](https://foundry.insightdevhub.ro/docs/image.md): Image metadata, validation against decompression bombs, aspect-ratio resizing, thumbnail generation; requires gd.
+- [Ini](https://foundry.insightdevhub.ro/docs/ini.md): Strict .ini file parser with line-accurate error reporting and no implicit type coercion.
+- [Base64](https://foundry.insightdevhub.ro/docs/base64.md): Strict decoding, URL-safe Base64 (RFC 4648), hex conversion.
+- [Serializer](https://foundry.insightdevhub.ro/docs/serializer.md): Secure unserialize wrapper disabling arbitrary class instantiation and enforcing max_depth; prefer Json for new data.
+
+## Text, Dates, and Numbers
+
+- [Str](https://foundry.insightdevhub.ro/docs/str.md): URL slugging, diacritic stripping, data masking (credit card, IBAN, email), case conversions, e() helper; fully UTF-8 compliant.
+- [Arr](https://foundry.insightdevhub.ro/docs/arr.md): Dot notation access (missing keys throw exceptions), pluck, keyBy, groupBy, sortBy, strict searches.
+- [Date](https://foundry.insightdevhub.ro/docs/date.md): Strict parsing (31.02 fails), localization formatting, Romanian public holidays, business day calculations.
+- [Number](https://foundry.insightdevhub.ro/docs/number.md): Romanian and European number formatting and parsing (1.234,50), independent of thread-unsafe setlocale.
+- [Money](https://foundry.insightdevhub.ro/docs/money.md): Currency amounts as exact strings, bcmath arithmetic, bankers rounding, loss-free installment splitting.
+
+## Validation
+
+- [Validator](https://foundry.insightdevhub.ro/docs/validator.md): Rule-based attribute validation ('required|email|max:255'), single error per field, stable translation error codes, custom callbacks.
+- [RoValidator](https://foundry.insightdevhub.ro/docs/ro-validator.md): Romanian specific validators: CNP, CUI/CIF, IBAN, phone numbers, postal codes, identity card series; returns boolean, usable directly in Validator.
+
+## Databases
+
+- [MySQL](https://foundry.insightdevhub.ro/docs/mysql.md): Secure PDO wrapper, verified SQL identifiers, enforced credentials.
+- [Oracle](https://foundry.insightdevhub.ro/docs/oracle.md): oci8 with ORA errors as exceptions; targets Oracle 11.2.0.4+ (ROWNUM pagination, sequences).
+- [SQLite](https://foundry.insightdevhub.ro/docs/sqlite.md): PDO; missing files are never silently created, foreign_keys PRAGMA enabled.
+- [Paginator](https://foundry.insightdevhub.ro/docs/paginator.md): URL-based pagination, sorting, and search limited strictly to whitelisted columns.
+
+## Import / Export
+
+- [Csv](https://foundry.insightdevhub.ro/docs/csv.md): Streaming reader (auto-detected delimiter, BOM, Windows-1250 support), atomic writer, batch validation import.
+- [Xlsx](https://foundry.insightdevhub.ro/docs/xlsx.md): Zero-dependency .xlsx reader/writer: streaming generation, split-archive ZIP exports when exceeding sheet limits, batch import.
+- [Xml](https://foundry.insightdevhub.ro/docs/xml.md): Secure XML parsing (immune to XXE), XSD schema validation (e.g., ANAF e-Factura), XPath querying, streaming I/O.
+
+## Configuration & Infrastructure
+
+- [Env](https://foundry.insightdevhub.ro/docs/env.md): .env file loader (phpdotenv syntax), schema validation, and typed casting.
+- [Config](https://foundry.insightdevhub.ro/docs/config.md): Nested PHP configuration arrays with dot notation; missing keys throw exceptions.
+- [Log](https://foundry.insightdevhub.ro/docs/log.md): PSR-3 compliant file logger, automatic sensitive data masking, daily log rotation.
+- [HttpClient](https://foundry.insightdevhub.ro/docs/http-client.md): cURL wrapper converting network failures and non-2xx statuses to exceptions, SSL verification enabled, default timeouts.
+- [Cache](https://foundry.insightdevhub.ro/docs/cache.md): JSON file-based cache with atomic file writes and remember() closure caching.
+- [Retry](https://foundry.insightdevhub.ro/docs/retry.md): Exponential backoff retry handler with jitter for transient failures.
+- [RateLimiter](https://foundry.insightdevhub.ro/docs/rate-limiter.md): Sliding/fixed window rate limiting by key (e.g., client IP), concurrency-safe.
+- [Crypt](https://foundry.insightdevhub.ro/docs/crypt.md): AES-256-GCM authenticated encryption with key rotation support and HMAC validation.
+- [Token](https://foundry.insightdevhub.ro/docs/token.md): Cryptographically secure random tokens and HMAC-SHA256 JWTs with mandatory exp.
+- [Mailer](https://foundry.insightdevhub.ro/docs/mailer.md): Native SMTP transport (TLS, proxy support), multipart HTML/plain-text, attachments.
+
+## Web & HTTP
+
+- [Request](https://foundry.insightdevhub.ro/docs/request.md): Encapsulates incoming HTTP requests with typed getters (int('id'): missing or non-integer throws exception), JSON body decoding, trusted proxy IP resolution.
+- [Response](https://foundry.insightdevhub.ro/docs/response.md): Immutable HTTP response object dispatched via send(): JSON, redirects, streaming downloads, secure cookies.
+- [Session](https://foundry.insightdevhub.ro/docs/session.md): Explicit session initialization with hardened cookie options, flash data, old() form retention, idle timeout invalidation.
+- [Csrf](https://foundry.insightdevhub.ro/docs/csrf.md): Session-bound anti-CSRF token verification for POST/PUT/PATCH/DELETE requests.
+- [View](https://foundry.insightdevhub.ro/docs/view.md): Isolated PHP template renderer confined to a base directory.
+- [Url](https://foundry.insightdevhub.ro/docs/url.md): Query parameter builder, current URL generation against trusted hosts, local redirect validation (isLocal).
+- [SecurityHeaders](https://foundry.insightdevhub.ro/docs/security-headers.md): Content Security Policy (CSP) with nonce generation, HSTS on HTTPS, and essential defensive HTTP headers.
+- [BotDetection](https://foundry.insightdevhub.ro/docs/bot-detection.md): Honeypot field verification and HMAC-timestamped minimum submission time checking for public forms.
+
+## UI Rendering Helpers
+
+- [Breadcrumbs](https://foundry.insightdevhub.ro/docs/breadcrumbs.md): Hierarchical trail management with automated schema.org JSON-LD generation for search engines.
+- [Flash](https://foundry.insightdevhub.ro/docs/flash.md): Flash messaging for sequential requests (success, warning, error, info), exposed as raw arrays.
+- [FormBuilder](https://foundry.insightdevhub.ro/docs/form-builder.md): Schema-driven form structure generation and Validator rule mapping directly from table column metadata.
+
+## Development Tools
+
+- [Debug](https://foundry.insightdevhub.ro/docs/debug.md): Safe dump() / dd() utilities disabled by default (Debug::enable() required), with automated sensitive data redaction.
+- [Timer](https://foundry.insightdevhub.ro/docs/timer.md): High-precision stage profiling and memory tracking; includes a statistical benchmark() helper.
+- [Faker](https://foundry.insightdevhub.ro/docs/faker.md): Generates realistic Romanian test data (valid CNP, CUI, IBAN, physical addresses), with optional deterministic seeding.
+
+## Optional
+
+- [Complete documentation in a single file](https://foundry.insightdevhub.ro/llms-full.txt): every guide and class reference concatenated.

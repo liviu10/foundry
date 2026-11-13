@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>File — Safe file reads and atomic writes | Foundry PHP</title>
+<meta name="description" content="PHP File class: Streaming reads, atomic writes, stream-based copying, safe directory creation (concurrency-safe), MIME detection from file bytes. Standalone…">
+<link rel="canonical" href="https://foundry.insightdevhub.ro/docs/file/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f1115">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Foundry">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="File — Safe file reads and atomic writes | Foundry PHP">
+<meta property="og:description" content="PHP File class: Streaming reads, atomic writes, stream-based copying, safe directory creation (concurrency-safe), MIME detection from file bytes. Standalone…">
+<meta property="og:url" content="https://foundry.insightdevhub.ro/docs/file/">
+<meta property="og:image" content="https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Foundry — standalone PHP utility classes">
+<meta property="article:modified_time" content="2026-11-10T21:51:05+02:00">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="File — Safe file reads and atomic writes | Foundry PHP">
+<meta name="twitter:description" content="PHP File class: Streaming reads, atomic writes, stream-based copying, safe directory creation (concurrency-safe), MIME detection from file bytes. Standalone…">
+<meta name="twitter:image" content="https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2">
+<link rel="alternate" type="text/markdown" href="/docs/file.md" title="Markdown version">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="stylesheet" href="/assets/css/site.css?v=f05442ef0e">
+<script src="/assets/js/theme.js?v=b02059f0fb"></script>
+<script src="/assets/js/app.js?v=02d0b9d9f7" defer></script>
+<script src="/assets/vendor/alpine-csp.min.js?v=820bc95038" defer></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"File — PHP utility class reference","description":"PHP File class: Streaming reads, atomic writes, stream-based copying, safe directory creation (concurrency-safe), MIME detection from file bytes. Standalone…","url":"https://foundry.insightdevhub.ro/docs/file/","mainEntityOfPage":"https://foundry.insightdevhub.ro/docs/file/","inLanguage":"en","image":"https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2","isPartOf":{"@type":"WebSite","name":"Foundry","url":"https://foundry.insightdevhub.ro/"},"proficiencyLevel":"Expert","dateModified":"2026-11-10T21:51:05+02:00","about":{"@type":"SoftwareSourceCode","name":"Foundry\\File","programmingLanguage":"PHP","runtimePlatform":"PHP 8.3+","version":"1.1"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://foundry.insightdevhub.ro/"},{"@type":"ListItem","position":2,"name":"Documentation","item":"https://foundry.insightdevhub.ro/docs/"},{"@type":"ListItem","position":3,"name":"Native Function Wrappers","item":"https://foundry.insightdevhub.ro/docs/#native-function-wrappers"},{"@type":"ListItem","position":4,"name":"File","item":"https://foundry.insightdevhub.ro/docs/file/"}]}</script>
+</head>
+<body class="is-docs">
+<div class="app" x-data="site" x-on:keydown.window="onKey">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="topbar-inner">
+        <button type="button" class="icon-btn menu-btn" x-cloak x-on:click="toggleDrawer" aria-controls="sidebar" x-bind:aria-expanded="drawerExpanded" aria-label="Open navigation">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+    </button>
+        <a class="brand" href="/" aria-label="Foundry home">
+      <svg class="brand-mark" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><rect width="32" height="32" rx="7" fill="var(--accent)"/><path d="M10 8h13v4h-8.5v3.5H21v4h-6.5V25H10z" fill="#fff"/></svg>
+      <span>Foundry</span>
+    </a>
+    <nav class="topnav" aria-label="Main">
+      <a href="/docs/" aria-current="true">Docs</a>
+      <a href="/docs/installation/#download">Download</a>
+    </nav>
+    <div class="topbar-actions">
+      <button type="button" class="search-btn" x-cloak x-on:click="openSearch" aria-label="Search documentation" aria-keyshortcuts="Control+K Meta+K /">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span class="search-btn-label">Search</span>
+        <kbd class="search-btn-kbd">Ctrl K</kbd>
+      </button>
+      <button type="button" class="icon-btn" x-cloak x-on:click="toggleTheme" x-bind:aria-label="themeLabel" x-bind:title="themeLabel">
+        <svg x-show="isDark" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <svg x-show="isLight" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="sidebar" id="sidebar" x-bind:class="drawerClass" aria-label="Documentation navigation">
+    <nav class="nav">
+    <div class="nav-group">
+    <p class="nav-title">Getting started</p>
+    <ul>
+            <li><a href="/docs/">Introduction</a></li>
+            <li><a href="/docs/installation/">Installation</a></li>
+            <li><a href="/docs/usage/">Usage &amp; exceptions</a></li>
+            <li><a href="/docs/bootstrap/">Bootstrap</a></li>
+            <li><a href="/docs/design-principles/">Design principles</a></li>
+            <li><a href="/docs/php-versions/">PHP versions</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Guides</p>
+    <ul>
+            <li><a href="/docs/form-handling/">Form handling</a></li>
+            <li><a href="/docs/imports-exports/">Imports &amp; exports</a></li>
+            <li><a href="/docs/databases/">Databases</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Errors &amp; Exception Handling</p>
+    <ul>
+            <li><a href="/docs/error-handler/">ErrorHandler</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Native Function Wrappers</p>
+    <ul>
+            <li><a href="/docs/json/">Json</a></li>
+            <li><a href="/docs/file/" aria-current="page">File</a></li>
+            <li><a href="/docs/regex/">Regex</a></li>
+            <li><a href="/docs/cast/">Cast</a></li>
+            <li><a href="/docs/encoding/">Encoding</a></li>
+            <li><a href="/docs/upload/">Upload</a></li>
+            <li><a href="/docs/process/">Process</a></li>
+            <li><a href="/docs/zip/">Zip</a></li>
+            <li><a href="/docs/image/">Image</a></li>
+            <li><a href="/docs/ini/">Ini</a></li>
+            <li><a href="/docs/base64/">Base64</a></li>
+            <li><a href="/docs/serializer/">Serializer</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Text, Dates, and Numbers</p>
+    <ul>
+            <li><a href="/docs/str/">Str</a></li>
+            <li><a href="/docs/arr/">Arr</a></li>
+            <li><a href="/docs/date/">Date</a></li>
+            <li><a href="/docs/number/">Number</a></li>
+            <li><a href="/docs/money/">Money</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Validation</p>
+    <ul>
+            <li><a href="/docs/validator/">Validator</a></li>
+            <li><a href="/docs/ro-validator/">RoValidator</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Databases</p>
+    <ul>
+            <li><a href="/docs/mysql/">MySQL</a></li>
+            <li><a href="/docs/oracle/">Oracle</a></li>
+            <li><a href="/docs/sqlite/">SQLite</a></li>
+            <li><a href="/docs/paginator/">Paginator</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Import / Export</p>
+    <ul>
+            <li><a href="/docs/csv/">Csv</a></li>
+            <li><a href="/docs/xlsx/">Xlsx</a></li>
+            <li><a href="/docs/xml/">Xml</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Configuration &amp; Infrastructure</p>
+    <ul>
+            <li><a href="/docs/env/">Env</a></li>
+            <li><a href="/docs/config/">Config</a></li>
+            <li><a href="/docs/log/">Log</a></li>
+            <li><a href="/docs/http-client/">HttpClient</a></li>
+            <li><a href="/docs/cache/">Cache</a></li>
+            <li><a href="/docs/retry/">Retry</a></li>
+            <li><a href="/docs/rate-limiter/">RateLimiter</a></li>
+            <li><a href="/docs/crypt/">Crypt</a></li>
+            <li><a href="/docs/token/">Token</a></li>
+            <li><a href="/docs/mailer/">Mailer</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Web &amp; HTTP</p>
+    <ul>
+            <li><a href="/docs/request/">Request</a></li>
+            <li><a href="/docs/response/">Response</a></li>
+            <li><a href="/docs/session/">Session</a></li>
+            <li><a href="/docs/csrf/">Csrf</a></li>
+            <li><a href="/docs/view/">View</a></li>
+            <li><a href="/docs/url/">Url</a></li>
+            <li><a href="/docs/security-headers/">SecurityHeaders</a></li>
+            <li><a href="/docs/bot-detection/">BotDetection</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">UI Rendering Helpers</p>
+    <ul>
+            <li><a href="/docs/breadcrumbs/">Breadcrumbs</a></li>
+            <li><a href="/docs/flash/">Flash</a></li>
+            <li><a href="/docs/form-builder/">FormBuilder</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Development Tools</p>
+    <ul>
+            <li><a href="/docs/debug/">Debug</a></li>
+            <li><a href="/docs/timer/">Timer</a></li>
+            <li><a href="/docs/faker/">Faker</a></li>
+          </ul>
+  </div>
+  </nav>
+  </aside>
+  <div class="drawer-backdrop" x-cloak x-show="drawerOpen" x-on:click="closeDrawer"></div>
+
+  <main id="main" class="content" tabindex="-1">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <ol>
+                        <li><a href="/">Home</a></li>
+                                <li><a href="/docs/">Documentation</a></li>
+                                <li><a href="/docs/#native-function-wrappers">Native Function Wrappers</a></li>
+                                <li><span aria-current="page">File</span></li>
+                      </ol>
+    </nav>
+    
+    <article class="prose doc">
+  <header class="doc-head">
+    <p class="eyebrow"><a href="/docs/#native-function-wrappers">Native Function Wrappers</a></p>
+    <h1>File</h1>
+    <p class="lead">File and directory operations. Native PHP functions return false and emit warnings; here any error throws a RuntimeException with a clear message (operation, path, cause).</p>
+    <ul class="facts" aria-label="Class facts">
+      <li><span>Namespace</span><code>Foundry\File</code></li>
+      <li><span>File</span><code>File.php</code></li>
+      <li><span>Version</span><strong>1.1</strong></li>
+      <li><span>Requires</span><strong>PHP 8.3+</strong> <code class="ext">ext-fileinfo</code></li>
+      <li><span>API</span><strong>22 public members</strong></li>
+    </ul>
+  </header>
+  <h2 id="usage">Usage<a class="anchor" href="#usage" aria-label="Permalink to this section">#</a></h2>
+<div class="codeblock" data-lang="php"><div class="codeblock-bar"><span class="codeblock-lang">PHP</span><button type="button" class="copy-btn" data-copy hidden>Copy</button></div><pre><code><span class="t-k">require_once</span> <span class="t-s">&apos;File.php&apos;</span>;
+<span class="t-k">use</span> <span class="t-C">Foundry\File</span>;
+
+<span class="t-C">File</span>::<span class="t-f">ensureDir</span>(__DIR__.<span class="t-s">&apos;/storage/exports&apos;</span>);
+<span class="t-C">File</span>::<span class="t-f">write</span>(__DIR__.<span class="t-s">&apos;/storage/exports/report.txt&apos;</span>, <span class="t-v">$content</span>);   <span class="t-c">// atomic write</span>
+<span class="t-k">foreach</span> (<span class="t-C">File</span>::<span class="t-f">lines</span>(<span class="t-v">$path</span>) <span class="t-k">as</span> <span class="t-v">$number</span> =&gt; <span class="t-v">$line</span>) { ... }          <span class="t-c">// large files, line by line</span>
+<span class="t-v">$csvFiles</span> = <span class="t-C">File</span>::<span class="t-f">files</span>(__DIR__.<span class="t-s">&apos;/import&apos;</span>, extension: <span class="t-s">&apos;csv&apos;</span>);
+<span class="t-C">File</span>::<span class="t-f">copyStream</span>(<span class="t-v">$httpBody</span>, __DIR__.<span class="t-s">&apos;/storage/download.pdf&apos;</span>);     <span class="t-c">// stream -&gt; file, atomic</span>
+<span class="t-C">File</span>::<span class="t-f">assertWritable</span>(__DIR__.<span class="t-s">&apos;/storage/logs&apos;</span>);                    <span class="t-c">// exception with exact reason</span></code></pre></div>
+<h2 id="installation">Installation<a class="anchor" href="#installation" aria-label="Permalink to this section">#</a></h2>
+<p>Copy <code>File.php</code> from the <a href="/docs/installation/#download">download archive</a> into your project and load it (or register the <a href="/docs/installation/#loading-the-classes">autoloader</a>):</p>
+<div class="codeblock" data-lang="php"><div class="codeblock-bar"><span class="codeblock-lang">PHP</span><button type="button" class="copy-btn" data-copy hidden>Copy</button></div><pre><code><span class="t-k">require_once</span> __DIR__.<span class="t-s">&apos;/lib/Utilities/File.php&apos;</span>;
+
+<span class="t-k">use</span> <span class="t-C">Foundry\File</span>;</code></pre></div>
+<p class="muted-note">Requires the PHP extension <code>fileinfo</code> (check with <code>php -m</code>).</p>
+<h2 id="methods">Methods<a class="anchor" href="#methods" aria-label="Permalink to this section">#</a></h2>
+<nav class="method-index" aria-label="File methods"><ul><li><a href="#method-read"><code>read()</code></a></li><li><a href="#method-lines"><code>lines()</code></a></li><li><a href="#method-write"><code>write()</code></a></li><li><a href="#method-copystream"><code>copyStream()</code></a></li><li><a href="#method-writeall"><code>writeAll()</code></a></li><li><a href="#method-append"><code>append()</code></a></li><li><a href="#method-delete"><code>delete()</code></a></li><li><a href="#method-deleteifexists"><code>deleteIfExists()</code></a></li><li><a href="#method-copy"><code>copy()</code></a></li><li><a href="#method-move"><code>move()</code></a></li><li><a href="#method-ensuredir"><code>ensureDir()</code></a></li><li><a href="#method-deletedir"><code>deleteDir()</code></a></li><li><a href="#method-files"><code>files()</code></a></li><li><a href="#method-size"><code>size()</code></a></li><li><a href="#method-mimetype"><code>mimeType()</code></a></li><li><a href="#method-tempfile"><code>tempFile()</code></a></li><li><a href="#method-glob"><code>glob()</code></a></li><li><a href="#method-realpath"><code>realpath()</code></a></li><li><a href="#method-touch"><code>touch()</code></a></li><li><a href="#method-chmod"><code>chmod()</code></a></li><li><a href="#method-assertwritable"><code>assertWritable()</code></a></li><li><a href="#method-join"><code>join()</code></a></li></ul></nav>
+<section class="member" id="method-read" aria-labelledby="method-read-title"><header class="member-head"><h3 id="method-read-title"><code>File::read()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-read" aria-label="Permalink to read">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">read</span>(<span class="t-t">string</span> <span class="t-v">$path</span>): <span class="t-t">string</span></code></pre><p>Reads the entire contents of a file.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$path</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td>The file path.</td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code> <span>The contents.</span></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the file does not exist or cannot be read.</li></ul></div></section>
+<section class="member" id="method-lines" aria-labelledby="method-lines-title"><header class="member-head"><h3 id="method-lines-title"><code>File::lines()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-lines" aria-label="Permalink to lines">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">lines</span>(<span class="t-t">string</span> <span class="t-v">$path</span>): <span class="t-C">Generator</span></code></pre><p>Reads a file line by line without loading it completely into memory. Line terminators (&quot;\n&quot;, &quot;\r\n&quot;) are stripped.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$path</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td>The file path.</td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">Generator&lt;int, string&gt;</code> <span>The key is the 1-based line number.</span></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the file does not exist or cannot be opened.</li></ul></div></section>
+<section class="member" id="method-write" aria-labelledby="method-write-title"><header class="member-head"><h3 id="method-write-title"><code>File::write()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-write" aria-label="Permalink to write">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">write</span>(<span class="t-t">string</span> <span class="t-v">$path</span>, <span class="t-t">string</span> <span class="t-v">$content</span>): <span class="t-t">void</span></code></pre><p>Writes content to a file atomically: writes to a temporary file in the same directory, then renames it. A reader sees either the old file or the complete new one. Permissions of an existing file are preserved.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$path</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td>The file path; the directory must exist.</td></tr><tr><td><code>$content</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td>The content to write.</td></tr></tbody></table></div><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the directory does not exist or writing fails.</li></ul></div></section>
+<section class="member" id="method-copystream" aria-labelledby="method-copystream-title"><header class="member-head"><h3 id="method-copystream-title"><code>File::copyStream()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-copystream" aria-label="Permalink to copyStream">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">copyStream</span>(<span class="t-v">$source</span>, <span class="t-t">string</span> <span class="t-v">$path</span>): <span class="t-t">int</span></code></pre><p>Copies a stream (e.g. an HTTP response body, php://input, an open file) into a file atomically without buffering the entire stream in memory. The stream is read to EOF.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$source</code></td><td><code class="type">resource</code></td><td><span class="pill pill-req">required</span></td><td>The source stream, opened for reading.</td></tr><tr><td><code>$path</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td>The destination file; the directory must exist.</td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">int</code> <span>The number of bytes written.</span></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If <code>$source</code> is not a stream resource.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If reading or writing fails, or stops before EOF.</li></ul></div></section>
+<section class="member" id="method-writeall" aria-labelledby="method-writeall-title"><header class="member-head"><h3 id="method-writeall-title"><code>File::writeAll()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-writeall" aria-label="Permalink to writeAll">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">writeAll</span>(<span class="t-v">$handle</span>, <span class="t-t">string</span> <span class="t-v">$data</span>): <span class="t-t">void</span></code></pre><p>Writes all data to an open stream. <code>fwrite()</code> may write fewer bytes than provided (sockets, pipes, disk full) without error; this method continues until completion or throws an exception.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$handle</code></td><td><code class="type">resource</code></td><td><span class="pill pill-req">required</span></td><td>Stream resource open for writing.</td></tr><tr><td><code>$data</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td>The data to write.</td></tr></tbody></table></div><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If <code>$handle</code> is not a stream resource.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If writing fails or makes no progress.</li></ul></div></section>
+<section class="member" id="method-append" aria-labelledby="method-append-title"><header class="member-head"><h3 id="method-append-title"><code>File::append()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-append" aria-label="Permalink to append">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">append</span>(<span class="t-t">string</span> <span class="t-v">$path</span>, <span class="t-t">string</span> <span class="t-v">$content</span>): <span class="t-t">void</span></code></pre><p>Appends content to the end of a file (creates it if it does not exist), using an exclusive lock.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$path</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td>The file path; the directory must exist.</td></tr><tr><td><code>$content</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td>The content to append.</td></tr></tbody></table></div><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the directory does not exist or writing fails.</li></ul></div></section>
+<section class="member" id="method-delete" aria-labelledby="method-delete-title"><header class="member-head"><h3 id="method-delete-title"><code>File::delete()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-delete" aria-label="Permalink to delete">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">delete</span>(<span class="t-t">string</span> <span class="t-v">$path</span>): <span class="t-t">void</span></code></pre><p>Deletes a file. A missing file is considered an error.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$path</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td>The file path.</td></tr></tbody></table></div><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the file does not exist or cannot be deleted.</li></ul></div></section>
+<section class="member" id="method-deleteifexists" aria-labelledby="method-deleteifexists-title"><header class="member-head"><h3 id="method-deleteifexists-title"><code>File::deleteIfExists()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-deleteifexists" aria-label="Permalink to deleteIfExists">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">deleteIfExists</span>(<span class="t-t">string</span> <span class="t-v">$path</span>): <span class="t-t">bool</span></code></pre><p>Deletes a file if it exists.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$path</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td>The file path.</td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">bool</code> <span>true if the file was deleted, false if it did not exist.</span></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the file exists but cannot be deleted.</li></ul></div></section>
+<section class="member" id="method-copy" aria-labelledby="method-copy-title"><header class="member-head"><h3 id="method-copy-title"><code>File::copy()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-copy" aria-label="Permalink to copy">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">copy</span>(<span class="t-t">string</span> <span class="t-v">$from</span>, <span class="t-t">string</span> <span class="t-v">$to</span>): <span class="t-t">void</span></code></pre><p>Copies a file. An existing destination file is overwritten.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$from</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td>The source file.</td></tr><tr><td><code>$to</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td>The destination file; the directory must exist.</td></tr></tbody></table></div><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the source file does not exist or copying fails.</li></ul></div></section>
+<section class="member" id="method-move" aria-labelledby="method-move-title"><header class="member-head"><h3 id="method-move-title"><code>File::move()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-move" aria-label="Permalink to move">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">move</span>(<span class="t-t">string</span> <span class="t-v">$from</span>, <span class="t-t">string</span> <span class="t-v">$to</span>): <span class="t-t">void</span></code></pre><p>Moves or renames a file. An existing destination file is overwritten. Across different partitions/drives PHP automatically performs a copy + delete; in that case the move is no longer atomic.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$from</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td>The source file.</td></tr><tr><td><code>$to</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td>The destination file; the directory must exist.</td></tr></tbody></table></div><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the source does not exist or moving fails.</li></ul></div></section>
+<section class="member" id="method-ensuredir" aria-labelledby="method-ensuredir-title"><header class="member-head"><h3 id="method-ensuredir-title"><code>File::ensureDir()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-ensuredir" aria-label="Permalink to ensureDir">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">ensureDir</span>(<span class="t-t">string</span> <span class="t-v">$dir</span>, <span class="t-t">int</span> <span class="t-v">$mode</span> = <span class="t-n">0775</span>): <span class="t-t">void</span></code></pre><p>Ensures that a directory exists (creates it recursively if missing). Safe under concurrent requests: if another process created it concurrently, no error is thrown.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$dir</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td>The directory path.</td></tr><tr><td><code>$mode</code></td><td><code class="type">int</code></td><td><code class="value">509</code></td><td>Permissions (Linux), affected by umask.</td></tr></tbody></table></div><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If a file with the same name exists or creation fails.</li></ul></div></section>
+<section class="member" id="method-deletedir" aria-labelledby="method-deletedir-title"><header class="member-head"><h3 id="method-deletedir-title"><code>File::deleteDir()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-deletedir" aria-label="Permalink to deleteDir">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">deleteDir</span>(<span class="t-t">string</span> <span class="t-v">$dir</span>): <span class="t-t">void</span></code></pre><p>Recursively deletes a directory and all of its contents. Symlinks are deleted as links; target contents are untouched.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$dir</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td>The directory path.</td></tr></tbody></table></div><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the directory does not exist, is a filesystem root, or deletion fails.</li></ul></div></section>
+<section class="member" id="method-files" aria-labelledby="method-files-title"><header class="member-head"><h3 id="method-files-title"><code>File::files()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-files" aria-label="Permalink to files">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">files</span>(<span class="t-t">string</span> <span class="t-v">$dir</span>, <span class="t-t">bool</span> <span class="t-v">$recursive</span> = <span class="t-t">false</span>, ?<span class="t-t">string</span> <span class="t-v">$extension</span> = <span class="t-t">null</span>): <span class="t-k">array</span></code></pre><p>Lists files in a directory (excluding subdirectories by default), sorted alphabetically.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$dir</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td>The directory path.</td></tr><tr><td><code>$recursive</code></td><td><code class="type">bool</code></td><td><code class="value">false</code></td><td>true to include files in subdirectories.</td></tr><tr><td><code>$extension</code></td><td><code class="type">string|null</code></td><td><code class="value">null</code></td><td>Filter by extension without leading dot (e.g. <code>&apos;csv&apos;</code>); case-insensitive.</td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">list&lt;string&gt;</code> <span>Absolute paths of the files.</span></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the directory does not exist.</li></ul></div></section>
+<section class="member" id="method-size" aria-labelledby="method-size-title"><header class="member-head"><h3 id="method-size-title"><code>File::size()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-size" aria-label="Permalink to size">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">size</span>(<span class="t-t">string</span> <span class="t-v">$path</span>): <span class="t-t">int</span></code></pre><p>File size in bytes.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$path</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">int</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the file does not exist.</li></ul></div></section>
+<section class="member" id="method-mimetype" aria-labelledby="method-mimetype-title"><header class="member-head"><h3 id="method-mimetype-title"><code>File::mimeType()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-mimetype" aria-label="Permalink to mimeType">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">mimeType</span>(<span class="t-t">string</span> <span class="t-v">$path</span>): <span class="t-t">string</span></code></pre><p>Real MIME type detected from file content (not from extension). E.g.: <code>&apos;application/pdf&apos;</code>. Requires the PHP fileinfo extension.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$path</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.logicexception.php" rel="noopener" target="_blank"><code>LogicException</code></a> — If the fileinfo extension is not enabled.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the file does not exist or the type cannot be detected.</li></ul></div></section>
+<section class="member" id="method-tempfile" aria-labelledby="method-tempfile-title"><header class="member-head"><h3 id="method-tempfile-title"><code>File::tempFile()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-tempfile" aria-label="Permalink to tempFile">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">tempFile</span>(<span class="t-t">string</span> <span class="t-v">$prefix</span> = <span class="t-s">&apos;tmp&apos;</span>, ?<span class="t-t">string</span> <span class="t-v">$dir</span> = <span class="t-t">null</span>): <span class="t-t">string</span></code></pre><p>Creates an empty temporary file and returns its path. Cleanup is the caller&apos;s responsibility.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$prefix</code></td><td><code class="type">string</code></td><td><code class="value">&apos;tmp&apos;</code></td><td>Filename prefix (on Windows only the first 3 characters are used).</td></tr><tr><td><code>$dir</code></td><td><code class="type">string|null</code></td><td><code class="value">null</code></td><td>Directory; defaults to the system temporary directory.</td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the file cannot be created.</li></ul></div></section>
+<section class="member" id="method-glob" aria-labelledby="method-glob-title"><header class="member-head"><h3 id="method-glob-title"><code>File::glob()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-glob" aria-label="Permalink to glob">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">glob</span>(<span class="t-t">string</span> <span class="t-v">$pattern</span>, <span class="t-t">int</span> <span class="t-v">$flags</span> = <span class="t-n">0</span>): <span class="t-k">array</span></code></pre><p>Returns sorted files and directories matching a glob pattern (e.g. <code>&apos;/var/log/app-*.log&apos;</code>). Natively, <code>glob()</code> returns false on error and [] when nothing is matched; here an error throws an exception.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$pattern</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td>The pattern (*, ?, [abc]).</td></tr><tr><td><code>$flags</code></td><td><code class="type">int</code></td><td><code class="value">0</code></td><td>GLOB_* flags (e.g. <code>GLOB_ONLYDIR</code>). <code>GLOB_BRACE</code> is not supported on all platforms.</td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">list&lt;string&gt;</code> <span>Matching paths (empty list if no matches found).</span></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the search fails.</li></ul></div></section>
+<section class="member" id="method-realpath" aria-labelledby="method-realpath-title"><header class="member-head"><h3 id="method-realpath-title"><code>File::realpath()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-realpath" aria-label="Permalink to realpath">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">realpath</span>(<span class="t-t">string</span> <span class="t-v">$path</span>): <span class="t-t">string</span></code></pre><p>Absolute, canonical path (resolving &quot;..&quot;, &quot;.&quot;, and symlinks) of an existing file or directory.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$path</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the path does not exist.</li></ul></div></section>
+<section class="member" id="method-touch" aria-labelledby="method-touch-title"><header class="member-head"><h3 id="method-touch-title"><code>File::touch()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-touch" aria-label="Permalink to touch">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">touch</span>(<span class="t-t">string</span> <span class="t-v">$path</span>, ?<span class="t-t">int</span> <span class="t-v">$time</span> = <span class="t-t">null</span>): <span class="t-t">void</span></code></pre><p>Creates an empty file or updates the modification timestamp of an existing one.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$path</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td>The file path; the directory must exist.</td></tr><tr><td><code>$time</code></td><td><code class="type">int|null</code></td><td><code class="value">null</code></td><td>Modification timestamp; null = current time.</td></tr></tbody></table></div><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the directory does not exist or the operation fails.</li></ul></div></section>
+<section class="member" id="method-chmod" aria-labelledby="method-chmod-title"><header class="member-head"><h3 id="method-chmod-title"><code>File::chmod()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-chmod" aria-label="Permalink to chmod">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">chmod</span>(<span class="t-t">string</span> <span class="t-v">$path</span>, <span class="t-t">int</span> <span class="t-v">$mode</span>): <span class="t-t">void</span></code></pre><p>Changes permissions of a file or directory (e.g. 0644, 0755). On Windows, only affects the read-only attribute (0444 / 0666).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$path</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$mode</code></td><td><code class="type">int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If <code>$mode</code> is not between 0 and 07777.</li><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — If the file does not exist or the operation fails.</li></ul></div></section>
+<section class="member" id="method-assertwritable" aria-labelledby="method-assertwritable-title"><header class="member-head"><h3 id="method-assertwritable-title"><code>File::assertWritable()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-assertwritable" aria-label="Permalink to assertWritable">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">assertWritable</span>(<span class="t-t">string</span> <span class="t-v">$path</span>): <span class="t-t">void</span></code></pre><p>Verifies that <code>$path</code> is writable and throws an exception with the exact reason if not: - existing directory: must be writable; - existing file: must be writable; - non-existent path: parent directory must exist and be writable.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$path</code></td><td><code class="type">string</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.runtimeexception.php" rel="noopener" target="_blank"><code>RuntimeException</code></a> — Explaining why the path is not writable.</li></ul></div></section>
+<section class="member" id="method-join" aria-labelledby="method-join-title"><header class="member-head"><h3 id="method-join-title"><code>File::join()</code></h3><span class="badge badge-static">Static</span><a class="anchor" href="#method-join" aria-label="Permalink to join">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">static</span> <span class="t-k">function</span> <span class="t-f">join</span>(<span class="t-t">string</span> ...<span class="t-v">$parts</span>): <span class="t-t">string</span></code></pre><p>Joins path segments with <code>&apos;/&apos;</code>, avoiding duplicate separators. E.g.: <a class="code-link" href="/docs/file/#method-join"><code>File::join(&apos;/var/www/&apos;, &apos;/storage&apos;, &apos;logs/&apos;)</code></a> =&gt; <code>&apos;/var/www/storage/logs&apos;</code></p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$parts</code></td><td><code class="type">string</code></td><td><span class="pill">variadic</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If no non-empty path segment is provided.</li></ul></div></section></article>
+
+        <nav class="pager" aria-label="Previous and next pages">
+            <a class="pager-prev" href="/docs/json/" rel="prev"><span>Previous</span><strong>Json</strong></a>
+                  <a class="pager-next" href="/docs/regex/" rel="next"><span>Next</span><strong>Regex</strong></a>
+          </nav>
+    
+    <div class="page-meta">
+            <span>Last updated <time datetime="2026-11-10T21:51:05+02:00">November 10, 2026</time></span>
+                  <a href="/docs/file.md">View as Markdown</a>
+          </div>
+  </main>
+
+    <aside class="toc" aria-label="On this page">
+    <p class="toc-title">On this page</p>
+    <ul>
+            <li class="toc-l2"><a href="#usage">Usage</a></li>
+            <li class="toc-l2"><a href="#installation">Installation</a></li>
+            <li class="toc-l2"><a href="#methods">Methods</a></li>
+            <li class="toc-l3"><a href="#method-read">read()</a></li>
+            <li class="toc-l3"><a href="#method-lines">lines()</a></li>
+            <li class="toc-l3"><a href="#method-write">write()</a></li>
+            <li class="toc-l3"><a href="#method-copystream">copyStream()</a></li>
+            <li class="toc-l3"><a href="#method-writeall">writeAll()</a></li>
+            <li class="toc-l3"><a href="#method-append">append()</a></li>
+            <li class="toc-l3"><a href="#method-delete">delete()</a></li>
+            <li class="toc-l3"><a href="#method-deleteifexists">deleteIfExists()</a></li>
+            <li class="toc-l3"><a href="#method-copy">copy()</a></li>
+            <li class="toc-l3"><a href="#method-move">move()</a></li>
+            <li class="toc-l3"><a href="#method-ensuredir">ensureDir()</a></li>
+            <li class="toc-l3"><a href="#method-deletedir">deleteDir()</a></li>
+            <li class="toc-l3"><a href="#method-files">files()</a></li>
+            <li class="toc-l3"><a href="#method-size">size()</a></li>
+            <li class="toc-l3"><a href="#method-mimetype">mimeType()</a></li>
+            <li class="toc-l3"><a href="#method-tempfile">tempFile()</a></li>
+            <li class="toc-l3"><a href="#method-glob">glob()</a></li>
+            <li class="toc-l3"><a href="#method-realpath">realpath()</a></li>
+            <li class="toc-l3"><a href="#method-touch">touch()</a></li>
+            <li class="toc-l3"><a href="#method-chmod">chmod()</a></li>
+            <li class="toc-l3"><a href="#method-assertwritable">assertWritable()</a></li>
+            <li class="toc-l3"><a href="#method-join">join()</a></li>
+          </ul>
+  </aside>
+  </div>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <p><strong>Foundry</strong> — standalone, single-file PHP utility classes. &copy; 2026 · Proprietary license.</p>
+    <nav aria-label="Footer">
+      <a href="/docs/">Documentation</a>
+      <a href="/docs/installation/">Installation</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/sitemap.xml">Sitemap</a>
+    </nav>
+  </div>
+</footer>
+
+<div class="search-modal" x-cloak x-show="searchOpen" role="dialog" aria-modal="true" aria-label="Search documentation" x-on:keydown="onSearchKey">
+  <div class="search-backdrop" x-on:click="closeSearch"></div>
+  <div class="search-panel">
+    <div class="search-field">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <input x-ref="input" type="search" placeholder="Search classes, methods and guides" autocomplete="off" spellcheck="false" aria-label="Search" aria-controls="search-results" aria-autocomplete="list" x-bind:aria-activedescendant="activeId" x-on:input="onInput">
+      <button type="button" class="kbd-btn" x-on:click="closeSearch" aria-label="Close search">Esc</button>
+    </div>
+    <ul id="search-results" class="search-results" role="listbox" aria-label="Results" x-ref="list">
+      <template x-for="item in results" x-bind:key="item.id">
+        <li role="option" x-bind:id="item.id" x-bind:aria-selected="item.selected" x-bind:class="item.cls" x-bind:data-index="item.i" x-on:mousemove="hover" x-on:click="closeSearch">
+          <a x-bind:href="item.u" tabindex="-1">
+            <span class="r-kind" x-text="item.kl"></span>
+            <span class="r-main"><span class="r-title" x-text="item.t"></span><span class="r-desc" x-text="item.d"></span></span>
+            <span class="r-sec" x-text="item.s"></span>
+          </a>
+        </li>
+      </template>
+    </ul>
+    <p class="search-status" x-show="showStatus" x-text="statusText"></p>
+    <div class="search-foot" aria-hidden="true"><span><kbd>↑</kbd><kbd>↓</kbd> navigate</span><span><kbd>Enter</kbd> open</span><span><kbd>Esc</kbd> close</span></div>
+  </div>
+</div>
+</div>
+</body>
+</html>

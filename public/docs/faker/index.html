@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Faker — Romanian test data: CNP, IBAN, CUI | Foundry PHP</title>
+<meta name="description" content="PHP Faker class: Generates realistic Romanian test data (valid CNP, CUI, IBAN, physical addresses), with optional deterministic seeding. Standalone…">
+<link rel="canonical" href="https://foundry.insightdevhub.ro/docs/faker/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f1115">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Foundry">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Faker — Romanian test data: CNP, IBAN, CUI | Foundry PHP">
+<meta property="og:description" content="PHP Faker class: Generates realistic Romanian test data (valid CNP, CUI, IBAN, physical addresses), with optional deterministic seeding. Standalone…">
+<meta property="og:url" content="https://foundry.insightdevhub.ro/docs/faker/">
+<meta property="og:image" content="https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Foundry — standalone PHP utility classes">
+<meta property="article:modified_time" content="2026-11-10T21:51:05+02:00">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Faker — Romanian test data: CNP, IBAN, CUI | Foundry PHP">
+<meta name="twitter:description" content="PHP Faker class: Generates realistic Romanian test data (valid CNP, CUI, IBAN, physical addresses), with optional deterministic seeding. Standalone…">
+<meta name="twitter:image" content="https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2">
+<link rel="alternate" type="text/markdown" href="/docs/faker.md" title="Markdown version">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="stylesheet" href="/assets/css/site.css?v=f05442ef0e">
+<script src="/assets/js/theme.js?v=b02059f0fb"></script>
+<script src="/assets/js/app.js?v=02d0b9d9f7" defer></script>
+<script src="/assets/vendor/alpine-csp.min.js?v=820bc95038" defer></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Faker — PHP utility class reference","description":"PHP Faker class: Generates realistic Romanian test data (valid CNP, CUI, IBAN, physical addresses), with optional deterministic seeding. Standalone…","url":"https://foundry.insightdevhub.ro/docs/faker/","mainEntityOfPage":"https://foundry.insightdevhub.ro/docs/faker/","inLanguage":"en","image":"https://foundry.insightdevhub.ro/assets/img/og-image.png?v=9f281f04f2","isPartOf":{"@type":"WebSite","name":"Foundry","url":"https://foundry.insightdevhub.ro/"},"proficiencyLevel":"Expert","dateModified":"2026-11-10T21:51:05+02:00","about":{"@type":"SoftwareSourceCode","name":"Foundry\\Faker","programmingLanguage":"PHP","runtimePlatform":"PHP 8.3+","version":"1.0"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://foundry.insightdevhub.ro/"},{"@type":"ListItem","position":2,"name":"Documentation","item":"https://foundry.insightdevhub.ro/docs/"},{"@type":"ListItem","position":3,"name":"Development Tools","item":"https://foundry.insightdevhub.ro/docs/#development-tools"},{"@type":"ListItem","position":4,"name":"Faker","item":"https://foundry.insightdevhub.ro/docs/faker/"}]}</script>
+</head>
+<body class="is-docs">
+<div class="app" x-data="site" x-on:keydown.window="onKey">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="topbar-inner">
+        <button type="button" class="icon-btn menu-btn" x-cloak x-on:click="toggleDrawer" aria-controls="sidebar" x-bind:aria-expanded="drawerExpanded" aria-label="Open navigation">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+    </button>
+        <a class="brand" href="/" aria-label="Foundry home">
+      <svg class="brand-mark" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><rect width="32" height="32" rx="7" fill="var(--accent)"/><path d="M10 8h13v4h-8.5v3.5H21v4h-6.5V25H10z" fill="#fff"/></svg>
+      <span>Foundry</span>
+    </a>
+    <nav class="topnav" aria-label="Main">
+      <a href="/docs/" aria-current="true">Docs</a>
+      <a href="/docs/installation/#download">Download</a>
+    </nav>
+    <div class="topbar-actions">
+      <button type="button" class="search-btn" x-cloak x-on:click="openSearch" aria-label="Search documentation" aria-keyshortcuts="Control+K Meta+K /">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span class="search-btn-label">Search</span>
+        <kbd class="search-btn-kbd">Ctrl K</kbd>
+      </button>
+      <button type="button" class="icon-btn" x-cloak x-on:click="toggleTheme" x-bind:aria-label="themeLabel" x-bind:title="themeLabel">
+        <svg x-show="isDark" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <svg x-show="isLight" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="sidebar" id="sidebar" x-bind:class="drawerClass" aria-label="Documentation navigation">
+    <nav class="nav">
+    <div class="nav-group">
+    <p class="nav-title">Getting started</p>
+    <ul>
+            <li><a href="/docs/">Introduction</a></li>
+            <li><a href="/docs/installation/">Installation</a></li>
+            <li><a href="/docs/usage/">Usage &amp; exceptions</a></li>
+            <li><a href="/docs/bootstrap/">Bootstrap</a></li>
+            <li><a href="/docs/design-principles/">Design principles</a></li>
+            <li><a href="/docs/php-versions/">PHP versions</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Guides</p>
+    <ul>
+            <li><a href="/docs/form-handling/">Form handling</a></li>
+            <li><a href="/docs/imports-exports/">Imports &amp; exports</a></li>
+            <li><a href="/docs/databases/">Databases</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Errors &amp; Exception Handling</p>
+    <ul>
+            <li><a href="/docs/error-handler/">ErrorHandler</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Native Function Wrappers</p>
+    <ul>
+            <li><a href="/docs/json/">Json</a></li>
+            <li><a href="/docs/file/">File</a></li>
+            <li><a href="/docs/regex/">Regex</a></li>
+            <li><a href="/docs/cast/">Cast</a></li>
+            <li><a href="/docs/encoding/">Encoding</a></li>
+            <li><a href="/docs/upload/">Upload</a></li>
+            <li><a href="/docs/process/">Process</a></li>
+            <li><a href="/docs/zip/">Zip</a></li>
+            <li><a href="/docs/image/">Image</a></li>
+            <li><a href="/docs/ini/">Ini</a></li>
+            <li><a href="/docs/base64/">Base64</a></li>
+            <li><a href="/docs/serializer/">Serializer</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Text, Dates, and Numbers</p>
+    <ul>
+            <li><a href="/docs/str/">Str</a></li>
+            <li><a href="/docs/arr/">Arr</a></li>
+            <li><a href="/docs/date/">Date</a></li>
+            <li><a href="/docs/number/">Number</a></li>
+            <li><a href="/docs/money/">Money</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Validation</p>
+    <ul>
+            <li><a href="/docs/validator/">Validator</a></li>
+            <li><a href="/docs/ro-validator/">RoValidator</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Databases</p>
+    <ul>
+            <li><a href="/docs/mysql/">MySQL</a></li>
+            <li><a href="/docs/oracle/">Oracle</a></li>
+            <li><a href="/docs/sqlite/">SQLite</a></li>
+            <li><a href="/docs/paginator/">Paginator</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Import / Export</p>
+    <ul>
+            <li><a href="/docs/csv/">Csv</a></li>
+            <li><a href="/docs/xlsx/">Xlsx</a></li>
+            <li><a href="/docs/xml/">Xml</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Configuration &amp; Infrastructure</p>
+    <ul>
+            <li><a href="/docs/env/">Env</a></li>
+            <li><a href="/docs/config/">Config</a></li>
+            <li><a href="/docs/log/">Log</a></li>
+            <li><a href="/docs/http-client/">HttpClient</a></li>
+            <li><a href="/docs/cache/">Cache</a></li>
+            <li><a href="/docs/retry/">Retry</a></li>
+            <li><a href="/docs/rate-limiter/">RateLimiter</a></li>
+            <li><a href="/docs/crypt/">Crypt</a></li>
+            <li><a href="/docs/token/">Token</a></li>
+            <li><a href="/docs/mailer/">Mailer</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Web &amp; HTTP</p>
+    <ul>
+            <li><a href="/docs/request/">Request</a></li>
+            <li><a href="/docs/response/">Response</a></li>
+            <li><a href="/docs/session/">Session</a></li>
+            <li><a href="/docs/csrf/">Csrf</a></li>
+            <li><a href="/docs/view/">View</a></li>
+            <li><a href="/docs/url/">Url</a></li>
+            <li><a href="/docs/security-headers/">SecurityHeaders</a></li>
+            <li><a href="/docs/bot-detection/">BotDetection</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">UI Rendering Helpers</p>
+    <ul>
+            <li><a href="/docs/breadcrumbs/">Breadcrumbs</a></li>
+            <li><a href="/docs/flash/">Flash</a></li>
+            <li><a href="/docs/form-builder/">FormBuilder</a></li>
+          </ul>
+  </div>
+    <div class="nav-group">
+    <p class="nav-title">Development Tools</p>
+    <ul>
+            <li><a href="/docs/debug/">Debug</a></li>
+            <li><a href="/docs/timer/">Timer</a></li>
+            <li><a href="/docs/faker/" aria-current="page">Faker</a></li>
+          </ul>
+  </div>
+  </nav>
+  </aside>
+  <div class="drawer-backdrop" x-cloak x-show="drawerOpen" x-on:click="closeDrawer"></div>
+
+  <main id="main" class="content" tabindex="-1">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <ol>
+                        <li><a href="/">Home</a></li>
+                                <li><a href="/docs/">Documentation</a></li>
+                                <li><a href="/docs/#development-tools">Development Tools</a></li>
+                                <li><span aria-current="page">Faker</span></li>
+                      </ol>
+    </nav>
+    
+    <article class="prose doc">
+  <header class="doc-head">
+    <p class="eyebrow"><a href="/docs/#development-tools">Development Tools</a></p>
+    <h1>Faker</h1>
+    <p class="lead">Romanian test data generator: names, CNP, CUI, IBAN, phone numbers, emails, addresses, companies, and calendar dates. Identifiers are valid (accurate check digits) and internally consistent: a person&apos;s CNP matches their gender and birth date. Names and addresses include Romanian diacritics to test UTF-8 encoding.</p>
+    <ul class="facts" aria-label="Class facts">
+      <li><span>Namespace</span><code>Foundry\Faker</code></li>
+      <li><span>File</span><code>Faker.php</code></li>
+      <li><span>Version</span><strong>1.0</strong></li>
+      <li><span>Requires</span><strong>PHP 8.3+</strong></li>
+      <li><span>API</span><strong>17 public members</strong></li>
+    </ul>
+  </header>
+  <h2 id="rules">Rules<a class="anchor" href="#rules" aria-label="Permalink to this section">#</a></h2>
+<ul><li>without a seed, data varies on each run; with a seed, output is deterministic (tests, demos)</li><li>uses an internal generator: does not affect application-level <code>mt_rand()</code> / <code>rand()</code></li><li>emails use example.com (domain reserved for testing, never delivers to real recipients)</li><li>data is fictitious, though a validly generated CNP may correspond to a real person: do not use in production.</li></ul>
+<h2 id="usage">Usage<a class="anchor" href="#usage" aria-label="Permalink to this section">#</a></h2>
+<div class="codeblock" data-lang="php"><div class="codeblock-bar"><span class="codeblock-lang">PHP</span><button type="button" class="copy-btn" data-copy hidden>Copy</button></div><pre><code><span class="t-k">require_once</span> <span class="t-s">&apos;Faker.php&apos;</span>;
+<span class="t-k">use</span> <span class="t-C">Foundry\Faker</span>;
+
+<span class="t-v">$faker</span> = <span class="t-k">new</span> <span class="t-f">Faker</span>(seed: <span class="t-n">42</span>);
+<span class="t-v">$persoana</span> = <span class="t-v">$faker</span>-&gt;<span class="t-f">person</span>();         <span class="t-c">// name, sex, birthDate, cnp, email, phone, address</span>
+<span class="t-v">$cnp</span> = <span class="t-v">$faker</span>-&gt;<span class="t-f">cnp</span>(sex: <span class="t-s">&apos;F&apos;</span>, birthDate: <span class="t-k">new</span> <span class="t-f">DateTimeImmutable</span>(<span class="t-s">&apos;1990-05-17&apos;</span>));
+<span class="t-v">$iban</span> = <span class="t-v">$faker</span>-&gt;<span class="t-f">iban</span>();               <span class="t-c">// &apos;RO..BTRL................&apos;</span>
+<span class="t-v">$firma</span> = <span class="t-v">$faker</span>-&gt;<span class="t-f">company</span>();           <span class="t-c">// [&apos;name&apos; =&gt; &apos;Popescu Construct SRL&apos;, &apos;cui&apos; =&gt; &apos;...&apos;]</span></code></pre></div>
+<h2 id="installation">Installation<a class="anchor" href="#installation" aria-label="Permalink to this section">#</a></h2>
+<p>Copy <code>Faker.php</code> from the <a href="/docs/installation/#download">download archive</a> into your project and load it (or register the <a href="/docs/installation/#loading-the-classes">autoloader</a>):</p>
+<div class="codeblock" data-lang="php"><div class="codeblock-bar"><span class="codeblock-lang">PHP</span><button type="button" class="copy-btn" data-copy hidden>Copy</button></div><pre><code><span class="t-k">require_once</span> __DIR__.<span class="t-s">&apos;/lib/Utilities/Faker.php&apos;</span>;
+
+<span class="t-k">use</span> <span class="t-C">Foundry\Faker</span>;</code></pre></div>
+<p class="muted-note">No PHP extensions required beyond a default PHP 8.3+ installation.</p>
+<h2 id="methods">Methods<a class="anchor" href="#methods" aria-label="Permalink to this section">#</a></h2>
+<nav class="method-index" aria-label="Faker methods"><ul><li><a href="#method-__construct"><code>__construct()</code></a></li><li><a href="#method-int"><code>int()</code></a></li><li><a href="#method-bool"><code>bool()</code></a></li><li><a href="#method-element"><code>element()</code></a></li><li><a href="#method-digits"><code>digits()</code></a></li><li><a href="#method-date"><code>date()</code></a></li><li><a href="#method-firstname"><code>firstName()</code></a></li><li><a href="#method-lastname"><code>lastName()</code></a></li><li><a href="#method-name"><code>name()</code></a></li><li><a href="#method-person"><code>person()</code></a></li><li><a href="#method-cnp"><code>cnp()</code></a></li><li><a href="#method-cui"><code>cui()</code></a></li><li><a href="#method-iban"><code>iban()</code></a></li><li><a href="#method-phone"><code>phone()</code></a></li><li><a href="#method-email"><code>email()</code></a></li><li><a href="#method-address"><code>address()</code></a></li><li><a href="#method-company"><code>company()</code></a></li></ul></nav>
+<section class="member" id="method-__construct" aria-labelledby="method-__construct-title"><header class="member-head"><h3 id="method-__construct-title"><code>new Faker()</code></h3><span class="badge badge-constructor">Constructor</span><a class="anchor" href="#method-__construct" aria-label="Permalink to __construct">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">__construct</span>(?<span class="t-t">int</span> <span class="t-v">$seed</span> = <span class="t-t">null</span>)</code></pre><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$seed</code></td><td><code class="type">int|null</code></td><td><code class="value">null</code></td><td>Same seed = identical data; null = different data on each run.</td></tr></tbody></table></div></section>
+<section class="member" id="method-int" aria-labelledby="method-int-title"><header class="member-head"><h3 id="method-int-title"><code>$faker-&gt;int()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-int" aria-label="Permalink to int">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-t">int</span>(<span class="t-t">int</span> <span class="t-v">$min</span>, <span class="t-t">int</span> <span class="t-v">$max</span>): <span class="t-t">int</span></code></pre><p>Integer between <code>$min</code> and <code>$max</code> (inclusive); the range spans at most 2^32 values.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$min</code></td><td><code class="type">int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$max</code></td><td><code class="type">int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">int</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If <code>$min</code> &gt; <code>$max</code> or the range is too large.</li></ul></div></section>
+<section class="member" id="method-bool" aria-labelledby="method-bool-title"><header class="member-head"><h3 id="method-bool-title"><code>$faker-&gt;bool()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-bool" aria-label="Permalink to bool">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-t">bool</span>(<span class="t-t">float</span> <span class="t-v">$probability</span> = <span class="t-n">0.5</span>): <span class="t-t">bool</span></code></pre><p>Returns true with the given probability (0..1).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$probability</code></td><td><code class="type">float</code></td><td><code class="value">0.5</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">bool</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If the probability is not between 0 and 1.</li></ul></div></section>
+<section class="member" id="method-element" aria-labelledby="method-element-title"><header class="member-head"><h3 id="method-element-title"><code>$faker-&gt;element()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-element" aria-label="Permalink to element">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">element</span>(<span class="t-k">array</span> <span class="t-v">$items</span>): <span class="t-t">mixed</span></code></pre><p>Picks an element from the given array.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$items</code></td><td><code class="type">array&lt;array-key, T&gt;</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">T</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If the list is empty.</li></ul></div></section>
+<section class="member" id="method-digits" aria-labelledby="method-digits-title"><header class="member-head"><h3 id="method-digits-title"><code>$faker-&gt;digits()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-digits" aria-label="Permalink to digits">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">digits</span>(<span class="t-t">int</span> <span class="t-v">$length</span>): <span class="t-t">string</span></code></pre><p>String of digits of the given length (may start with 0).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$length</code></td><td><code class="type">int</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If the length is negative.</li></ul></div></section>
+<section class="member" id="method-date" aria-labelledby="method-date-title"><header class="member-head"><h3 id="method-date-title"><code>$faker-&gt;date()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-date" aria-label="Permalink to date">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">date</span>(<span class="t-C">DateTimeInterface</span> <span class="t-v">$from</span>, <span class="t-C">DateTimeInterface</span> <span class="t-v">$to</span>): <span class="t-C">DateTimeImmutable</span></code></pre><p>Date between two dates (inclusive), at 00:00:00.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$from</code></td><td><code class="type">DateTimeInterface</code></td><td><span class="pill pill-req">required</span></td><td></td></tr><tr><td><code>$to</code></td><td><code class="type">DateTimeInterface</code></td><td><span class="pill pill-req">required</span></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">DateTimeImmutable</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If <code>$from</code> is after <code>$to</code>.</li></ul></div></section>
+<section class="member" id="method-firstname" aria-labelledby="method-firstname-title"><header class="member-head"><h3 id="method-firstname-title"><code>$faker-&gt;firstName()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-firstname" aria-label="Permalink to firstName">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">firstName</span>(?<span class="t-t">string</span> <span class="t-v">$sex</span> = <span class="t-t">null</span>): <span class="t-t">string</span></code></pre><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$sex</code></td><td><code class="type">string|null</code></td><td><code class="value">null</code></td><td><code>&apos;M&apos;</code> or <code>&apos;F&apos;</code>; null = random.</td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If the sex is not M or F.</li></ul></div></section>
+<section class="member" id="method-lastname" aria-labelledby="method-lastname-title"><header class="member-head"><h3 id="method-lastname-title"><code>$faker-&gt;lastName()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-lastname" aria-label="Permalink to lastName">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">lastName</span>(): <span class="t-t">string</span></code></pre><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl></section>
+<section class="member" id="method-name" aria-labelledby="method-name-title"><header class="member-head"><h3 id="method-name-title"><code>$faker-&gt;name()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-name" aria-label="Permalink to name">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">name</span>(?<span class="t-t">string</span> <span class="t-v">$sex</span> = <span class="t-t">null</span>): <span class="t-t">string</span></code></pre><p>First and last name (<code>&apos;Andreea Popescu&apos;</code>).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$sex</code></td><td><code class="type">string|null</code></td><td><code class="value">null</code></td><td><code>&apos;M&apos;</code> or <code>&apos;F&apos;</code>; null = random.</td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If the sex is not M or F.</li></ul></div></section>
+<section class="member" id="method-person" aria-labelledby="method-person-title"><header class="member-head"><h3 id="method-person-title"><code>$faker-&gt;person()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-person" aria-label="Permalink to person">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">person</span>(): <span class="t-k">array</span></code></pre><p>Generates a complete and consistent person profile (CNP matching sex and birth date; email derived from name).</p><dl class="returns"><dt>Returns</dt><dd><code class="type">array{firstName: string, lastName: string, name: string, sex: &apos;M&apos;|&apos;F&apos;, birthDate: DateTimeImmutable, cnp: string, email: string, phone: string, address: array{street: string, number: string, city: string, county: string, postalCode: string, full: string}}</code></dd></dl></section>
+<section class="member" id="method-cnp" aria-labelledby="method-cnp-title"><header class="member-head"><h3 id="method-cnp-title"><code>$faker-&gt;cnp()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-cnp" aria-label="Permalink to cnp">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">cnp</span>(?<span class="t-t">string</span> <span class="t-v">$sex</span> = <span class="t-t">null</span>, ?<span class="t-C">DateTimeInterface</span> <span class="t-v">$birthDate</span> = <span class="t-t">null</span>, ?<span class="t-t">string</span> <span class="t-v">$county</span> = <span class="t-t">null</span>): <span class="t-t">string</span></code></pre><p>Valid CNP. Without arguments: random sex, birth date (18-80 years old), and county.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$sex</code></td><td><code class="type">string|null</code></td><td><code class="value">null</code></td><td><code>&apos;M&apos;</code> or <code>&apos;F&apos;</code>; null = random.</td></tr><tr><td><code>$birthDate</code></td><td><code class="type">?DateTimeInterface</code></td><td><code class="value">null</code></td><td></td></tr><tr><td><code>$county</code></td><td><code class="type">string|null</code></td><td><code class="value">null</code></td><td>County code in CNP (<code>&apos;12&apos;</code> = Cluj, <code>&apos;40&apos;</code> = Bucharest, <code>&apos;70&apos;</code>, etc.).</td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If sex, date (in future or before 1800), or county are invalid.</li></ul></div></section>
+<section class="member" id="method-cui" aria-labelledby="method-cui-title"><header class="member-head"><h3 id="method-cui-title"><code>$faker-&gt;cui()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-cui" aria-label="Permalink to cui">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">cui</span>(<span class="t-t">bool</span> <span class="t-v">$vatPrefix</span> = <span class="t-t">false</span>): <span class="t-t">string</span></code></pre><p>Valid CUI (6-9 digits plus check digit), optionally with the <code>&apos;RO&apos;</code> VAT prefix.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$vatPrefix</code></td><td><code class="type">bool</code></td><td><code class="value">false</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl></section>
+<section class="member" id="method-iban" aria-labelledby="method-iban-title"><header class="member-head"><h3 id="method-iban-title"><code>$faker-&gt;iban()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-iban" aria-label="Permalink to iban">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">iban</span>(?<span class="t-t">string</span> <span class="t-v">$bank</span> = <span class="t-t">null</span>): <span class="t-t">string</span></code></pre><p>Valid Romanian IBAN (mod 97) at a common bank or the specified bank (4-letter BIC code).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$bank</code></td><td><code class="type">?string</code></td><td><code class="value">null</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl><div class="throws"><p class="throws-title">Throws</p><ul><li><a class="code-link" href="https://www.php.net/manual/en/class.invalidargumentexception.php" rel="noopener" target="_blank"><code>InvalidArgumentException</code></a> — If the bank code is not 4 uppercase letters.</li></ul></div></section>
+<section class="member" id="method-phone" aria-labelledby="method-phone-title"><header class="member-head"><h3 id="method-phone-title"><code>$faker-&gt;phone()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-phone" aria-label="Permalink to phone">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">phone</span>(<span class="t-t">bool</span> <span class="t-v">$mobile</span> = <span class="t-t">true</span>): <span class="t-t">string</span></code></pre><p>Romanian phone number in national format (<code>&apos;0721234567&apos;</code>): mobile (07...) or landline (02.../03...).</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$mobile</code></td><td><code class="type">bool</code></td><td><code class="value">true</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl></section>
+<section class="member" id="method-email" aria-labelledby="method-email-title"><header class="member-head"><h3 id="method-email-title"><code>$faker-&gt;email()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-email" aria-label="Permalink to email">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">email</span>(?<span class="t-t">string</span> <span class="t-v">$name</span> = <span class="t-t">null</span>): <span class="t-t">string</span></code></pre><p>Email on example.com (reserved for testing): derived from the given name or a random name.</p><div class="table-wrap"><table class="ref-table params"><caption>Parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>$name</code></td><td><code class="type">?string</code></td><td><code class="value">null</code></td><td></td></tr></tbody></table></div><dl class="returns"><dt>Returns</dt><dd><code class="type">string</code></dd></dl></section>
+<section class="member" id="method-address" aria-labelledby="method-address-title"><header class="member-head"><h3 id="method-address-title"><code>$faker-&gt;address()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-address" aria-label="Permalink to address">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">address</span>(): <span class="t-k">array</span></code></pre><p>Address: street, number, city (county seat), county, postal code, and full formatted string.</p><dl class="returns"><dt>Returns</dt><dd><code class="type">array{street: string, number: string, city: string, county: string, postalCode: string, full: string}</code></dd></dl></section>
+<section class="member" id="method-company" aria-labelledby="method-company-title"><header class="member-head"><h3 id="method-company-title"><code>$faker-&gt;company()</code></h3><span class="badge badge-method">Instance</span><a class="anchor" href="#method-company" aria-label="Permalink to company">#</a></header><pre class="signature"><code><span class="t-k">public</span> <span class="t-k">function</span> <span class="t-f">company</span>(): <span class="t-k">array</span></code></pre><p>Company: name and valid CUI.</p><dl class="returns"><dt>Returns</dt><dd><code class="type">array{name: string, cui: string}</code></dd></dl></section></article>
+
+        <nav class="pager" aria-label="Previous and next pages">
+            <a class="pager-prev" href="/docs/timer/" rel="prev"><span>Previous</span><strong>Timer</strong></a>
+                </nav>
+    
+    <div class="page-meta">
+            <span>Last updated <time datetime="2026-11-10T21:51:05+02:00">November 10, 2026</time></span>
+                  <a href="/docs/faker.md">View as Markdown</a>
+          </div>
+  </main>
+
+    <aside class="toc" aria-label="On this page">
+    <p class="toc-title">On this page</p>
+    <ul>
+            <li class="toc-l2"><a href="#rules">Rules</a></li>
+            <li class="toc-l2"><a href="#usage">Usage</a></li>
+            <li class="toc-l2"><a href="#installation">Installation</a></li>
+            <li class="toc-l2"><a href="#methods">Methods</a></li>
+            <li class="toc-l3"><a href="#method-__construct">__construct()</a></li>
+            <li class="toc-l3"><a href="#method-int">int()</a></li>
+            <li class="toc-l3"><a href="#method-bool">bool()</a></li>
+            <li class="toc-l3"><a href="#method-element">element()</a></li>
+            <li class="toc-l3"><a href="#method-digits">digits()</a></li>
+            <li class="toc-l3"><a href="#method-date">date()</a></li>
+            <li class="toc-l3"><a href="#method-firstname">firstName()</a></li>
+            <li class="toc-l3"><a href="#method-lastname">lastName()</a></li>
+            <li class="toc-l3"><a href="#method-name">name()</a></li>
+            <li class="toc-l3"><a href="#method-person">person()</a></li>
+            <li class="toc-l3"><a href="#method-cnp">cnp()</a></li>
+            <li class="toc-l3"><a href="#method-cui">cui()</a></li>
+            <li class="toc-l3"><a href="#method-iban">iban()</a></li>
+            <li class="toc-l3"><a href="#method-phone">phone()</a></li>
+            <li class="toc-l3"><a href="#method-email">email()</a></li>
+            <li class="toc-l3"><a href="#method-address">address()</a></li>
+            <li class="toc-l3"><a href="#method-company">company()</a></li>
+          </ul>
+  </aside>
+  </div>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <p><strong>Foundry</strong> — standalone, single-file PHP utility classes. &copy; 2026 · Proprietary license.</p>
+    <nav aria-label="Footer">
+      <a href="/docs/">Documentation</a>
+      <a href="/docs/installation/">Installation</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/sitemap.xml">Sitemap</a>
+    </nav>
+  </div>
+</footer>
+
+<div class="search-modal" x-cloak x-show="searchOpen" role="dialog" aria-modal="true" aria-label="Search documentation" x-on:keydown="onSearchKey">
+  <div class="search-backdrop" x-on:click="closeSearch"></div>
+  <div class="search-panel">
+    <div class="search-field">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <input x-ref="input" type="search" placeholder="Search classes, methods and guides" autocomplete="off" spellcheck="false" aria-label="Search" aria-controls="search-results" aria-autocomplete="list" x-bind:aria-activedescendant="activeId" x-on:input="onInput">
+      <button type="button" class="kbd-btn" x-on:click="closeSearch" aria-label="Close search">Esc</button>
+    </div>
+    <ul id="search-results" class="search-results" role="listbox" aria-label="Results" x-ref="list">
+      <template x-for="item in results" x-bind:key="item.id">
+        <li role="option" x-bind:id="item.id" x-bind:aria-selected="item.selected" x-bind:class="item.cls" x-bind:data-index="item.i" x-on:mousemove="hover" x-on:click="closeSearch">
+          <a x-bind:href="item.u" tabindex="-1">
+            <span class="r-kind" x-text="item.kl"></span>
+            <span class="r-main"><span class="r-title" x-text="item.t"></span><span class="r-desc" x-text="item.d"></span></span>
+            <span class="r-sec" x-text="item.s"></span>
+          </a>
+        </li>
+      </template>
+    </ul>
+    <p class="search-status" x-show="showStatus" x-text="statusText"></p>
+    <div class="search-foot" aria-hidden="true"><span><kbd>↑</kbd><kbd>↓</kbd> navigate</span><span><kbd>Enter</kbd> open</span><span><kbd>Esc</kbd> close</span></div>
+  </div>
+</div>
+</div>
+</body>
+</html>
