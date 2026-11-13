@@ -18,17 +18,17 @@ services:
       - no-new-privileges:true
     # In-memory tmpfs for temporary files (pid, buffers) with noexec/nosuid/nodev
     tmpfs:
-      - /tmp:rw,noexec,nosuid,nodev,size=8m
-      - /var/run:rw,noexec,nosuid,nodev,size=1m
+      - /tmp:rw,noexec,nosuid,nodev,size=2m
+      - /var/run:rw,noexec,nosuid,nodev,size=512k
     # Strict resource limits for a static site
     pids_limit: 16
     deploy:
       resources:
         limits:
-          cpus: "0.50"
-          memory: 64M
+          cpus: "0.20"
+          memory: 24M
         reservations:
-          memory: 16M
+          memory: 6M
     volumes:
       # ISOLATION GUARANTEE: Mount ONLY public/ directly as read-only.
       # All other project directories on the server (build, content, templates, assets, .git)
