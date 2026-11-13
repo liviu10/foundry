@@ -1,2 +1,13 @@
 # Public generated folder is tracked in Git for deployment
 
+# Library development artifacts (keep library clean in Git)
+/library/vendor/
+/library/.phpunit.cache/
+/library/exemple/
+
+# Development & OS artifacts
+.idea/
+.vscode/
+.DS_Store
+*.log
+

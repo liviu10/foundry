@@ -12,7 +12,7 @@ The archive contains the 51 classes as PHP 8.3 source files, in a single `foundr
 
 <p><a class="btn btn-primary" href="/downloads/foundry-php83.zip" download>Download foundry-php83.zip</a> <span class="muted">249 KB</span></p>
 
-SHA-256 checksum: `0584dbc1243e618041b57ff2a30160b2945c36cb1b01a0874ddc885483737124`
+SHA-256 checksum: `e6bbcbeb8cfe1f742e3537243f1f345ff7cfa926eaa468866725280ddc065d87`
 
 Verify the archive after downloading it:
 

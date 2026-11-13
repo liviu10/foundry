@@ -8,7 +8,7 @@ declare(strict_types=1);
  *   php build.php                                  -> public/ for https://foundry.insightdevhub.ro
  *   php build.php --base-url=http://localhost:8080 -> local preview (php -S localhost:8080 -t public)
  *
- * Reads ../foundry (README catalog + src/*.php via Reflection) and content/guides/*.md,
+ * Reads library/ (README catalog + src/*.php via Reflection) and content/guides/*.md,
  * then writes a fully static site into public/. Requires PHP 8.3+ with the zip extension.
  */
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /*
  * Site configuration. Paths are absolute; everything else is plain data.
- * The library itself (../foundry) is only READ at build time and never modified.
+ * The library itself (library/) is only READ at build time and never modified.
  */
 
 $root = dirname(__DIR__);
@@ -16,8 +16,8 @@ return [
     'language' => 'en',
     'license' => 'Proprietary',
 
-    'source_dir' => dirname($root).'/foundry/src',
-    'readme' => dirname($root).'/foundry/README.md',
+    'source_dir' => $root.'/library/src',
+    'readme' => $root.'/library/README.md',
     'content_dir' => $root.'/content',
     'templates_dir' => $root.'/templates',
     'assets_dir' => $root.'/assets',

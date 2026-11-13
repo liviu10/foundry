@@ -12,6 +12,13 @@
 !docker
 !docker/**
 
+# Explicitly exclude the library source, tests, and dependencies
+library
+library/**
+**/vendor
+**/vendor/**
+**/.phpunit.cache
+
 # Exclude sensitive, temporary, or unneeded files within allowed folders
 **/.git
 **/.gitignore

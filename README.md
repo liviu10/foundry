@@ -29,6 +29,10 @@ The build cleans and regenerates `public/` completely. Rebuild after changes to 
 ```text
 build.php                   Build CLI entrypoint
 build/                      Generator core (DocBlock, Markdown, Highlighter, Renderer, Site)
+library/                    Foundry PHP utility library source code & tests
+  src/                      Standalone zero-dependency utility classes (*.php)
+  tests/                    Comprehensive test suite
+  README.md                 Catalog and class summaries
 content/
   guides/*.md               Markdown guides (frontmatter: title, description, nav)
   titles.php                SEO title mappings per class
@@ -40,7 +44,7 @@ docker/
   Dockerfile                Hardened Alpine-slim container (<21MB total image)
   nginx.conf                Ultra-optimized static configuration (sendfile, rate-limiting)
   security-headers.conf     Strict A+ security headers (CSP, HSTS, COOP, CORP, Nosniff)
-.dockerignore               Excludes all source code & Git metadata from Docker build context
+.dockerignore               Excludes library/, source code & Git metadata from Docker build context
 ```
 
 ---
@@ -133,7 +137,7 @@ Rebuilding the container image is **only** required in the following scenarios:
   * `cap_drop: [ALL]`: All Linux kernel capabilities are dropped.
   * `security_opt: [no-new-privileges:true]`: Disallows privilege escalation via setuid binaries.
   * `tmpfs`: Ephemeral directories (`/tmp`, `/var/run`) are in-memory tmpfs mounted with `noexec,nosuid,nodev`.
-* **Physical Webroot Isolation**: The container only mounts `public/`. All other server directories (`build/`, `content/`, `templates/`, `assets/`, `.git`) are unmounted and physically unreachable.
+* **Physical Webroot Isolation**: The container only mounts `public/`. All other server directories (`library/`, `build/`, `content/`, `templates/`, `assets/`, `.git`) are unmounted and physically unreachable.
 * **Nginx Hardening**:
   * A+ Security Headers: Strict CSP (`default-src 'self'`), `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `Permissions-Policy`, `Cross-Origin-Opener-Policy`, `Cross-Origin-Resource-Policy`, `Strict-Transport-Security`.
   * Dotfiles Blocked: Requests to `/.git`, `/.env`, `/.foundry-site` return `404 Not Found` without logging.

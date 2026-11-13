@@ -1,0 +1,58 @@
+{
+    "name": "utilities/foundry",
+    "description": "Standalone, single-file PHP 8.3+ / 7.4 utility classes and helper functions (copy & paste).",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.3"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Foundry\\": "src/",
+            "Foundry\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "docs:sync": "@php sync_docs.php",
+        "test": "phpunit",
+        "analyse": "phpstan analyse --memory-limit=1G",
+        "lint": "pint --test",
+        "format": "pint",
+        "refactor": "rector process",
+        "refactor:check": "rector process --dry-run",
+        "fix": [
+            "@refactor",
+            "@format"
+        ],
+        "check": [
+            "@lint",
+            "@refactor:check",
+            "@analyse",
+            "@test"
+        ]
+    },
+    "scripts-descriptions": {
+        "docs:sync": "Synchronize documentation and Version History from source docblocks to docs/index.html",
+        "test": "Run PHPUnit test suite",
+        "analyse": "PHPStan static analysis (max level)",
+        "lint": "Check code style with Pint without modifying files",
+        "format": "Apply code style formatting with Pint",
+        "refactor": "Apply Rector refactoring rules to src/, tests/",
+        "refactor:check": "Dry-run Rector refactoring check without modifying files",
+        "fix": "Run Rector and Pint formatters",
+        "check": "Run all pre-commit quality checks (lint, refactor:check, analyse, test)"
+    },
+    "config": {
+        "process-timeout": 0,
+        "platform": {
+            "php": "8.3.12"
+        },
+        "sort-packages": true
+    },
+    "require-dev": {
+        "laravel/pint": "^1.32",
+        "phpstan/phpstan": "^2.3",
+        "phpunit/phpunit": "^12.5",
+        "rector/rector": "^2.8"
+    }
+}
