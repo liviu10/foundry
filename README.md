@@ -61,7 +61,6 @@ The documentation is served by an ultra-minimal, hardened Nginx container on Alp
    git init
    git remote add origin git@github.com:liviu10/foundry.git
    git fetch origin
-   git checkout -B master origin/master
    git reset --hard origin/master
    git branch --set-upstream-to=origin/master master
    ```
